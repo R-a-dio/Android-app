@@ -22,7 +22,7 @@ public class NotificationHandler {
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setLargeIcon(
 						BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
-				.getNotification();
+				.build();
 		return n;
 	}
 
@@ -33,7 +33,7 @@ public class NotificationHandler {
 		Notification n = new Notification.Builder(context)
 				.setContentTitle("R/a/dio" + " (" + currentPacket.dj + ")")
 				.setContentText(currentPacket.np).setSmallIcon(R.drawable.ic_launcher)
-				.setLargeIcon(image).getNotification();
+				.setLargeIcon(image).build();
 		mNotificationManager.notify(CONSTANTNOTIFICATION, n);
 	}
 
@@ -46,7 +46,7 @@ public class NotificationHandler {
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setLargeIcon(
 						currentImage != null ? currentImage : BitmapFactory.decodeResource(
-								context.getResources(), R.drawable.ic_launcher)).getNotification();
+								context.getResources(), R.drawable.ic_launcher)).build();
 		mNotificationManager.notify(CONSTANTNOTIFICATION, n);
 	}
 }

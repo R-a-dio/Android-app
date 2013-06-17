@@ -25,7 +25,7 @@ public class ApiUtil {
 		} catch (Exception e) {
 			// ApiPack already initialized with defaults
 		}
+
 		return pack;
 	}
-
 }

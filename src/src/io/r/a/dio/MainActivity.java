@@ -3,6 +3,8 @@ package io.r.a.dio;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -29,6 +31,7 @@ public class MainActivity extends Activity {
 	private TextView artistName;
 	private TextView djName;
 	private ProgressBar songProgressBar;
+	private Timer progressBarTimer;
 	private ImageView djImage;
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -72,6 +75,14 @@ public class MainActivity extends Activity {
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
 		Intent servIntent = new Intent(this, RadioService.class);
 		bindService(servIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+		progressBarTimer = new Timer();
+		progressBarTimer.scheduleAtFixedRate(new TimerTask () {
+			@Override
+			public void run() {
+				songProgressBar.setProgress(songProgressBar.getProgress() + 1);		
+			}
+	
+		}, 0, 1000);
 	}
 
 	@Override
@@ -81,11 +92,14 @@ public class MainActivity extends Activity {
 	}
 
 	private String lastDjImg = "";
-
+	
 	private void updateNP(ApiPacket packet) {
+		int progress = (int)(packet.cur - packet.start);
 		songName.setText(packet.songName);
 		artistName.setText(packet.artistName);
 		djName.setText(packet.dj);
+		songProgressBar.setMax((int)(packet.end - packet.start));
+		songProgressBar.setProgress(progress);
 		if (!lastDjImg.equals(packet.djimg)) {
 			lastDjImg = packet.djimg;
 			DJImageLoader imageLoader = new DJImageLoader();
@@ -103,7 +117,8 @@ public class MainActivity extends Activity {
 			URL url;
 			try {
 				url = new URL("http://r-a-d.io" + pack.djimg);
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				HttpURLConnection conn = (HttpURLConnection) url
+						.openConnection();
 				conn.setDoInput(true);
 				conn.connect();
 				InputStream is = conn.getInputStream();
