@@ -21,6 +21,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -85,13 +86,38 @@ public class MainActivity extends Activity {
 		}, 0, 1000);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
 
-	private String lastDjImg = "";
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_share:
+                shareTrack();
+                return true;
+            case R.id.menu_settings:
+                // do nothing
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void shareTrack() {
+        String shareHeading = "Share track title.";
+
+        String shareText = songName.getText() + " - " + artistName.getText();
+        Intent i = new Intent(android.content.Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, shareText);
+
+        startActivity(Intent.createChooser(i, shareHeading));
+
+    }
+
+    private String lastDjImg = "";
 	
 	private void updateNP(ApiPacket packet) {
 		int progress = (int)(packet.cur - packet.start);
