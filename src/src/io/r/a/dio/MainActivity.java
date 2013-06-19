@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,10 +21,17 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -68,7 +76,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home_layout);
+		setContentView(R.layout.home_layout_scroll);
 		songName = (TextView) findViewById(R.id.main_SongName);
 		artistName = (TextView) findViewById(R.id.main_ArtistName);
 		djName = (TextView) findViewById(R.id.main_DjName);
@@ -132,6 +140,60 @@ public class MainActivity extends Activity {
 			imageLoader.execute(packet);
 
 		}
+
+
+        //ArrayAdapter<Tracks> lpAdapter = new ArrayAdapter<Tracks>(this, R.layout.track_textview, packet.lastPlayed);
+        //TracksAdapter lpAdapter = new TracksAdapter(this, R.layout.track_textview, packet.lastPlayed);
+        //ListView lpList = (ListView) findViewById(R.id.lastPlayedList);
+        //lpList.setAdapter(lpAdapter);
+        //lpList.setScrollContainer(false);
+
+        LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
+        queueLayout.removeAllViews();
+        LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (packet.queue != null) {
+            for (Tracks t : packet.queue) {
+                View v = vi.inflate(R.layout.track_textview, null);
+                TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+                TextView songName = (TextView) v.findViewById(R.id.track_songName);
+                //isRequest = (TextView) v.findViewById(R.id.track_isRequest);
+                artistName.setText(t.artistName);
+                songName.setText(t.songName);
+                if (t.isRequest) {
+                    artistName.setTypeface(null, Typeface.BOLD);
+                    songName.setTypeface(null, Typeface.BOLD);
+                }
+                queueLayout.addView(v);
+            }
+        } else {
+            View v = vi.inflate(R.layout.track_textview, null);
+            TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+            TextView songName = (TextView) v.findViewById(R.id.track_songName);
+            artistName.setText("-");
+            songName.setText("-");
+            queueLayout.addView(v);
+        }
+
+
+        LinearLayout lpLayout = (LinearLayout) findViewById(R.id.lastPlayedList);
+        lpLayout.removeAllViews();
+        for (Tracks t : packet.lastPlayed) {
+            View v = vi.inflate(R.layout.track_textview, null);
+            TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+            TextView songName = (TextView) v.findViewById(R.id.track_songName);
+            //isRequest = (TextView) v.findViewById(R.id.track_isRequest);
+            artistName.setText(t.artistName);
+            songName.setText(t.songName);
+            System.out.println(t.artistName);
+            System.out.println(t.songName);
+            if (t.isRequest) {
+                artistName.setTypeface(null, Typeface.BOLD);
+                songName.setTypeface(null, Typeface.BOLD);
+            }
+            lpLayout.addView(v);
+        }
+
+
 	}
 
 	private class DJImageLoader extends AsyncTask<ApiPacket, Void, Void> {

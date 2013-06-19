@@ -13,12 +13,15 @@ public class ApiPacket {
 	public String dj;
 	public String djimg;
 	public String djtext;
-	public int thread;
+	public String thread;
 	public Bitmap djImage;
 	public String songName;
 	public String artistName;
+    public Tracks[] queue;
+    public Tracks[] lastPlayed;
 
-	public ApiPacket() {
+
+    public ApiPacket() {
 		online = false;
 		np = "unknown";
 		list = "";
@@ -29,7 +32,7 @@ public class ApiPacket {
 		dj = "";
 		djimg = "";
 		djtext = "";
-		thread = 0;
+		thread = "";
 		songName = "";
 		artistName = "";
 	}

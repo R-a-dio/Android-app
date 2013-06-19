@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:stretchColumns="*"
+        android:gravity="center">
+    <TextView
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:id="@+id/track_songName"
+            android:padding="10dp"
+            android:layout_weight="1"
+
+            android:text="uugu"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"/>
+    <TextView
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:id="@+id/track_artistName"
+            android:padding="10dp"
+
+            android:text="uguu"
+            android:textAlignment="center"
+            android:autoText="false"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/track_isRequest"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="invisible" />
+</TableRow>
+
+        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
