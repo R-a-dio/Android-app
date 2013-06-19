@@ -25,13 +25,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -42,6 +38,7 @@ public class MainActivity extends Activity {
 	private ProgressBar songProgressBar;
 	private Timer progressBarTimer;
 	private ImageView djImage;
+
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
 			service = ((RadioService.LocalBinder) binder).getService();
@@ -68,7 +65,7 @@ public class MainActivity extends Activity {
 		public void handleMessage(Message msg) {
 			if (msg.what == ApiUtil.NPUPDATE) {
 				ApiPacket packet = (ApiPacket) msg.obj;
-				MainActivity.this.updateNP(packet);
+                MainActivity.this.updateNP(packet);
 			}
 		}
 	};
@@ -82,17 +79,39 @@ public class MainActivity extends Activity {
 		djName = (TextView) findViewById(R.id.main_DjName);
 		djImage = (ImageView) findViewById(R.id.main_DjImage);
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
-		Intent servIntent = new Intent(this, RadioService.class);
-		bindService(servIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-		progressBarTimer = new Timer();
-		progressBarTimer.scheduleAtFixedRate(new TimerTask () {
-			@Override
-			public void run() {
-				songProgressBar.setProgress(songProgressBar.getProgress() + 1);		
-			}
-	
-		}, 0, 1000);
+        startService();
+
+        progressBarTimer = new Timer();
+		progressBarTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                songProgressBar.setProgress(songProgressBar.getProgress() + 1);
+            }
+
+        }, 0, 1000);
 	}
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //unbindService(serviceConnection);
+    }
+
+
+    public void startService() {
+        Intent servIntent = new Intent(this, RadioService.class);
+        if (RadioService.serviceStarted == false) {
+            startService(servIntent);
+            bindService(servIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            RadioService.serviceStarted = true;
+            service = RadioService.service;
+        } else {
+            bindService(servIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            service = RadioService.service;
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,6 +122,13 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_play:
+                service.restartPlayer();
+                service.updateApiData();
+                return true;
+            case R.id.menu_pause:
+                service.stopPlayer();
+                return true;
             case R.id.menu_share:
                 shareTrack();
                 return true;
@@ -141,22 +167,14 @@ public class MainActivity extends Activity {
 
 		}
 
-
-        //ArrayAdapter<Tracks> lpAdapter = new ArrayAdapter<Tracks>(this, R.layout.track_textview, packet.lastPlayed);
-        //TracksAdapter lpAdapter = new TracksAdapter(this, R.layout.track_textview, packet.lastPlayed);
-        //ListView lpList = (ListView) findViewById(R.id.lastPlayedList);
-        //lpList.setAdapter(lpAdapter);
-        //lpList.setScrollContainer(false);
-
         LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
         queueLayout.removeAllViews();
         LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (packet.queue != null) {
             for (Tracks t : packet.queue) {
-                View v = vi.inflate(R.layout.track_textview, null);
+                View v = vi.inflate(R.layout.track_tableview, null);
                 TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
                 TextView songName = (TextView) v.findViewById(R.id.track_songName);
-                //isRequest = (TextView) v.findViewById(R.id.track_isRequest);
                 artistName.setText(t.artistName);
                 songName.setText(t.songName);
                 if (t.isRequest) {
@@ -166,7 +184,7 @@ public class MainActivity extends Activity {
                 queueLayout.addView(v);
             }
         } else {
-            View v = vi.inflate(R.layout.track_textview, null);
+            View v = vi.inflate(R.layout.track_tableview, null);
             TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
             TextView songName = (TextView) v.findViewById(R.id.track_songName);
             artistName.setText("-");
@@ -174,22 +192,27 @@ public class MainActivity extends Activity {
             queueLayout.addView(v);
         }
 
-
         LinearLayout lpLayout = (LinearLayout) findViewById(R.id.lastPlayedList);
         lpLayout.removeAllViews();
-        for (Tracks t : packet.lastPlayed) {
-            View v = vi.inflate(R.layout.track_textview, null);
+        if (packet.lastPlayed != null) {
+            for (Tracks t : packet.lastPlayed) {
+                View v = vi.inflate(R.layout.track_tableview, null);
+                TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+                TextView songName = (TextView) v.findViewById(R.id.track_songName);
+                artistName.setText(t.artistName);
+                songName.setText(t.songName);
+                if (t.isRequest) {
+                    artistName.setTypeface(null, Typeface.BOLD);
+                    songName.setTypeface(null, Typeface.BOLD);
+                }
+                lpLayout.addView(v);
+            }
+        } else {
+            View v = vi.inflate(R.layout.track_tableview, null);
             TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
             TextView songName = (TextView) v.findViewById(R.id.track_songName);
-            //isRequest = (TextView) v.findViewById(R.id.track_isRequest);
-            artistName.setText(t.artistName);
-            songName.setText(t.songName);
-            System.out.println(t.artistName);
-            System.out.println(t.songName);
-            if (t.isRequest) {
-                artistName.setTypeface(null, Typeface.BOLD);
-                songName.setTypeface(null, Typeface.BOLD);
-            }
+            artistName.setText("-");
+            songName.setText("-");
             lpLayout.addView(v);
         }
 

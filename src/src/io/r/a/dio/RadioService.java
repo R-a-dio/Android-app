@@ -20,7 +20,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-public class RadioService extends Service implements OnPreparedListener {
+public class RadioService extends Service implements OnPreparedListener, MediaPlayer.OnErrorListener {
 	private final IBinder binder = new LocalBinder();
 	private Messenger messenger;
 	private boolean activityConnected;
@@ -29,6 +29,8 @@ public class RadioService extends Service implements OnPreparedListener {
 	private NotificationHandler notificationManager;
 	private Timer apiDataTimer;
 	MediaPlayer radioPlayer;
+    public static boolean serviceStarted = false;
+    public static RadioService service;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -70,11 +72,39 @@ public class RadioService extends Service implements OnPreparedListener {
 			e.printStackTrace();
 		}
 		radioPlayer.prepareAsync();
+        service = this;
 	}
 
 	public void onPrepared(MediaPlayer mp) {
 		radioPlayer.start();
 	}
+
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        return true;
+    }
+
+    public void stopPlayer() {
+        if (radioPlayer != null) {
+            radioPlayer.stop();
+            radioPlayer.reset();
+            radioPlayer.release();
+            radioPlayer = null;
+        }
+    }
+
+    // call
+    public void restartPlayer() {
+        radioPlayer = new MediaPlayer();
+        radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        radioPlayer.setOnPreparedListener(this);
+        try {
+            radioPlayer.setDataSource("http://r-a-d.io/lb/load-balance.php");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        radioPlayer.prepareAsync();
+
+    }
 	
 	public Messenger getMessenger() {
 		return this.messenger;

@@ -74,11 +74,13 @@
                     android:text="Shinohara Tomoe"
                     android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:orientation="vertical"
             android:padding="10dp">
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
