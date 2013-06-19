@@ -141,9 +141,15 @@ public class RadioService extends Service implements OnPreparedListener, MediaPl
 				in.close();
 				resultPacket = ApiUtil.parseJSON(inputLine);
 				String[] songParts = resultPacket.np.split(" - ");
-				resultPacket.songName = songParts[1];
-				resultPacket.artistName = songParts[0];
-			} catch (Exception e) {
+                if (songParts.length == 2) {
+				    resultPacket.artistName = songParts[0];
+                    resultPacket.songName = songParts[1];
+                } else {
+                    resultPacket.artistName = songParts[0];
+                    resultPacket.songName = "-";
+                }
+
+            } catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;

@@ -34,8 +34,8 @@ public class ApiUtil {
                 JSONArray lpObj = (JSONArray) lpArray.get(i);
                 String track = lpObj.getString(1);
                 String[] details = track.split(" - ");
-                String songName = "";
-                String artistName = "";
+                String songName = "-";
+                String artistName = "-";
 
                 // checking against songs
                 if (details.length == 2) {
@@ -59,8 +59,15 @@ public class ApiUtil {
                     JSONArray lpObj = (JSONArray) queueArray.get(i);
                     String track = lpObj.getString(1);
                     String[] details = track.split(" - ");
-                    String songName = details[0];
-                    String artistName = details[1];
+                    String songName = "-";
+                    String artistName = "-";
+                    if (details.length == 2) {
+                        songName = details[0];
+                        artistName = details[1];
+                    } else if (details.length == 1) {
+                        songName = details[0];
+                    }
+
                     boolean isRequest = lpObj.getInt(2) == 1 ? true : false;
                     queueList.add(new Tracks(songName, artistName, isRequest));
                 }
