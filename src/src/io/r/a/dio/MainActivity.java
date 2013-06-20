@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +21,12 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,6 +38,7 @@ public class MainActivity extends Activity {
 	private ProgressBar songProgressBar;
 	private Timer progressBarTimer;
 	private ImageView djImage;
+
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
 			service = ((RadioService.LocalBinder) binder).getService();
@@ -59,7 +65,7 @@ public class MainActivity extends Activity {
 		public void handleMessage(Message msg) {
 			if (msg.what == ApiUtil.NPUPDATE) {
 				ApiPacket packet = (ApiPacket) msg.obj;
-				MainActivity.this.updateNP(packet);
+                MainActivity.this.updateNP(packet);
 			}
 		}
 	};
@@ -67,31 +73,85 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home_layout);
+		setContentView(R.layout.home_layout_scroll);
 		songName = (TextView) findViewById(R.id.main_SongName);
 		artistName = (TextView) findViewById(R.id.main_ArtistName);
 		djName = (TextView) findViewById(R.id.main_DjName);
 		djImage = (ImageView) findViewById(R.id.main_DjImage);
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
-		Intent servIntent = new Intent(this, RadioService.class);
-		bindService(servIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-		progressBarTimer = new Timer();
-		progressBarTimer.scheduleAtFixedRate(new TimerTask () {
-			@Override
-			public void run() {
-				songProgressBar.setProgress(songProgressBar.getProgress() + 1);		
-			}
-	
-		}, 0, 1000);
+        startService();
+
+        progressBarTimer = new Timer();
+		progressBarTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                songProgressBar.setProgress(songProgressBar.getProgress() + 1);
+            }
+
+        }, 0, 1000);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
 
-	private String lastDjImg = "";
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //unbindService(serviceConnection);
+    }
+
+
+    public void startService() {
+        Intent servIntent = new Intent(this, RadioService.class);
+        if (RadioService.serviceStarted == false) {
+            startService(servIntent);
+            bindService(servIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            RadioService.serviceStarted = true;
+            service = RadioService.service;
+        } else {
+            bindService(servIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            service = RadioService.service;
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_play:
+                service.restartPlayer();
+                service.updateApiData();
+                return true;
+            case R.id.menu_pause:
+                service.stopPlayer();
+                return true;
+            case R.id.menu_share:
+                shareTrack();
+                return true;
+            case R.id.menu_settings:
+                // do nothing
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void shareTrack() {
+        String shareHeading = "Share track title.";
+
+        String shareText = songName.getText() + " - " + artistName.getText();
+        Intent i = new Intent(android.content.Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, shareText);
+
+        startActivity(Intent.createChooser(i, shareHeading));
+
+    }
+
+    private String lastDjImg = "";
 	
 	private void updateNP(ApiPacket packet) {
 		int progress = (int)(packet.cur - packet.start);
@@ -106,6 +166,57 @@ public class MainActivity extends Activity {
 			imageLoader.execute(packet);
 
 		}
+
+        LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
+        queueLayout.removeAllViews();
+        LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (packet.queue != null) {
+            for (Tracks t : packet.queue) {
+                View v = vi.inflate(R.layout.track_tableview, null);
+                TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+                TextView songName = (TextView) v.findViewById(R.id.track_songName);
+                artistName.setText(t.artistName);
+                songName.setText(t.songName);
+                if (t.isRequest) {
+                    artistName.setTypeface(null, Typeface.BOLD);
+                    songName.setTypeface(null, Typeface.BOLD);
+                }
+                queueLayout.addView(v);
+            }
+        } else {
+            View v = vi.inflate(R.layout.track_tableview, null);
+            TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+            TextView songName = (TextView) v.findViewById(R.id.track_songName);
+            artistName.setText("-");
+            songName.setText("-");
+            queueLayout.addView(v);
+        }
+
+        LinearLayout lpLayout = (LinearLayout) findViewById(R.id.lastPlayedList);
+        lpLayout.removeAllViews();
+        if (packet.lastPlayed != null) {
+            for (Tracks t : packet.lastPlayed) {
+                View v = vi.inflate(R.layout.track_tableview, null);
+                TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+                TextView songName = (TextView) v.findViewById(R.id.track_songName);
+                artistName.setText(t.artistName);
+                songName.setText(t.songName);
+                if (t.isRequest) {
+                    artistName.setTypeface(null, Typeface.BOLD);
+                    songName.setTypeface(null, Typeface.BOLD);
+                }
+                lpLayout.addView(v);
+            }
+        } else {
+            View v = vi.inflate(R.layout.track_tableview, null);
+            TextView artistName = (TextView) v.findViewById(R.id.track_artistName);
+            TextView songName = (TextView) v.findViewById(R.id.track_songName);
+            artistName.setText("-");
+            songName.setText("-");
+            lpLayout.addView(v);
+        }
+
+
 	}
 
 	private class DJImageLoader extends AsyncTask<ApiPacket, Void, Void> {
