@@ -145,8 +145,8 @@ public class RadioService extends Service implements OnPreparedListener, MediaPl
 				    resultPacket.artistName = songParts[0];
                     resultPacket.songName = songParts[1];
                 } else {
-                    resultPacket.artistName = songParts[0];
-                    resultPacket.songName = "-";
+                    resultPacket.songName = songParts[0];
+                    resultPacket.artistName = "-";
                 }
 
             } catch (Exception e) {
