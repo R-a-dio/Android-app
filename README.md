@@ -1,9 +1,24 @@
 r-a-dio-android
 ===============
 
-***Current Behavior***
+***Current Features/Behavior listed with made up categories***
 
-1. Displays info in notifications and application activity.
-2. Begins playback upon opening application.
-3. Updates information and progressbar every 10 seconds with the r/a/dio API.
-4. Progressbar updates every second with estimation.
+* Notifications Display
+  - Now playing song 
+  - DJ 
+  
+* Main Application Activity Display (vertical scroll)
+  - DJ
+  - Progress Bar
+  - Now Playing Song
+  - Queue
+  - Last Played
+  
+* Behaviors Include
+  - Playback upon opening application.
+  - Updates information and progressbar in the background every 10 seconds with the r/a/dio API.
+  - Progressbar in Main Application Activity Display updates every second with estimation.
+  
+* Interactions Include
+  - Play button
+  - Pause button
