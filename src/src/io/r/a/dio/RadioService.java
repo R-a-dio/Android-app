@@ -20,7 +20,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-public class RadioService extends Service implements OnPreparedListener, MediaPlayer.OnErrorListener {
+public class RadioService extends Service implements OnPreparedListener,
+		MediaPlayer.OnErrorListener {
 	private final IBinder binder = new LocalBinder();
 	private Messenger messenger;
 	private boolean activityConnected;
@@ -29,8 +30,8 @@ public class RadioService extends Service implements OnPreparedListener, MediaPl
 	private NotificationHandler notificationManager;
 	private Timer apiDataTimer;
 	MediaPlayer radioPlayer;
-    public static boolean serviceStarted = false;
-    public static RadioService service;
+	public static boolean serviceStarted = false;
+	public static RadioService service;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -67,45 +68,37 @@ public class RadioService extends Service implements OnPreparedListener, MediaPl
 		radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		radioPlayer.setOnPreparedListener(this);
 		try {
-		radioPlayer.setDataSource("http://r-a-d.io/lb/load-balance.php");
+			radioPlayer.setDataSource("http://r-a-d.io/lb/load-balance.php");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		radioPlayer.prepareAsync();
-        service = this;
+		service = this;
 	}
 
 	public void onPrepared(MediaPlayer mp) {
 		radioPlayer.start();
 	}
 
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        return true;
-    }
+	public boolean onError(MediaPlayer mp, int what, int extra) {
+		return true;
+	}
 
-    public void stopPlayer() {
-        if (radioPlayer != null) {
-            radioPlayer.stop();
-            radioPlayer.reset();
-            radioPlayer.release();
-            radioPlayer = null;
-        }
-    }
+	public void stopPlayer() {
+		radioPlayer.reset();
+	}
 
-    // call
-    public void restartPlayer() {
-        radioPlayer = new MediaPlayer();
-        radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        radioPlayer.setOnPreparedListener(this);
-        try {
-            radioPlayer.setDataSource("http://r-a-d.io/lb/load-balance.php");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        radioPlayer.prepareAsync();
+	// call
+	public void restartPlayer() {
+		try {
+			radioPlayer.setDataSource("http://r-a-d.io/lb/load-balance.php");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		radioPlayer.prepareAsync();
 
-    }
-	
+	}
+
 	public Messenger getMessenger() {
 		return this.messenger;
 	}
@@ -141,15 +134,15 @@ public class RadioService extends Service implements OnPreparedListener, MediaPl
 				in.close();
 				resultPacket = ApiUtil.parseJSON(inputLine);
 				String[] songParts = resultPacket.np.split(" - ");
-                if (songParts.length == 2) {
-				    resultPacket.artistName = songParts[0];
-                    resultPacket.songName = songParts[1];
-                } else {
-                    resultPacket.songName = songParts[0];
-                    resultPacket.artistName = "-";
-                }
+				if (songParts.length == 2) {
+					resultPacket.artistName = songParts[0];
+					resultPacket.songName = songParts[1];
+				} else {
+					resultPacket.songName = songParts[0];
+					resultPacket.artistName = "-";
+				}
 
-            } catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
@@ -175,6 +168,11 @@ public class RadioService extends Service implements OnPreparedListener, MediaPl
 
 	public void updateNotificationImage(Bitmap image) {
 		notificationManager.updateNotificationImage(currentApiPacket, image);
+	}
+
+	@Override
+	public void onDestroy() {
+		radioPlayer.release();
 	}
 
 }
