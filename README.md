@@ -2,7 +2,7 @@ r-a-dio-android
 ===============
 
 
-***Features/Behavior/Progress listed with made up categories.***
+***Current Features/Behavior/Progress is listed with made up categories. Screenshot is the current progress with the layout.***
 <img src="http://i.imgur.com/p2w6KQa.png"
  alt="screenshot" title="The man himself" align="right" />
  
