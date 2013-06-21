@@ -90,13 +90,15 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	// call
 	public void restartPlayer() {
-		try {
-			radioPlayer.setDataSource("http://r-a-d.io/lb/load-balance.php");
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (!radioPlayer.isPlaying()) {
+			try {
+				radioPlayer
+						.setDataSource("http://r-a-d.io/lb/load-balance.php");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			radioPlayer.prepareAsync();
 		}
-		radioPlayer.prepareAsync();
-
 	}
 
 	public Messenger getMessenger() {
