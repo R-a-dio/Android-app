@@ -68,7 +68,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		radioPlayer.setOnPreparedListener(this);
 		try {
-			radioPlayer.setDataSource("http://r-a-d.io/lb/load-balance.php");
+			radioPlayer.setDataSource(getString(R.string.streamURL));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,8 +92,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void restartPlayer() {
 		if (!radioPlayer.isPlaying()) {
 			try {
-				radioPlayer
-						.setDataSource("http://r-a-d.io/lb/load-balance.php");
+				radioPlayer.setDataSource(getString(R.string.streamURL));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -129,7 +128,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		protected Void doInBackground(Void... params) {
 			resultPacket = new ApiPacket();
 			try {
-				URL apiURl = new URL("http://r-a-d.io/api.php");
+				URL apiURl = new URL(getString(R.string.mainApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
 				String inputLine = in.readLine();

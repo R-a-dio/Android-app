@@ -4,5 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">R/a/dio</string>
+    <string name="streamURL">http://r-a-d.io/lb/load-balance.php</string>
+    <string name="mainApiURL">http://r-a-d.io/api.php</string>
 
 </resources>
