@@ -3,7 +3,7 @@ r-a-dio-android
 
 
 ***Current Features/Behavior/Progress is listed with made up categories. Screenshot is the current progress with the layout.***
-<img src="http://i.imgur.com/lDjnF8D.png"
+<img src="http://i.imgur.com/eKDCCPg.png"
  alt="screenshot" title="Current Look" align="right" />
  
 
@@ -21,7 +21,7 @@ r-a-dio-android
 * Behaviors Include
   - Playback upon opening application.
   - Updates information and progressbar in the background every 10 seconds with the r/a/dio API.
-  - Progressbar in Main Application Activity Display updates every second with estimation.  
+  - Progressbar and song length in Main Application Activity Display updates every second with estimation.  
 * Interactions Include
   - Play button
   - Pause button
