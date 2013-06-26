@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -32,6 +33,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	MediaPlayer radioPlayer;
 	public static boolean serviceStarted = false;
 	public static RadioService service;
+	AppWidgetManager widgetManager;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -41,6 +43,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	@Override
 	public void onCreate() {
 		notificationManager = new NotificationHandler(this);
+		widgetManager = AppWidgetManager.getInstance(this);
 		messenger = new Messenger(new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
