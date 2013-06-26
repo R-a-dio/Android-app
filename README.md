@@ -3,8 +3,8 @@ r-a-dio-android
 
 
 ***Current Features/Behavior/Progress is listed with made up categories. Screenshot is the current progress with the layout.***
-<img src="http://i.imgur.com/p2w6KQa.png"
- alt="screenshot" title="The man himself" align="right" />
+<img src="http://i.imgur.com/lDjnF8D.png"
+ alt="screenshot" title="Current Look" align="right" />
  
 
 > * Notifications Display
@@ -15,7 +15,9 @@ r-a-dio-android
   - Progress Bar
   - Now Playing Song
   - Queue
-  - Last Played  
+  - Last Played
+  - Song Length
+  - Listener Count
 * Behaviors Include
   - Playback upon opening application.
   - Updates information and progressbar in the background every 10 seconds with the r/a/dio API.
