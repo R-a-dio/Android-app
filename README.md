@@ -6,6 +6,8 @@ r-a-dio-android
 <img src="http://i.imgur.com/eKDCCPg.png"
  alt="screenshot" title="Current Look" align="right" />
  
+<img src="http://i.imgur.com/tqgS8j6.png"
+ alt="screenshot" title="Current Look" align="right" />
 
 > * Notifications Display
   - Now playing song 
@@ -18,6 +20,8 @@ r-a-dio-android
   - Last Played
   - Song Length
   - Listener Count
+* Home Screen Widget
+  - Does nothing right now
 * Behaviors Include
   - Playback upon opening application.
   - Updates information and progressbar in the background every 10 seconds with the r/a/dio API.
@@ -25,3 +29,5 @@ r-a-dio-android
 * Interactions Include
   - Play button
   - Pause button
+
+
