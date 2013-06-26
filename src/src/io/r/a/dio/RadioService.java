@@ -90,14 +90,14 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	// call
 	public void restartPlayer() {
-		if (!radioPlayer.isPlaying()) {
-			try {
-				radioPlayer.setDataSource(getString(R.string.streamURL));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			radioPlayer.prepareAsync();
+		radioPlayer.reset();
+		try {
+			radioPlayer.setDataSource(getString(R.string.streamURL));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		radioPlayer.prepareAsync();
+
 	}
 
 	public Messenger getMessenger() {

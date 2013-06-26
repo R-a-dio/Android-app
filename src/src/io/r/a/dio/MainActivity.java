@@ -34,10 +34,14 @@ public class MainActivity extends Activity {
 	RadioService service;
 	private TextView songName;
 	private TextView artistName;
-	private TextView djName;
+	private TextView djName;	
 	private ProgressBar songProgressBar;
 	private Timer progressBarTimer;
 	private ImageView djImage;
+	private TextView listeners;
+	private TextView songLength;
+	private int progress;
+	private int length;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -79,19 +83,25 @@ public class MainActivity extends Activity {
 		djName = (TextView) findViewById(R.id.main_DjName);
 		djImage = (ImageView) findViewById(R.id.main_DjImage);
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
+		listeners = (TextView) findViewById(R.id.main_Listeners);
+		songLength = (TextView) findViewById(R.id.main_SongLength);
         startService();
 
         progressBarTimer = new Timer();
 		progressBarTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                songProgressBar.setProgress(songProgressBar.getProgress() + 1);
+            	progress++;
+                songProgressBar.setProgress(progress);
             }
 
         }, 0, 1000);
 	}
 
 
+	private void estimateNP() {
+		
+	}
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -153,8 +163,29 @@ public class MainActivity extends Activity {
 
     private String lastDjImg = "";
 	
+    private String formatLength(int progress, int length) {
+    	StringBuilder sb = new StringBuilder();
+    	
+    	int progMins = progress % 60;
+    	int progSecs = progress;
+    	sb.append(progMins);
+    	sb.append(":");
+    	sb.append(progSecs);
+    	
+    	sb.append(" / ");
+    	
+    	int lenMins = length % 60;
+    	int lenSecs = length;
+    	sb.append(lenMins);
+    	sb.append(":");
+    	sb.append(lenSecs); 
+    		
+    	return sb.toString();
+    }
+    
 	private void updateNP(ApiPacket packet) {
-		int progress = (int)(packet.cur - packet.start);
+		progress = (int)(packet.cur - packet.start);
+		length = (int)(packet.end - packet.start);
 		songName.setText(packet.songName);
 		artistName.setText(packet.artistName);
 		djName.setText(packet.dj);
@@ -166,6 +197,8 @@ public class MainActivity extends Activity {
 			imageLoader.execute(packet);
 
 		}
+		listeners.setText("Listeners: " + packet.list);
+		songLength.setText(progress + " / " + length);
 
         LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
         queueLayout.removeAllViews();
