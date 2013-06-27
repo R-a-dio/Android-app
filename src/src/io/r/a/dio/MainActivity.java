@@ -201,7 +201,7 @@ public class MainActivity extends Activity {
 		songName.setText(packet.songName);
 		artistName.setText(packet.artistName);
 		djName.setText(packet.dj);
-		songProgressBar.setMax((int) (packet.end - packet.start));
+		songProgressBar.setMax(length);
 		songProgressBar.setProgress(progress);
 		if (!lastDjImg.equals(packet.djimg)) {
 			lastDjImg = packet.djimg;

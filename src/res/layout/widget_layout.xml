@@ -11,7 +11,7 @@
         android:src="@drawable/ic_media_pause" />
 
     <ProgressBar
-        android:id="@+id/progressBar1"
+        android:id="@+id/widget_ProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/progressBar1"
+        android:layout_alignRight="@+id/widget_ProgressBar"
         android:text="neko - Matryoshka"
         android:textColor="@android:color/black" />
 
@@ -48,7 +48,7 @@
         android:id="@+id/widget_SongLength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar1"
+        android:layout_below="@+id/widget_ProgressBar"
         android:layout_toLeftOf="@+id/widget_RelativeLayout"
         android:text="00:49 / 2:50"
         android:textColor="@android:color/black" />

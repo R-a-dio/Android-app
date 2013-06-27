@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -20,6 +21,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.widget.RemoteViews;
 
 public class RadioService extends Service implements OnPreparedListener,
 		MediaPlayer.OnErrorListener {
@@ -30,6 +32,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	private ApiPacket currentApiPacket;
 	private NotificationHandler notificationManager;
 	private Timer apiDataTimer;
+	private Timer widgetTimer;
 	MediaPlayer radioPlayer;
 	public static boolean serviceStarted = false;
 	public static RadioService service;
@@ -67,6 +70,49 @@ public class RadioService extends Service implements OnPreparedListener,
 				updateApiData();
 			}
 		}, 0, 10000);
+		widgetTimer = new Timer();
+		widgetTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+
+				ApiPacket resultPacket = new ApiPacket();
+				try {
+					URL apiURl = new URL(getString(R.string.mainApiURL));
+					BufferedReader in = new BufferedReader(
+							new InputStreamReader(apiURl.openStream()));
+					String inputLine = in.readLine();
+					in.close();
+					resultPacket = ApiUtil.parseJSON(inputLine);
+					String[] songParts = resultPacket.np.split(" - ");
+					if (songParts.length == 2) {
+						resultPacket.artistName = songParts[0];
+						resultPacket.songName = songParts[1];
+					} else {
+						resultPacket.songName = songParts[0];
+						resultPacket.artistName = "-";
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				RemoteViews view = new RemoteViews(getPackageName(),
+						R.layout.widget_layout);
+				int progress = (int) (resultPacket.cur - resultPacket.start);
+				int length = (int) (resultPacket.end - resultPacket.start);
+				view.setTextViewText(R.id.widget_NowPlaying, resultPacket.np);
+				view.setProgressBar(R.id.widget_ProgressBar, length, progress,
+						false);
+				view.setTextViewText(R.id.widget_SongLength,
+						formatSongLength(progress, length));
+
+				// Push update for this widget to the home screen
+				ComponentName thisWidget = new ComponentName(
+						getApplicationContext(), RadioWidgetProvider.class);
+				AppWidgetManager manager = AppWidgetManager
+						.getInstance(getApplicationContext());
+				manager.updateAppWidget(thisWidget, view);
+			}
+		}, 0, 1000);
 		radioPlayer = new MediaPlayer();
 		radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		radioPlayer.setOnPreparedListener(this);
@@ -85,6 +131,34 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		return true;
+	}
+
+	private String formatSongLength(int progress, int length) {
+		StringBuilder sb = new StringBuilder();
+
+		int progMins = progress / 60;
+		int progSecs = progress % 60;
+		if (progMins < 10)
+			sb.append("0");
+		sb.append(progMins);
+		sb.append(":");
+		if (progSecs < 10)
+			sb.append("0");
+		sb.append(progSecs);
+
+		sb.append(" / ");
+
+		int lenMins = length / 60;
+		int lenSecs = length % 60;
+		if (lenMins < 10)
+			sb.append("0");
+		sb.append(lenMins);
+		sb.append(":");
+		if (lenSecs < 10)
+			sb.append("0");
+		sb.append(lenSecs);
+
+		return sb.toString();
 	}
 
 	public void stopPlayer() {
