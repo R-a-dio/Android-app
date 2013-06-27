@@ -37,6 +37,8 @@ public class RadioService extends Service implements OnPreparedListener,
 	public static boolean serviceStarted = false;
 	public static RadioService service;
 	AppWidgetManager widgetManager;
+	private int progress;
+	private int length;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -47,6 +49,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void onCreate() {
 		notificationManager = new NotificationHandler(this);
 		widgetManager = AppWidgetManager.getInstance(this);
+		currentApiPacket = new ApiPacket();
 		messenger = new Messenger(new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -74,32 +77,11 @@ public class RadioService extends Service implements OnPreparedListener,
 		widgetTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-
-				ApiPacket resultPacket = new ApiPacket();
-				try {
-					URL apiURl = new URL(getString(R.string.mainApiURL));
-					BufferedReader in = new BufferedReader(
-							new InputStreamReader(apiURl.openStream()));
-					String inputLine = in.readLine();
-					in.close();
-					resultPacket = ApiUtil.parseJSON(inputLine);
-					String[] songParts = resultPacket.np.split(" - ");
-					if (songParts.length == 2) {
-						resultPacket.artistName = songParts[0];
-						resultPacket.songName = songParts[1];
-					} else {
-						resultPacket.songName = songParts[0];
-						resultPacket.artistName = "-";
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 				RemoteViews view = new RemoteViews(getPackageName(),
 						R.layout.widget_layout);
-				int progress = (int) (resultPacket.cur - resultPacket.start);
-				int length = (int) (resultPacket.end - resultPacket.start);
-				view.setTextViewText(R.id.widget_NowPlaying, resultPacket.np);
+				progress++;
+				length = (int) (currentApiPacket.end - currentApiPacket.start);
+				view.setTextViewText(R.id.widget_NowPlaying, currentApiPacket.np);
 				view.setProgressBar(R.id.widget_ProgressBar, length, progress,
 						false);
 				view.setTextViewText(R.id.widget_SongLength,

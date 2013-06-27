@@ -12,11 +12,12 @@ public class RadioWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
-		
+
 		Intent i = new Intent(context, RadioService.class);
-		
-		service = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-		
+
+		service = PendingIntent.getService(context, 0, i,
+				PendingIntent.FLAG_CANCEL_CURRENT);
+
 	}
 
 }
