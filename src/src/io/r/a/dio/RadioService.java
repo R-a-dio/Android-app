@@ -80,7 +80,6 @@ public class RadioService extends Service implements OnPreparedListener,
 				RemoteViews view = new RemoteViews(getPackageName(),
 						R.layout.widget_layout);
 				progress++;
-				length = (int) (currentApiPacket.end - currentApiPacket.start);
 				view.setTextViewText(R.id.widget_NowPlaying, currentApiPacket.np);
 				view.setProgressBar(R.id.widget_ProgressBar, length, progress,
 						false);
@@ -193,6 +192,8 @@ public class RadioService extends Service implements OnPreparedListener,
 				String inputLine = in.readLine();
 				in.close();
 				resultPacket = ApiUtil.parseJSON(inputLine);
+				progress = (int) (resultPacket.cur - resultPacket.start);
+				length = (int) (resultPacket.end - resultPacket.start);
 				String[] songParts = resultPacket.np.split(" - ");
 				if (songParts.length == 2) {
 					resultPacket.artistName = songParts[0];
