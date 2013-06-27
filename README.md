@@ -21,7 +21,10 @@ r-a-dio-android
   - Song Length
   - Listener Count
 * Home Screen Widget
-  - Does nothing right now
+  - Updates and displays progressbar, songinfo, and song length. 
+  - Currently the update code is just awful. (Calls r/a/dio API every second and etc.) I feel like I barfed the widget
+  ontop of the RadioService class and stapled the two together with a staplegun only to find out later that the
+  staplegun was a nailgun and the staples were nail.
 * Behaviors Include
   - Playback upon opening application.
   - Updates information and progressbar in the background every 10 seconds with the r/a/dio API.
