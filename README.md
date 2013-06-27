@@ -22,6 +22,7 @@ r-a-dio-android
   - Listener Count
 * Home Screen Widget
   - Updates and displays progressbar, songinfo, and song length.
+  - Controls playback
 * Behaviors Include
   - Playback upon opening application.
   - Updates information and progressbar in the background every 10 seconds with the r/a/dio API.
