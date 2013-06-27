@@ -8,8 +8,11 @@ import java.util.TimerTask;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -40,6 +43,18 @@ public class RadioService extends Service implements OnPreparedListener,
 	private int progress;
 	private int length;
 
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals("restart")) {
+				restartPlayer();
+			}
+			if (intent.getAction().equals("stop")) {
+				stopPlayer();
+			}
+		}
+	};
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return binder;
@@ -49,6 +64,12 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void onCreate() {
 		notificationManager = new NotificationHandler(this);
 		widgetManager = AppWidgetManager.getInstance(this);
+		
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("restart");
+		filter.addAction("stop");
+		registerReceiver(receiver, filter);
+
 		currentApiPacket = new ApiPacket();
 		messenger = new Messenger(new Handler() {
 			@Override
@@ -80,7 +101,8 @@ public class RadioService extends Service implements OnPreparedListener,
 				RemoteViews view = new RemoteViews(getPackageName(),
 						R.layout.widget_layout);
 				progress++;
-				view.setTextViewText(R.id.widget_NowPlaying, currentApiPacket.np);
+				view.setTextViewText(R.id.widget_NowPlaying,
+						currentApiPacket.np);
 				view.setProgressBar(R.id.widget_ProgressBar, length, progress,
 						false);
 				view.setTextViewText(R.id.widget_SongLength,
@@ -234,6 +256,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	@Override
 	public void onDestroy() {
 		radioPlayer.release();
+		unregisterReceiver(receiver);
 	}
 
 }
