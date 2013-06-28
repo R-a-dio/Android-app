@@ -217,7 +217,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		protected Void doInBackground(Void... params) {
 			resultPacket = new ApiPacket();
 			try {
-				URL apiURl = new URL("http://r-a-d.io/apiphp");
+				URL apiURl = new URL(getString(R.string.mainApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
 				String inputLine = in.readLine();
