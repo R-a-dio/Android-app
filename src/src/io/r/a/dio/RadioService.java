@@ -54,7 +54,7 @@ public class RadioService extends Service implements OnPreparedListener,
 				stopPlayer();
 			}
 			if (intent.getAction().equals("api fail")) {
-				CharSequence text = "API is not reachable.\nUpdate your R/a/dio app! ";
+				CharSequence text = "The R/a/dio server doesn't seem to be responding. You may have to update the app";
 				int duration = Toast.LENGTH_SHORT;
 
 				Toast toast = Toast.makeText(context, text, duration);
