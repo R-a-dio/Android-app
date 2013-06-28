@@ -25,6 +25,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 public class RadioService extends Service implements OnPreparedListener,
 		MediaPlayer.OnErrorListener {
@@ -52,6 +53,13 @@ public class RadioService extends Service implements OnPreparedListener,
 			if (intent.getAction().equals("stop")) {
 				stopPlayer();
 			}
+			if (intent.getAction().equals("api fail")) {
+				CharSequence text = "API is not reachable.\nUpdate your R/a/dio app! ";
+				int duration = Toast.LENGTH_SHORT;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+			}
 		}
 	};
 
@@ -64,10 +72,11 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void onCreate() {
 		notificationManager = new NotificationHandler(this);
 		widgetManager = AppWidgetManager.getInstance(this);
-		
+
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("restart");
 		filter.addAction("stop");
+		filter.addAction("api fail");
 		registerReceiver(receiver, filter);
 
 		currentApiPacket = new ApiPacket();
@@ -208,7 +217,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		protected Void doInBackground(Void... params) {
 			resultPacket = new ApiPacket();
 			try {
-				URL apiURl = new URL(getString(R.string.mainApiURL));
+				URL apiURl = new URL("http://r-a-d.io/apiphp");
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
 				String inputLine = in.readLine();
@@ -227,6 +236,10 @@ public class RadioService extends Service implements OnPreparedListener,
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.out.println("Api getter failed");
+				Intent intent = new Intent();
+				intent.setAction("api fail");
+				sendBroadcast(intent);
 			}
 			return null;
 		}
