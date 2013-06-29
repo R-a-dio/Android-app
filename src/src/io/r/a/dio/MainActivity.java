@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_layout_scroll);
-		
+
 		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
 		artistName = (TextView) findViewById(R.id.main_ArtistName);
@@ -92,8 +92,8 @@ public class MainActivity extends Activity {
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
 		listeners = (TextView) findViewById(R.id.main_Listeners);
 		songLength = (TextView) findViewById(R.id.main_SongLength);
-		
-		//Start Radio service
+
+		// Start Radio service
 		startService();
 
 		// Start progress timer to estimate progress between api updates
@@ -116,8 +116,8 @@ public class MainActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		// unbindService(serviceConnection);
-
+		unbindService(serviceConnection);
+		stopService(new Intent(MainActivity.this, RadioService.class));
 		progressTimer.cancel();
 	}
 
