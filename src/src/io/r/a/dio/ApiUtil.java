@@ -10,6 +10,7 @@ public class ApiUtil {
 	public static final int NPUPDATE = 0;
 	public static final int ACTIVITYCONNECTED = 1;
 	public static final int ACTIVITYDISCONNECTED = 2;
+	public static final int PROGRESSUPDATE = 3;
 
 	public static ApiPacket parseJSON(String JSON) throws Exception {
 		ApiPacket pack = new ApiPacket();
@@ -75,7 +76,36 @@ public class ApiUtil {
 			pack.queue = Arrays.copyOf(array, array.length, Tracks[].class);
 		}
 
+		pack.progress = (int)(pack.cur - pack.start);
+		pack.length = (int)(pack.end - pack.start);
 		return pack;
+	}
+	
+	static public String formatSongLength(int progress, int length) {
+		StringBuilder sb = new StringBuilder();
 
+		int progMins = progress / 60;
+		int progSecs = progress % 60;
+		if (progMins < 10)
+			sb.append("0");
+		sb.append(progMins);
+		sb.append(":");
+		if (progSecs < 10)
+			sb.append("0");
+		sb.append(progSecs);
+
+		sb.append(" / ");
+
+		int lenMins = length / 60;
+		int lenSecs = length % 60;
+		if (lenMins < 10)
+			sb.append("0");
+		sb.append(lenMins);
+		sb.append(":");
+		if (lenSecs < 10)
+			sb.append("0");
+		sb.append(lenSecs);
+
+		return sb.toString();
 	}
 }

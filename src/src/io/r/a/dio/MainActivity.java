@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 	private TextView artistName;
 	private TextView djName;
 	private ProgressBar songProgressBar;
-	private Timer progressBarTimer;
+	private Timer progressTimer;
 	private ImageView djImage;
 	private TextView listeners;
 	private TextView songLength;
@@ -71,15 +71,10 @@ public class MainActivity extends Activity {
 				ApiPacket packet = (ApiPacket) msg.obj;
 				MainActivity.this.updateNP(packet);
 			}
-		}
-	};
-
-	public Handler mHandler = new Handler() {
-		public void handleMessage(Message msg) {
-			if (msg.what == 99) {
+			if (msg.what == ApiUtil.PROGRESSUPDATE) {
 				progress++;
 				songProgressBar.setProgress(progress);
-				songLength.setText(formatSongLength(progress, length));
+				songLength.setText(ApiUtil.formatSongLength(progress, length));
 			}
 		}
 	};
@@ -88,6 +83,8 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_layout_scroll);
+		
+		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
 		artistName = (TextView) findViewById(R.id.main_ArtistName);
 		djName = (TextView) findViewById(R.id.main_DjName);
@@ -95,13 +92,22 @@ public class MainActivity extends Activity {
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
 		listeners = (TextView) findViewById(R.id.main_Listeners);
 		songLength = (TextView) findViewById(R.id.main_SongLength);
+		
+		//Start Radio service
 		startService();
 
-		progressBarTimer = new Timer();
-		progressBarTimer.scheduleAtFixedRate(new TimerTask() {
+		// Start progress timer to estimate progress between api updates
+		progressTimer = new Timer();
+		progressTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				mHandler.obtainMessage(99).sendToTarget();
+				Message msg = Message.obtain();
+				msg.what = ApiUtil.PROGRESSUPDATE;
+				try {
+					mMessenger.send(msg);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 		}, 0, 1000);
@@ -111,6 +117,8 @@ public class MainActivity extends Activity {
 	public void onDestroy() {
 		super.onDestroy();
 		// unbindService(serviceConnection);
+
+		progressTimer.cancel();
 	}
 
 	public void startService() {
@@ -167,34 +175,6 @@ public class MainActivity extends Activity {
 
 	private String lastDjImg = "";
 
-	private String formatSongLength(int progress, int length) {
-		StringBuilder sb = new StringBuilder();
-
-		int progMins = progress / 60;
-		int progSecs = progress % 60;
-		if (progMins < 10)
-			sb.append("0");
-		sb.append(progMins);
-		sb.append(":");
-		if (progSecs < 10)
-			sb.append("0");
-		sb.append(progSecs);
-
-		sb.append(" / ");
-
-		int lenMins = length / 60;
-		int lenSecs = length % 60;
-		if (lenMins < 10)
-			sb.append("0");
-		sb.append(lenMins);
-		sb.append(":");
-		if (lenSecs < 10)
-			sb.append("0");
-		sb.append(lenSecs);
-
-		return sb.toString();
-	}
-
 	private void updateNP(ApiPacket packet) {
 		progress = (int) (packet.cur - packet.start);
 		length = (int) (packet.end - packet.start);
@@ -210,7 +190,7 @@ public class MainActivity extends Activity {
 
 		}
 		listeners.setText("Listeners: " + packet.list);
-		songLength.setText(formatSongLength(progress, length));
+		songLength.setText(ApiUtil.formatSongLength(progress, length));
 
 		LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
 		queueLayout.removeAllViews();
@@ -296,6 +276,7 @@ public class MainActivity extends Activity {
 			if (image != null) {
 				djImage.setImageBitmap(image);
 				service.updateNotificationImage(image);
+				service.updateWidgetImage(image);
 			}
 		}
 

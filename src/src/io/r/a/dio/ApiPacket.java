@@ -19,7 +19,8 @@ public class ApiPacket {
 	public String artistName;
     public Tracks[] queue;
     public Tracks[] lastPlayed;
-
+    public int progress;
+    public int length;
 
     public ApiPacket() {
 		online = false;

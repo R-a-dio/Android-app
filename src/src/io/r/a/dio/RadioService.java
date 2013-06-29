@@ -33,7 +33,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	private Messenger messenger;
 	private boolean activityConnected;
 	private Messenger activityMessenger;
-	private ApiPacket currentApiPacket;
+	private ApiPacket currentPacket = new ApiPacket();
 	private NotificationHandler notificationManager;
 	private Timer apiDataTimer;
 	private Timer widgetTimer;
@@ -41,8 +41,6 @@ public class RadioService extends Service implements OnPreparedListener,
 	public static boolean serviceStarted = false;
 	public static RadioService service;
 	AppWidgetManager widgetManager;
-	private int progress;
-	private int length;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -72,14 +70,11 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void onCreate() {
 		notificationManager = new NotificationHandler(this);
 		widgetManager = AppWidgetManager.getInstance(this);
+		service = this;
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction("restart");
-		filter.addAction("stop");
-		filter.addAction("api fail");
-		registerReceiver(receiver, filter);
+		registerBroadcasts();
+		initializeTimers();
 
-		currentApiPacket = new ApiPacket();
 		messenger = new Messenger(new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -96,6 +91,32 @@ public class RadioService extends Service implements OnPreparedListener,
 		});
 		this.startForeground(NotificationHandler.CONSTANTNOTIFICATION,
 				notificationManager.constantNotification());
+
+		radioPlayer = new MediaPlayer();
+		radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		radioPlayer.setOnPreparedListener(this);
+		try {
+			radioPlayer.setDataSource(getString(R.string.streamURL));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		radioPlayer.prepareAsync();
+
+	}
+
+	public void onPrepared(MediaPlayer mp) {
+		radioPlayer.start();
+	}
+
+	public void registerBroadcasts() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("restart");
+		filter.addAction("stop");
+		filter.addAction("api fail");
+		registerReceiver(receiver, filter);
+	}
+
+	public void initializeTimers() {
 		apiDataTimer = new Timer();
 		apiDataTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -109,13 +130,13 @@ public class RadioService extends Service implements OnPreparedListener,
 			public void run() {
 				RemoteViews view = new RemoteViews(getPackageName(),
 						R.layout.widget_layout);
-				progress++;
-				view.setTextViewText(R.id.widget_NowPlaying,
-						currentApiPacket.np);
-				view.setProgressBar(R.id.widget_ProgressBar, length, progress,
-						false);
-				view.setTextViewText(R.id.widget_SongLength,
-						formatSongLength(progress, length));
+				currentPacket.progress++;
+				view.setTextViewText(R.id.widget_NowPlaying, currentPacket.np);
+				view.setProgressBar(R.id.widget_ProgressBar,
+						currentPacket.length, currentPacket.progress, false);
+				view.setTextViewText(R.id.widget_SongLength, ApiUtil
+						.formatSongLength(currentPacket.progress,
+								currentPacket.length));
 
 				// Push update for this widget to the home screen
 				ComponentName thisWidget = new ComponentName(
@@ -125,52 +146,10 @@ public class RadioService extends Service implements OnPreparedListener,
 				manager.updateAppWidget(thisWidget, view);
 			}
 		}, 0, 1000);
-		radioPlayer = new MediaPlayer();
-		radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		radioPlayer.setOnPreparedListener(this);
-		try {
-			radioPlayer.setDataSource(getString(R.string.streamURL));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		radioPlayer.prepareAsync();
-		service = this;
-	}
-
-	public void onPrepared(MediaPlayer mp) {
-		radioPlayer.start();
 	}
 
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		return true;
-	}
-
-	private String formatSongLength(int progress, int length) {
-		StringBuilder sb = new StringBuilder();
-
-		int progMins = progress / 60;
-		int progSecs = progress % 60;
-		if (progMins < 10)
-			sb.append("0");
-		sb.append(progMins);
-		sb.append(":");
-		if (progSecs < 10)
-			sb.append("0");
-		sb.append(progSecs);
-
-		sb.append(" / ");
-
-		int lenMins = length / 60;
-		int lenSecs = length % 60;
-		if (lenMins < 10)
-			sb.append("0");
-		sb.append(lenMins);
-		sb.append(":");
-		if (lenSecs < 10)
-			sb.append("0");
-		sb.append(lenSecs);
-
-		return sb.toString();
 	}
 
 	public void stopPlayer() {
@@ -223,8 +202,6 @@ public class RadioService extends Service implements OnPreparedListener,
 				String inputLine = in.readLine();
 				in.close();
 				resultPacket = ApiUtil.parseJSON(inputLine);
-				progress = (int) (resultPacket.cur - resultPacket.start);
-				length = (int) (resultPacket.end - resultPacket.start);
 				String[] songParts = resultPacket.np.split(" - ");
 				if (songParts.length == 2) {
 					resultPacket.artistName = songParts[0];
@@ -246,10 +223,10 @@ public class RadioService extends Service implements OnPreparedListener,
 
 		@Override
 		protected void onPostExecute(Void result) {
-			currentApiPacket = resultPacket;
+			currentPacket = resultPacket;
 			Message m = Message.obtain();
 			m.what = ApiUtil.NPUPDATE;
-			m.obj = currentApiPacket;
+			m.obj = currentPacket;
 			if (activityConnected) {
 				try {
 					activityMessenger.send(m);
@@ -257,19 +234,34 @@ public class RadioService extends Service implements OnPreparedListener,
 					// Whatever...
 				}
 			}
-			notificationManager.updateNotificationWithInfo(currentApiPacket);
+			notificationManager.updateNotificationWithInfo(currentPacket);
 		}
 
 	}
 
 	public void updateNotificationImage(Bitmap image) {
-		notificationManager.updateNotificationImage(currentApiPacket, image);
+		notificationManager.updateNotificationImage(currentPacket, image);
+	}
+
+	public void updateWidgetImage(Bitmap image) {
+		RemoteViews view = new RemoteViews(getPackageName(),
+				R.layout.widget_layout);
+		view.setImageViewBitmap(R.id.widget_djImage, image);
+
+		// Push update for this widget to the home screen
+		ComponentName thisWidget = new ComponentName(getApplicationContext(),
+				RadioWidgetProvider.class);
+		AppWidgetManager manager = AppWidgetManager
+				.getInstance(getApplicationContext());
+		manager.updateAppWidget(thisWidget, view);
 	}
 
 	@Override
 	public void onDestroy() {
 		radioPlayer.release();
 		unregisterReceiver(receiver);
+		widgetTimer.cancel();
+		apiDataTimer.cancel();
 	}
 
 }
