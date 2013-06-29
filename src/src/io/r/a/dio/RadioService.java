@@ -35,8 +35,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	private Messenger activityMessenger;
 	private ApiPacket currentPacket = new ApiPacket();
 	private NotificationHandler notificationManager;
-	private Timer apiDataTimer;
-	private Timer widgetTimer;
+	private Timer updateTimer;
 	MediaPlayer radioPlayer;
 	public static boolean serviceStarted = false;
 	public static RadioService service;
@@ -117,15 +116,18 @@ public class RadioService extends Service implements OnPreparedListener,
 	}
 
 	public void initializeTimers() {
-		apiDataTimer = new Timer();
-		apiDataTimer.scheduleAtFixedRate(new TimerTask() {
+		updateTimer = new Timer();
+		
+		// Schedule API updates every 10 seconds
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				updateApiData();
 			}
 		}, 0, 10000);
-		widgetTimer = new Timer();
-		widgetTimer.scheduleAtFixedRate(new TimerTask() {
+		
+		// Schedule widget update every second
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				RemoteViews view = new RemoteViews(getPackageName(),
@@ -153,6 +155,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	}
 
 	public void stopPlayer() {
+		updateTimer.cancel();
 		radioPlayer.reset();
 	}
 
@@ -260,8 +263,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void onDestroy() {
 		radioPlayer.release();
 		unregisterReceiver(receiver);
-		widgetTimer.cancel();
-		apiDataTimer.cancel();
+		updateTimer.cancel();
 	}
 
 }
