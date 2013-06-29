@@ -1,4 +1,4 @@
-package io.r.a.dio;
+package io.radio.android;
 
 import java.util.ArrayList;
 import java.util.Arrays;

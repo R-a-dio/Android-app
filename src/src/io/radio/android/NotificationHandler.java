@@ -1,4 +1,4 @@
-package io.r.a.dio;
+package io.radio.android;
 
 import android.app.Notification;
 import android.app.NotificationManager;

@@ -1,4 +1,4 @@
-package io.r.a.dio;
+package io.radio.android;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
