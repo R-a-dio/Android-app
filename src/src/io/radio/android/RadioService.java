@@ -161,7 +161,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	}
 
 	public void stopPlayer() {
-		updateTimer.cancel();
+		//updateTimer.cancel();
 		radioPlayer.reset();
         currentlyPlaying = false;
 	}
