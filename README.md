@@ -1,13 +1,15 @@
 r-a-dio-android
 ===============
 
+<style type="text/css">
+#screenshots {
+margin-left: auto;
+margin-right: auto;
+}
+</style>
+
 
 ***Current Features/Behavior/Progress is listed with made up categories. Screenshots are the current progress with the layout.***
-<img src="http://i.imgur.com/eKDCCPg.png"
- alt="screenshot" title="Current Look" align="right" />
- 
-<img src="http://i.imgur.com/tqgS8j6.png"
- alt="screenshot" title="Current Look" align="right" />
 
 > * Notifications Display
   - Now playing song 
@@ -31,3 +33,11 @@ r-a-dio-android
   - Progressbar and song length in Main Application Activity Display updates every second with estimation.  
 * Interactions Include
   - Play and Stop toggle
+
+### Screenshots
+
+><img src="http://i.imgur.com/eKDCCPg.png"
+ alt="screenshot" title="Current Look" height="200px" width="200px"/>
+<img src="http://i.imgur.com/DCQ32k7.png" alt="screenshot" title="Current Look" height="200px" width="200px" />
+<img src="http://i.imgur.com/tqgS8j6.png"
+ alt="screenshot" title="Current Look" height="200px" width="200px"/>
