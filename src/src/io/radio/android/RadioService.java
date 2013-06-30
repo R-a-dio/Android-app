@@ -99,7 +99,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		radioPlayer.prepareAsync();
+		//radioPlayer.prepareAsync(); // Doesn't start service on app start.
 
 	}
 
