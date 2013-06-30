@@ -102,7 +102,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//radioPlayer.prepareAsync(); // Doesn't start service on app start.
+
 	}
 
 	public void onPrepared(MediaPlayer mp) {
