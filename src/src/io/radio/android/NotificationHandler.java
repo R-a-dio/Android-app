@@ -24,15 +24,32 @@ public class NotificationHandler {
     private NotificationCompat.Builder baseNotification() {
         Intent notifyIntent = new Intent(Intent.ACTION_MAIN);
         notifyIntent.setClass(context, MainActivity.class);
-        PendingIntent intent = PendingIntent.getActivity(context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent openActivityIntent = PendingIntent.getActivity(context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent playIntent = new Intent();
+        playIntent.setAction("restart");
+
+        PendingIntent playPendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(), 0, playIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent stopIntent = new Intent();
+        stopIntent.setAction("restart");
+
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(), 0, stopIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+
 
         return new NotificationCompat.Builder(context)
                 .setContentTitle("R/a/dio")
                 .setContentText(" ")
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setContentIntent(intent)
-                .addAction(R.drawable.ic_media_play, "Play", null)
-                .addAction(R.drawable.ic_media_stop, "Stop", null)
+                .setContentIntent(openActivityIntent)
+                .setOngoing(true)
+                .addAction(R.drawable.ic_media_play, "Play", playPendingIntent)
+                .addAction(R.drawable.ic_media_stop, "Stop", stopPendingIntent)
                 .setLargeIcon(
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
     }
@@ -40,6 +57,20 @@ public class NotificationHandler {
     public Notification constantNotification() {
         Notification n = baseNotification().build();
         return n;
+    }
+
+    public void newSongTickerNotification(String songName, String artistName) {
+        String ns = Context.NOTIFICATION_SERVICE;
+        Notification n = baseNotification().setTicker("Now playing: " + songName + " - " + artistName).build();
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
+        mNotificationManager.notify(CONSTANTNOTIFICATION, n);
+    }
+
+    public void newDjTickerNotification(String djName) {
+        String ns = Context.NOTIFICATION_SERVICE;
+        Notification n = baseNotification().setTicker(djName + " is now streaming!").build();
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
+        mNotificationManager.notify(CONSTANTNOTIFICATION, n);
     }
 
 	public void updateNotificationImage(ApiPacket currentPacket, Bitmap image) {
@@ -55,7 +86,6 @@ public class NotificationHandler {
 	}
 
 	public void updateNotificationWithInfo(ApiPacket currentPacket) {
-
         String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 		Notification n = baseNotification()
@@ -63,7 +93,8 @@ public class NotificationHandler {
 				.setContentText(currentPacket.np)
 				.setLargeIcon(
 						currentImage != null ? currentImage : BitmapFactory.decodeResource(
-								context.getResources(), R.drawable.ic_launcher)).build();
+								context.getResources(), R.drawable.ic_launcher))
+                .build();
 		mNotificationManager.notify(CONSTANTNOTIFICATION, n);
 	}
 }
