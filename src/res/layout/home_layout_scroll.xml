@@ -44,6 +44,16 @@
                     android:textColor="#ffffff"
                     android:textSize="17sp" />
             </LinearLayout>
+
+            <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/main_streamLoading"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="invisible"/>
+
         </RelativeLayout>
 
         <LinearLayout

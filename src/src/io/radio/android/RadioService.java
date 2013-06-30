@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 

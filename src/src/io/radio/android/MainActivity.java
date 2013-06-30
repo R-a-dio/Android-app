@@ -162,6 +162,7 @@ public class MainActivity extends Activity {
             } else {
                 service.restartPlayer();
                 service.updateApiData();
+                // need indication to the user that the stream is loading ie progressbar
             }
             return true;
 		case R.id.menu_share:
