@@ -43,8 +43,6 @@ public class MainActivity extends Activity {
 	private int progress;
 	private int length;
 
-    private boolean currentlyPlaying;
-
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
 			service = ((RadioService.LocalBinder) binder).getService();
@@ -145,8 +143,8 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem playButton = menu.findItem(R.id.menu_play);
-        if (currentlyPlaying) {
+        MenuItem playButton = menu.findItem(R.id.menu_play_toggle);
+        if (service.currentlyPlaying) {
             playButton.setIcon(R.drawable.ic_media_stop);
         } else {
             playButton.setIcon(R.drawable.ic_media_play);
@@ -157,14 +155,15 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_play:
-			service.restartPlayer();
-			service.updateApiData();
+		case R.id.menu_play_toggle:
             invalidateOptionsMenu();
+            if (service.currentlyPlaying) {
+                service.stopPlayer();
+            } else {
+                service.restartPlayer();
+                service.updateApiData();
+            }
             return true;
-		case R.id.menu_pause:
-			service.stopPlayer();
-			return true;
 		case R.id.menu_share:
 			shareTrack();
 			return true;

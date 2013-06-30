@@ -1,12 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_play"
+    <item android:id="@+id/menu_play_toggle"
         android:icon="@drawable/ic_media_play"
         android:title="Play"
         android:showAsAction="always" />
-    <item android:id="@+id/menu_pause"
-          android:icon="@drawable/ic_media_pause"
-          android:title="Pause"
-          android:showAsAction="always" />
     <item android:id="@+id/menu_share"
         android:icon="@drawable/ic_menu_share"
         android:title="Share Current Track"
