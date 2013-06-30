@@ -12,6 +12,8 @@ r-a-dio-android
 > * Notifications Display
   - Now playing song 
   - DJ   
+  - Play and Stop controls
+  - Displays song and DJ changes
 * Main Application Activity Display (vertical scroll)
   - DJ
   - Progress Bar
@@ -28,5 +30,4 @@ r-a-dio-android
   - Updates information and progressbar in the background every 10 seconds with the r/a/dio API.
   - Progressbar and song length in Main Application Activity Display updates every second with estimation.  
 * Interactions Include
-  - Play button
-  - Pause button
+  - Play and Stop toggle
