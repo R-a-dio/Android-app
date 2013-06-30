@@ -37,7 +37,7 @@ margin-right: auto;
 ### Screenshots
 
 ><img src="http://i.imgur.com/eKDCCPg.png"
- alt="screenshot" title="Current Look" height="200px" width="200px"/>
-<img src="http://i.imgur.com/DCQ32k7.png" alt="screenshot" title="Current Look" height="200px" width="200px" />
+ alt="screenshot" title="Current Look" height="400px" width="240px"/>
+<img src="http://i.imgur.com/DCQ32k7.png" alt="screenshot" title="Current Look" height="400px" width="240px" />
 <img src="http://i.imgur.com/tqgS8j6.png"
- alt="screenshot" title="Current Look" height="200px" width="200px"/>
+ alt="screenshot" title="Current Look" height="400px" width="240px"/>
