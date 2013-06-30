@@ -42,6 +42,10 @@ public class RadioService extends Service implements OnPreparedListener,
 	public static RadioService service;
 	AppWidgetManager widgetManager;
 
+    public String currentDj = "";
+    public String currentSong = "";
+    public String currentArtist = "";
+
     public static boolean currentlyPlaying = false;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -102,7 +106,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//radioPlayer.prepareAsync(); // Doesn't start service on app start.
+
 	}
 
 	public void onPrepared(MediaPlayer mp) {
@@ -240,6 +244,15 @@ public class RadioService extends Service implements OnPreparedListener,
 					// Whatever...
 				}
 			}
+            if (!currentArtist.equals(currentPacket.artistName) && !currentSong.equals(currentPacket.songName)) {
+                notificationManager.newSongTickerNotification(currentPacket.songName, currentPacket.artistName);
+                currentArtist = currentPacket.artistName;
+                currentSong = currentPacket.songName;
+            }
+            if (!currentDj.equals(currentPacket.dj)) {
+                notificationManager.newDjTickerNotification(currentPacket.dj);
+                currentDj = currentPacket.dj;
+            }
 			notificationManager.updateNotificationWithInfo(currentPacket);
 		}
 

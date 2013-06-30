@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.media.RemoteControlClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -111,7 +114,20 @@ public class MainActivity extends Activity {
 			}
 
 		}, 0, 1000);
-	}
+        /*
+        ComponentName eventRecevier = new ComponentName(getPackageName(), LockscreenReceiver.class.getName());
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.registerMediaButtonEventReceiver(eventRecevier);
+        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        mediaButtonIntent.setComponent(eventRecevier);
+        PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, mediaButtonIntent, 0);
+        RemoteControlClient remoteControlClient = new RemoteControlClient(mediaPendingIntent);
+        remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
+        remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY | RemoteControlClient.FLAG_KEY_MEDIA_STOP);
+        audioManager.registerRemoteControlClient(remoteControlClient);
+        audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        */
+    }
 
 	@Override
 	public void onDestroy() {
