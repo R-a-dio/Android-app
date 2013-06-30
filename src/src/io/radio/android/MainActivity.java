@@ -200,7 +200,6 @@ public class MainActivity extends Activity {
 		i.putExtra(Intent.EXTRA_TEXT, shareText);
 
 		startActivity(Intent.createChooser(i, shareHeading));
-
 	}
 
 	private String lastDjImg = "";
