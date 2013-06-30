@@ -1,14 +1,6 @@
 r-a-dio-android
 ===============
 
-<style type="text/css">
-#screenshots {
-margin-left: auto;
-margin-right: auto;
-}
-</style>
-
-
 ***Current Features/Behavior/Progress is listed with made up categories. Screenshots are the current progress with the layout.***
 
 > * Notifications Display
