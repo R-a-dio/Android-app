@@ -141,16 +141,30 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem playButton = menu.findItem(R.id.menu_play_toggle);
+        if (service.currentlyPlaying) {
+            playButton.setIcon(R.drawable.ic_media_stop);
+        } else {
+            playButton.setIcon(R.drawable.ic_media_play);
+        }
+        return true;
+    }
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_play:
-			service.restartPlayer();
-			service.updateApiData();
-			return true;
-		case R.id.menu_pause:
-			service.stopPlayer();
-			return true;
+		case R.id.menu_play_toggle:
+            invalidateOptionsMenu();
+            if (service.currentlyPlaying) {
+                service.stopPlayer();
+            } else {
+                service.restartPlayer();
+                service.updateApiData();
+                // need indication to the user that the stream is loading ie progressbar
+            }
+            return true;
 		case R.id.menu_share:
 			shareTrack();
 			return true;

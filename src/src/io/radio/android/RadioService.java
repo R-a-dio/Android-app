@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class RadioService extends Service implements OnPreparedListener,
 	public static boolean serviceStarted = false;
 	public static RadioService service;
 	AppWidgetManager widgetManager;
+
+    public static boolean currentlyPlaying = false;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -99,8 +102,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		radioPlayer.prepareAsync();
-
+		//radioPlayer.prepareAsync(); // Doesn't start service on app start.
 	}
 
 	public void onPrepared(MediaPlayer mp) {
@@ -157,6 +159,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void stopPlayer() {
 		updateTimer.cancel();
 		radioPlayer.reset();
+        currentlyPlaying = false;
 	}
 
 	// call
@@ -168,8 +171,8 @@ public class RadioService extends Service implements OnPreparedListener,
 			e.printStackTrace();
 		}
 		radioPlayer.prepareAsync();
-
-	}
+        currentlyPlaying = true;
+    }
 
 	public Messenger getMessenger() {
 		return this.messenger;

@@ -1,5 +1,6 @@
 package io.radio.android;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,57 +30,47 @@ public class ApiUtil {
 		pack.thread = jObj.getString("thread");
 
 		JSONArray lpArray = jObj.getJSONArray("lp");
-
-		ArrayList<Tracks> lastPlayedList = new ArrayList<Tracks>();
-		for (int i = 0; i < lpArray.length(); i++) {
-			JSONArray lpObj = (JSONArray) lpArray.get(i);
-			String track = lpObj.getString(1);
-			String[] details = track.split(" - ");
-			String songName = "-";
-			String artistName = "-";
-
-			// checking against songs
-			if (details.length == 2) {
-				songName = details[0];
-				artistName = details[1];
-			} else if (details.length == 1) {
-				songName = details[0];
-			}
-			boolean isRequest = lpObj.getInt(2) == 1 ? true : false;
-			lastPlayedList.add(new Tracks(songName, artistName, isRequest));
-		}
-		Object[] array = lastPlayedList.toArray();
-		pack.lastPlayed = Arrays.copyOf(array, array.length, Tracks[].class);
+        pack.lastPlayed = getTracks(lpArray);
 
 		// queue is null during a DJ session
 		if (jObj.has("queue")) {
 			JSONArray queueArray = jObj.getJSONArray("queue");
-
-			ArrayList<Tracks> queueList = new ArrayList<Tracks>();
-			for (int i = 0; i < queueArray.length(); i++) {
-				JSONArray lpObj = (JSONArray) queueArray.get(i);
-				String track = lpObj.getString(1);
-				String[] details = track.split(" - ");
-				String songName = "-";
-				String artistName = "-";
-				if (details.length == 2) {
-					songName = details[0];
-					artistName = details[1];
-				} else if (details.length == 1) {
-					songName = details[0];
-				}
-
-				boolean isRequest = lpObj.getInt(2) == 1 ? true : false;
-				queueList.add(new Tracks(songName, artistName, isRequest));
-			}
-			array = queueList.toArray();
-			pack.queue = Arrays.copyOf(array, array.length, Tracks[].class);
+            pack.queue = getTracks(queueArray);
 		}
 
 		pack.progress = (int)(pack.cur - pack.start);
 		pack.length = (int)(pack.end - pack.start);
 		return pack;
 	}
+
+    private static Tracks[] getTracks(JSONArray JSONarray) {
+        ArrayList<Tracks> list = new ArrayList<Tracks>();
+            for (int i = 0; i < JSONarray.length(); i++) {
+                JSONArray obj = null;
+                String track = "";
+                boolean isRequest = false;
+                try {
+                    obj = (JSONArray) JSONarray.get(i);
+                    track = obj.getString(1);
+                    isRequest = obj.getInt(2) == 1 ? true : false;
+                } catch (Exception e) {}
+                String[] details = track.split(" - ");
+                String songName = "-";
+                String artistName = "-";
+                if (details.length == 2) {
+                    try {
+                        songName = URLDecoder.decode(details[0], "UTF-8");
+                        artistName = URLDecoder.decode(details[1], "UTF-8");
+                    } catch (Exception e) {}
+                } else if (details.length == 1) {
+                    songName = details[0];
+                }
+
+                list.add(new Tracks(songName, artistName, isRequest));
+            }
+            Object[] array = list.toArray();
+            return Arrays.copyOf(array, array.length, Tracks[].class);
+    }
 	
 	static public String formatSongLength(int progress, int length) {
 		StringBuilder sb = new StringBuilder();
