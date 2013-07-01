@@ -10,5 +10,7 @@
 
     <string name="search_hint">Search for a song.</string>
     <string name="requestApiPath">http://r-a-d.io/request/index.py</string>
+    <string name="Queue">Queue</string>
+    <string name="lastplayed">Last Played</string>
 
 </resources>

@@ -156,7 +156,7 @@
             android:layout_centerHorizontal="true"
             android:flipInterval="2"
             android:layout_below="@+id/linearLayout"
-            android:layout_above="@id/main_SongProgress">
+            android:layout_above="@id/main_SongLength">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -199,19 +199,63 @@
 
         </LinearLayout>
 
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/player_page_upcoming">
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/player_queuescroll"
+                android:layout_below="@id/main_SongProgress">
 
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/textView"/>
-        </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/player_page_upcoming">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/Queue"
+                        android:id="@+id/textView2"
+                        android:textColor="#ffffff"
+                        android:shadowColor="#9f000000"
+                        android:shadowDx="3.0"
+                        android:shadowDy="3.0"
+                        android:shadowRadius="3.0"
+                        android:layout_gravity="center"
+                        android:textSize="18dp"
+                        android:layout_marginTop="20dp"/>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@id/queueList">
+                </LinearLayout>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/lastplayed"
+                        android:id="@+id/textView2"
+                        android:textColor="#ffffff"
+                        android:shadowColor="#9f000000"
+                        android:shadowDx="3.0"
+                        android:shadowDy="3.0"
+                        android:shadowRadius="3.0"
+                        android:layout_gravity="center"
+                        android:textSize="18dp"
+                        android:layout_marginTop="20dp"/>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@id/lastPlayedList">
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
 
     </ViewFlipper>
 
@@ -220,7 +264,8 @@
             android:layout_height="match_parent"
             android:id="@+id/player_gestureoverlay"
             android:layout_below="@+id/linearLayout"
-            android:layout_above="@+id/linearLayout2">
+            android:layout_above="@+id/linearLayout2"
+            android:gestureColor="#00000000">
     </android.gesture.GestureOverlayView>
 
 </RelativeLayout>

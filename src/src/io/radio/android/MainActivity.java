@@ -8,6 +8,8 @@ import android.content.ServiceConnection;
 import android.gesture.GestureOverlayView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,8 +18,10 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,8 +30,10 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -56,6 +62,7 @@ public class MainActivity extends Activity {
     private PopupMenu contextMenu;
     private ViewFlipper viewFlipper;
     private GestureOverlayView gestureOverlay;
+    private ScrollView queueScroll;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -155,11 +162,15 @@ public class MainActivity extends Activity {
             }
         });
         viewFlipper = (ViewFlipper) findViewById(R.id.player_flipper);
+        queueScroll = (ScrollView) findViewById(R.id.player_queuescroll);
         gestureOverlay = (GestureOverlayView) findViewById(R.id.player_gestureoverlay);
         final GestureDetector gestureDetector = new GestureDetector(this, new Detector());
         View.OnTouchListener gestureListener = new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                return gestureDetector.onTouchEvent(motionEvent);
+               if (!gestureDetector.onTouchEvent(motionEvent))
+                    return queueScroll.onTouchEvent(motionEvent);
+               else
+                    return true;
             }
         };
         gestureOverlay.setOnTouchListener(gestureListener);
@@ -225,6 +236,7 @@ public class MainActivity extends Activity {
         private static final int SWIPE_MIN_DISTANCE = 120;
         private static final int SWIPE_MAX_OFF_PATH = 250;
         private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -317,9 +329,9 @@ public class MainActivity extends Activity {
 	private void updateNP(ApiPacket packet) {
 		progress = (int) (packet.cur - packet.start);
 		length = (int) (packet.end - packet.start);
-		songName.setText(packet.songName);
-		artistName.setText(packet.artistName);
-		djName.setText(packet.dj);
+		songName.setText(Html.fromHtml(packet.songName));
+		artistName.setText(Html.fromHtml(packet.artistName));
+		djName.setText(Html.fromHtml(packet.dj));
 		songProgressBar.setMax(length);
 		songProgressBar.setProgress(progress);
 		if (!lastDjImg.equals(packet.djimg)) {
@@ -331,19 +343,22 @@ public class MainActivity extends Activity {
 		listeners.setText("Listeners: " + packet.list);
 		songLength.setText(ApiUtil.formatSongLength(progress, length));
 
-        /*
+
 		LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
 		queueLayout.removeAllViews();
 		LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if (packet.queue != null) {
+
+        if (packet.queue != null) {
 			for (Tracks t : packet.queue) {
 				View v = vi.inflate(R.layout.track_tableview, null);
 				TextView artistName = (TextView) v
 						.findViewById(R.id.track_artistName);
 				TextView songName = (TextView) v
 						.findViewById(R.id.track_songName);
-				artistName.setText(t.artistName);
-				songName.setText(t.songName);
+                configureQueueTextView(artistName);
+                configureQueueTextView(songName);
+				artistName.setText(Html.fromHtml(t.artistName));
+				songName.setText(Html.fromHtml(t.songName));
 				if (t.isRequest) {
 					artistName.setTypeface(null, Typeface.BOLD);
 					songName.setTypeface(null, Typeface.BOLD);
@@ -357,6 +372,8 @@ public class MainActivity extends Activity {
 			TextView songName = (TextView) v.findViewById(R.id.track_songName);
 			artistName.setText("-");
 			songName.setText("-");
+            configureQueueTextView(artistName);
+            configureQueueTextView(songName);
 			queueLayout.addView(v);
 		}
 
@@ -369,8 +386,10 @@ public class MainActivity extends Activity {
 						.findViewById(R.id.track_artistName);
 				TextView songName = (TextView) v
 						.findViewById(R.id.track_songName);
-				artistName.setText(t.artistName);
-				songName.setText(t.songName);
+                configureQueueTextView(artistName);
+                configureQueueTextView(songName);
+				artistName.setText(Html.fromHtml(t.artistName));
+				songName.setText(Html.fromHtml(t.songName));
 				if (t.isRequest) {
 					artistName.setTypeface(null, Typeface.BOLD);
 					songName.setTypeface(null, Typeface.BOLD);
@@ -382,13 +401,20 @@ public class MainActivity extends Activity {
 			TextView artistName = (TextView) v
 					.findViewById(R.id.track_artistName);
 			TextView songName = (TextView) v.findViewById(R.id.track_songName);
+            configureQueueTextView(artistName);
+            configureQueueTextView(songName);
 			artistName.setText("-");
 			songName.setText("-");
 			lpLayout.addView(v);
 		}
-		*/
+
 
 	}
+    private void configureQueueTextView(TextView v)
+    {
+        v.setTextColor(Color.WHITE);
+        v.setShadowLayer(3.0f,3.0f,3.0f,Color.parseColor("#9f000000"));
+    }
 
 	private class DJImageLoader extends AsyncTask<ApiPacket, Void, Void> {
 		private Bitmap image;
