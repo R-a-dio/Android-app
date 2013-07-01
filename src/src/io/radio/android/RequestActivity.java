@@ -8,10 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,20 @@ import java.util.List;
 /**
  * Created by aki on 1/07/13.
  */
+
+/*
+    TO DO
+        - indication of requesting status in the search results
+        - indication of cooldown
+        -- extract from "You have to wait another 1 hour, 58 minutes, 32 seconds before requesting again. (Updates every 2 minutes)"
+        - nicer looking results list
+        - autocomplete?
+        - not redo search on orientation change
+        - indication when search fails
+        - indication when loading search results
+
+ */
+
 public class RequestActivity extends ListActivity {
 
     private SongAdapter adapter = null;
@@ -54,6 +70,18 @@ public class RequestActivity extends ListActivity {
             new SearchTask().execute(query);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_search, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+        return true;
+    }
+
 
     protected class SearchPage {
         public boolean status;
@@ -193,7 +221,7 @@ public class RequestActivity extends ListActivity {
         protected Void doInBackground(String... songId) {
             try {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://r-a-d.io/request/index.py");
+                HttpPost httpPost = new HttpPost(getString(R.string.requestApiPath));
                 List<NameValuePair> params = new ArrayList<NameValuePair>(1);
                 params.add(new BasicNameValuePair("songid", songId[0]));
                 httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
@@ -223,14 +251,27 @@ public class RequestActivity extends ListActivity {
             return null;
         }
 
-        // TO DO - switch on responses defined in
-        // https://github.com/R-a-dio/Hanyuu-sama/blob/1.2/requests_.py
-        //
-
         protected void onPostExecute(Void v) {
-            // check if song requested
-            System.out.println(postBody);
-            Toast.makeText(getApplicationContext(), "Song successfully requested!", Toast.LENGTH_LONG).show();
+            //System.out.println(postBody);
+            String resultText;
+
+            // switches on responses defined in
+            // https://github.com/R-a-dio/Hanyuu-sama/blob/1.2/requests_.py
+
+            if (postBody.matches(".*You need to wait longer before requesting again.*")) {
+                resultText = "You need to wait longer before requesting again.";
+            } else if (postBody.matches(".*You need to wait longer before requesting this song.*")) {
+                resultText = "You need to wait longer before requesting this song.";
+            } else if (postBody.matches(".*Thank you for making your request!.*")) {
+                resultText = "Thank you for making your request!";
+            } else if (postBody.matches(".*Invalid parameter.*")) {
+                resultText = "Invalid parameter.";
+            } else if (postBody.matches(".*You can't request songs at the moment.*")) {
+                resultText = "You can't request songs at the moment.";
+            } else {
+                resultText = "Unknown error";
+            }
+            Toast.makeText(getApplicationContext(), resultText, Toast.LENGTH_LONG).show();
         }
     }
 

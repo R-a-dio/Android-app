@@ -29,12 +29,15 @@
                        android:value=".RequestActivity" />
 
         </activity>
-        <activity android:name=".RequestActivity">
+        <activity android:name=".RequestActivity"
+                  android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <meta-data android:name="android.app.searchable"
                        android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".RequestActivity" />
         </activity>
 
         <service android:name=".RadioService" />

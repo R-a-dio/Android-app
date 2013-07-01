@@ -9,5 +9,6 @@
     <string name="searchApiURL">http://r-a-d.io/search/api.php</string>
 
     <string name="search_hint">Search for a song.</string>
+    <string name="requestApiPath">http://r-a-d.io/request/index.py</string>
 
 </resources>
