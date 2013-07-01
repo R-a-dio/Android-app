@@ -105,6 +105,10 @@ public class MainActivity extends Activity {
 				songProgressBar.setProgress(progress);
 				songLength.setText(ApiUtil.formatSongLength(progress, length));
 			}
+            if (msg.what==ApiUtil.MUSICSTOP||msg.what==ApiUtil.MUSICSTART)
+            {
+                updatePlayButton();
+            }
 		}
 	};
 
@@ -137,7 +141,7 @@ public class MainActivity extends Activity {
                     service.updateApiData();
                     // need indication to the user that the stream is loading ie progressbar
                 }
-                updatePlayButton();
+                //Service will notify play button status
             }
         });
         shareButton = (ImageButton) findViewById(R.id.player_share);

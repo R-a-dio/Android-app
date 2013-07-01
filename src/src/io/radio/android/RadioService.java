@@ -163,6 +163,17 @@ public class RadioService extends Service implements OnPreparedListener,
 		//updateTimer.cancel();
 		radioPlayer.reset();
         currentlyPlaying = false;
+
+        Message m = Message.obtain();
+        m.what = ApiUtil.MUSICSTOP;
+        m.obj = currentPacket;
+        if (activityConnected) {
+            try {
+                activityMessenger.send(m);
+            } catch (RemoteException e) {
+                // Whatever...
+            }
+        }
 	}
 
 	// call
@@ -175,6 +186,17 @@ public class RadioService extends Service implements OnPreparedListener,
 		}
 		radioPlayer.prepareAsync();
         currentlyPlaying = true;
+
+        Message m = Message.obtain();
+        m.what = ApiUtil.MUSICSTART;
+        m.obj = currentPacket;
+        if (activityConnected) {
+            try {
+                activityMessenger.send(m);
+            } catch (RemoteException e) {
+                // Whatever...
+            }
+        }
     }
 
 	public Messenger getMessenger() {

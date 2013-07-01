@@ -12,8 +12,11 @@ public class ApiUtil {
 	public static final int ACTIVITYCONNECTED = 1;
 	public static final int ACTIVITYDISCONNECTED = 2;
 	public static final int PROGRESSUPDATE = 3;
+    public static final int MUSICSTART = 4;
+    public static final int MUSICSTOP = 5;
 
-	public static ApiPacket parseJSON(String JSON) throws Exception {
+
+    public static ApiPacket parseJSON(String JSON) throws Exception {
 		ApiPacket pack = new ApiPacket();
 
 		JSONObject jObj = new JSONObject(JSON);
