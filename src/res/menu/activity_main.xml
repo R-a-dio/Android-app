@@ -3,6 +3,11 @@
         android:icon="@drawable/ic_media_play"
         android:title="Play"
         android:showAsAction="always" />
+    <item android:id="@+id/menu_search"
+          android:icon="@drawable/ic_menu_search"
+          android:title="Search"
+          android:actionViewClass="android.widget.SearchView"
+          android:showAsAction="always" />
     <item android:id="@+id/menu_share"
         android:icon="@drawable/ic_menu_share"
         android:title="Share Current Track"

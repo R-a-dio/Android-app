@@ -6,5 +6,8 @@
     <string name="title_activity_main">R/a/dio</string>
     <string name="streamURL">http://r-a-d.io/lb/load-balance.php</string>
     <string name="mainApiURL">http://r-a-d.io/api.php</string>
+    <string name="searchApiURL">http://r-a-d.io/search/api.php</string>
+
+    <string name="search_hint">Search for a song.</string>
 
 </resources>
