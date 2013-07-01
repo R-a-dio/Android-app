@@ -87,6 +87,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_layout_scroll);
 
+        //Allow keys to change volume without playing
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
 		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
 		artistName = (TextView) findViewById(R.id.main_ArtistName);
