@@ -1,15 +1,13 @@
 package io.radio.android;
 
 import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.widget.RemoteViews;
+import android.support.v4.app.NotificationCompat;
 
 
 public class NotificationHandler {

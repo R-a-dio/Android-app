@@ -7,7 +7,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.AudioManager;
-import android.media.RemoteControlClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
