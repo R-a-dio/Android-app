@@ -1,21 +1,13 @@
 package io.radio.android;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.gesture.GestureOverlayView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,15 +16,26 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.view.LayoutInflater;
-import android.view.Menu;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends Activity {
 	RadioService service;
@@ -46,6 +49,13 @@ public class MainActivity extends Activity {
 	private TextView songLength;
 	private int progress;
 	private int length;
+    private ImageButton playButton;
+    private ImageButton shareButton;
+    private ImageButton searchButton;
+    private ImageButton contextButton;
+    private PopupMenu contextMenu;
+    private ViewFlipper viewFlipper;
+    private GestureOverlayView gestureOverlay;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -86,7 +96,8 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home_layout_scroll);
+		setContentView(R.layout.player_layout);
+        getActionBar().hide();
 
         //Allow keys to change volume without playing
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -99,8 +110,62 @@ public class MainActivity extends Activity {
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
 		listeners = (TextView) findViewById(R.id.main_Listeners);
 		songLength = (TextView) findViewById(R.id.main_SongLength);
+        // Set up controls
+        playButton = (ImageButton) findViewById(R.id.player_play);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (service.currentlyPlaying) {
+                    service.stopPlayer();
+                } else {
+                    service.restartPlayer();
+                    service.updateApiData();
+                    // need indication to the user that the stream is loading ie progressbar
+                }
+                updatePlayButton();
+            }
+        });
+        shareButton = (ImageButton) findViewById(R.id.player_share);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareTrack();
+            }
+        });
+        searchButton = (ImageButton) findViewById(R.id.player_search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSearchRequested();
+            }
+        });
+        contextButton = (ImageButton) findViewById(R.id.player_context);
+        contextMenu = new PopupMenu(MainActivity.this,contextButton);
+        contextMenu.inflate(R.menu.activity_main);
+        contextMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                return false;
+            }
+        });
+        contextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                contextMenu.show();
+            }
+        });
+        viewFlipper = (ViewFlipper) findViewById(R.id.player_flipper);
+        gestureOverlay = (GestureOverlayView) findViewById(R.id.player_gestureoverlay);
+        final GestureDetector gestureDetector = new GestureDetector(this, new Detector());
+        View.OnTouchListener gestureListener = new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return gestureDetector.onTouchEvent(motionEvent);
+            }
+        };
+        gestureOverlay.setOnTouchListener(gestureListener);
 
-		// Start Radio service
+
+        // Start Radio service
 		startService();
 
 		// Start progress timer to estimate progress between api updates
@@ -155,50 +220,86 @@ public class MainActivity extends Activity {
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+    private class Detector extends GestureDetector.SimpleOnGestureListener {
+        private static final String TAG = "Detector";
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 250;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true);
-        return true;
-	}
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem playButton = menu.findItem(R.id.menu_play_toggle);
-        if (service.currentlyPlaying) {
-            playButton.setIcon(R.drawable.ic_media_stop);
-        } else {
-            playButton.setIcon(R.drawable.ic_media_play);
+                //Right
+                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if (viewFlipper.getCurrentView().getId() != R.id.player_page_upcoming)
+                    {
+                        viewFlipper.setInAnimation(inFromRightAnimation());
+                        viewFlipper.setOutAnimation(outToLeftAnimation());
+                        viewFlipper.showNext();
+                    }
+                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if (viewFlipper.getCurrentView().getId() != R.id.player_page_current)
+                    {
+                        viewFlipper.setInAnimation(inFromLeftAnimation());
+                        viewFlipper.setOutAnimation(outToRightAnimation());
+                        viewFlipper.showPrevious();
+                    }
+                }
+            } catch (Exception ex) {
+                Log.e(this.TAG, ex.getMessage());
+            }
+
+            return true;
         }
-        return true;
+        private Animation inFromRightAnimation() {
+
+            Animation inFromRight = new TranslateAnimation(
+                    Animation.RELATIVE_TO_PARENT,  +1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
+                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+            );
+            inFromRight.setDuration(500);
+            inFromRight.setInterpolator(new AccelerateInterpolator());
+            return inFromRight;
+        }
+        private Animation outToLeftAnimation() {
+            Animation outtoLeft = new TranslateAnimation(
+                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  -1.0f,
+                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+            );
+            outtoLeft.setDuration(500);
+            outtoLeft.setInterpolator(new AccelerateInterpolator());
+            return outtoLeft;
+        }
+        private Animation inFromLeftAnimation() {
+            Animation inFromLeft = new TranslateAnimation(
+                    Animation.RELATIVE_TO_PARENT,  -1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
+                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+            );
+            inFromLeft.setDuration(500);
+            inFromLeft.setInterpolator(new AccelerateInterpolator());
+            return inFromLeft;
+        }
+        private Animation outToRightAnimation() {
+            Animation outtoRight = new TranslateAnimation(
+                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  +1.0f,
+                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+            );
+            outtoRight.setDuration(500);
+            outtoRight.setInterpolator(new AccelerateInterpolator());
+            return outtoRight;
+        }
     }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_play_toggle:
-            invalidateOptionsMenu();
-            if (service.currentlyPlaying) {
-                service.stopPlayer();
-            } else {
-                service.restartPlayer();
-                service.updateApiData();
-                // need indication to the user that the stream is loading ie progressbar
-            }
-            return true;
-		case R.id.menu_share:
-			shareTrack();
-			return true;
-		case R.id.menu_settings:
-			// do nothing
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+    private void updatePlayButton(){
+        if (service.currentlyPlaying) {
+            playButton.setImageResource(R.drawable.av_stop);
+        } else {
+            playButton.setImageResource(R.drawable.av_play);
+        }
+    }
 
 	private void shareTrack() {
 		String shareHeading = "Share track title.";
@@ -230,6 +331,7 @@ public class MainActivity extends Activity {
 		listeners.setText("Listeners: " + packet.list);
 		songLength.setText(ApiUtil.formatSongLength(progress, length));
 
+        /*
 		LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
 		queueLayout.removeAllViews();
 		LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -284,6 +386,7 @@ public class MainActivity extends Activity {
 			songName.setText("-");
 			lpLayout.addView(v);
 		}
+		*/
 
 	}
 
