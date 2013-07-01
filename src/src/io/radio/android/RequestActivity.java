@@ -193,7 +193,7 @@ public class RequestActivity extends ListActivity {
         protected Void doInBackground(String... songId) {
             try {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://r-a-d.io/request/");
+                HttpPost httpPost = new HttpPost("http://r-a-d.io/request/index.py");
                 List<NameValuePair> params = new ArrayList<NameValuePair>(1);
                 params.add(new BasicNameValuePair("songid", songId[0]));
                 httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
@@ -222,6 +222,10 @@ public class RequestActivity extends ListActivity {
             }
             return null;
         }
+
+        // TO DO - switch on responses defined in
+        // https://github.com/R-a-dio/Hanyuu-sama/blob/1.2/requests_.py
+        //
 
         protected void onPostExecute(Void v) {
             // check if song requested
