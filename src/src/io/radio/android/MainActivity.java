@@ -17,7 +17,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.AudioManager;
-import android.media.RemoteControlClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -88,6 +87,9 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_layout_scroll);
+
+        //Allow keys to change volume without playing
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
