@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.gesture.GestureOverlayView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,10 +22,12 @@ import android.os.RemoteException;
 import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -35,6 +38,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.io.InputStream;
@@ -43,7 +47,11 @@ import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.xml.datatype.Duration;
+
 public class MainActivity extends Activity {
+    public static String PREFS_FILENAME = "RADIOPREFS";
+
 	RadioService service;
 	private TextView songName;
 	private TextView artistName;
@@ -207,6 +215,22 @@ public class MainActivity extends Activity {
         audioManager.registerRemoteControlClient(remoteControlClient);
         audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         */
+
+        SharedPreferences pref = getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE);
+        if (!pref.getBoolean("player_firstrun_hint_shown",false))
+        {
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.player_intro_toast_layout,
+                    (ViewGroup) findViewById(R.id.relativeLayout1));
+            Toast toast = new Toast(this);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.setView(view);
+            toast.show();
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("player_firstrun_hint_shown",true);
+            editor.apply();
+        }
     }
 
 	@Override
@@ -272,7 +296,7 @@ public class MainActivity extends Activity {
                     Animation.RELATIVE_TO_PARENT,  +1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
                     Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
             );
-            inFromRight.setDuration(500);
+            inFromRight.setDuration(350);
             inFromRight.setInterpolator(new AccelerateInterpolator());
             return inFromRight;
         }
@@ -281,7 +305,7 @@ public class MainActivity extends Activity {
                     Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  -1.0f,
                     Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
             );
-            outtoLeft.setDuration(500);
+            outtoLeft.setDuration(350);
             outtoLeft.setInterpolator(new AccelerateInterpolator());
             return outtoLeft;
         }
@@ -290,7 +314,7 @@ public class MainActivity extends Activity {
                     Animation.RELATIVE_TO_PARENT,  -1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
                     Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
             );
-            inFromLeft.setDuration(500);
+            inFromLeft.setDuration(350);
             inFromLeft.setInterpolator(new AccelerateInterpolator());
             return inFromLeft;
         }
@@ -299,7 +323,7 @@ public class MainActivity extends Activity {
                     Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  +1.0f,
                     Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
             );
-            outtoRight.setDuration(500);
+            outtoRight.setDuration(350);
             outtoRight.setInterpolator(new AccelerateInterpolator());
             return outtoRight;
         }

@@ -12,5 +12,6 @@
     <string name="requestApiPath">http://r-a-d.io/request/index.py</string>
     <string name="Queue">Queue</string>
     <string name="lastplayed">Last Played</string>
+    <string name="player_gesture_tip">Swipe left for more info</string>
 
 </resources>
