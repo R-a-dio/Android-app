@@ -1,6 +1,7 @@
 package io.radio.android;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 public class ApiPacket {
 	public boolean online;
@@ -21,6 +22,7 @@ public class ApiPacket {
     public Tracks[] lastPlayed;
     public int progress;
     public int length;
+    public int djColor;
 
     public ApiPacket() {
 		online = false;
@@ -36,6 +38,7 @@ public class ApiPacket {
 		thread = "";
 		songName = "";
 		artistName = "";
+        djColor = Color.parseColor("#00DDFF");
 	}
 
 }

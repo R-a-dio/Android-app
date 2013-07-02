@@ -17,6 +17,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -109,6 +112,7 @@ public class MainActivity extends Activity {
             }
 		}
 	};
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
