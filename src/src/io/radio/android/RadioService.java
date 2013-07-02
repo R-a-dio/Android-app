@@ -230,9 +230,12 @@ public class RadioService extends Service implements OnPreparedListener,
 				URL apiURl = new URL(getString(R.string.mainApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
-				String inputLine = in.readLine();
+                String input ="";
+                String inputLine;
+                while ((inputLine = in.readLine())!=null)
+                    input+=inputLine;
 				in.close();
-				resultPacket = ApiUtil.parseJSON(inputLine);
+				resultPacket = ApiUtil.parseJSON(input);
 				String[] songParts = resultPacket.np.split(" - ");
 				if (songParts.length == 2) {
 					resultPacket.artistName = songParts[0];
