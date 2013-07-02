@@ -1,5 +1,11 @@
 package io.radio.android;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -40,14 +46,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.xml.datatype.Duration;
 
 public class MainActivity extends Activity {
     public static String PREFS_FILENAME = "RADIOPREFS";
@@ -132,7 +130,6 @@ public class MainActivity extends Activity {
         // Set up controls
         playButton = (ImageButton) findViewById(R.id.player_play);
         playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
                 if (service.currentlyPlaying) {
                     service.stopPlayer();
@@ -146,14 +143,12 @@ public class MainActivity extends Activity {
         });
         shareButton = (ImageButton) findViewById(R.id.player_share);
         shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
                 shareTrack();
             }
         });
         searchButton = (ImageButton) findViewById(R.id.player_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
                 onSearchRequested();
             }
@@ -162,13 +157,11 @@ public class MainActivity extends Activity {
         contextMenu = new PopupMenu(MainActivity.this,contextButton);
         contextMenu.inflate(R.menu.activity_main);
         contextMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 return false;
             }
         });
         contextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
                 contextMenu.show();
             }
