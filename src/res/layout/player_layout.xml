@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/imageView"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/testimage"
-            android:scaleType="centerCrop"/>
-
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
     <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="60dp"
@@ -83,191 +77,225 @@
         </RelativeLayout>
 
     </LinearLayout>
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="80dp"
-            android:background="#d9ffffff"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:id="@+id/linearLayout2">
 
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:id="@+id/player_context"
-                android:layout_weight="1"
-                style="?android:attr/borderlessButtonStyle"
-                android:src="@drawable/collections_sort_by_size"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginLeft="50dp"/>
+<android.support.v4.widget.DrawerLayout
+        android:id="@+id/player_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <!-- The main content view -->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:id="@+id/player_play"
-                android:src="@drawable/av_play"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"/>
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/testimage"
+                android:scaleType="centerCrop"/>
 
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:id="@+id/player_share"
-                android:layout_weight="1"
-                style="?android:attr/borderlessButtonStyle"
-                android:src="@drawable/social_share"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"/>
-    </LinearLayout>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="1:20 / 5:30"
-            android:textColor="#ffffff"
-            android:shadowColor="#9f000000"
-            android:shadowDx="3.0"
-            android:shadowDy="3.0"
-            android:shadowRadius="3.0"
-            android:id="@id/main_SongLength"
-            android:layout_above="@id/main_SongProgress"
-            android:layout_centerHorizontal="true"/>
-
-    <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@id/main_SongProgress"
-            android:indeterminate="false"
-            android:layout_above="@+id/linearLayout2"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="-7dp"/>
-
-    <ViewFlipper
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/player_flipper"
-            android:layout_centerHorizontal="true"
-            android:flipInterval="2"
-            android:layout_below="@+id/linearLayout"
-            android:layout_above="@id/main_SongLength">
 
         <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/linearLayout"
-                android:layout_alignParentRight="true"
-                android:id="@+id/player_page_current">
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:background="#d9ffffff"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/linearLayout2">
 
-            <TextView
+            <ImageButton
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Song"
-                    android:gravity="center_horizontal"
-                    android:id="@id/main_SongName"
-                    android:textColor="#ffffff"
-                    android:shadowColor="#9f000000"
-                    android:shadowDx="3.0"
-                    android:shadowDy="3.0"
-                    android:shadowRadius="3.0"
-                    android:layout_gravity="center"
-                    android:textSize="22dp"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_height="fill_parent"
+                    android:id="@+id/player_context"
+                    android:layout_weight="1"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:src="@drawable/collections_sort_by_size"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"/>
 
-            <TextView
+            <ImageButton
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Artist"
-                    android:gravity="center_horizontal"
-                    android:id="@id/main_ArtistName"
-                    android:textColor="#ffffff"
-                    android:shadowColor="#9f000000"
-                    android:shadowDx="3.0"
-                    android:shadowDy="3.0"
-                    android:shadowRadius="3.0"
-                    android:textSize="16dp"
-                    android:layout_gravity="center"
-                    android:alpha="0.8"
-                    />
+                    android:layout_height="fill_parent"
+                    android:id="@+id/player_play"
+                    android:src="@drawable/av_play"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"/>
 
+            <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/player_share"
+                    android:layout_weight="1"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:src="@drawable/social_share"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"/>
         </LinearLayout>
 
-        <ScrollView
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="1:20 / 5:30"
+                android:textColor="#ffffff"
+                android:shadowColor="#9f000000"
+                android:shadowDx="3.0"
+                android:shadowDy="3.0"
+                android:shadowRadius="3.0"
+                android:id="@id/main_SongLength"
+                android:layout_above="@id/main_SongProgress"
+                android:layout_centerHorizontal="true"/>
+
+        <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@id/main_SongProgress"
+                android:indeterminate="false"
+                android:layout_above="@+id/linearLayout2"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="-7dp"/>
+
+        <ViewFlipper
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/player_queuescroll"
-                android:layout_below="@id/main_SongProgress">
+                android:id="@+id/player_flipper"
+                android:layout_centerHorizontal="true"
+                android:flipInterval="2"
+                android:layout_below="@+id/linearLayout"
+                android:layout_above="@id/main_SongLength">
 
             <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/player_page_upcoming">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/linearLayout"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/player_page_current"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp">
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/Queue"
-                        android:id="@+id/textView2"
+                        android:text="Song"
+                        android:gravity="center_horizontal"
+                        android:id="@id/main_SongName"
                         android:textColor="#ffffff"
                         android:shadowColor="#9f000000"
                         android:shadowDx="3.0"
                         android:shadowDy="3.0"
                         android:shadowRadius="3.0"
                         android:layout_gravity="center"
-                        android:textSize="18dp"
+                        android:textSize="22dp"
                         android:layout_marginTop="20dp"/>
-
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@id/queueList">
-                </LinearLayout>
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/lastplayed"
-                        android:id="@+id/textView2"
+                        android:text="Artist"
+                        android:gravity="center_horizontal"
+                        android:id="@id/main_ArtistName"
                         android:textColor="#ffffff"
                         android:shadowColor="#9f000000"
                         android:shadowDx="3.0"
                         android:shadowDy="3.0"
                         android:shadowRadius="3.0"
+                        android:textSize="16dp"
                         android:layout_gravity="center"
-                        android:textSize="18dp"
-                        android:layout_marginTop="20dp"/>
+                        android:alpha="0.8"
+                        />
 
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@id/lastPlayedList">
-                </LinearLayout>
             </LinearLayout>
-        </ScrollView>
 
-    </ViewFlipper>
+            <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/player_queuescroll"
+                    android:layout_below="@id/main_SongProgress">
 
-    <android.gesture.GestureOverlayView
-            android:layout_width="match_parent"
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/player_page_upcoming">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/Queue"
+                            android:id="@+id/textView2"
+                            android:textColor="#ffffff"
+                            android:shadowColor="#9f000000"
+                            android:shadowDx="3.0"
+                            android:shadowDy="3.0"
+                            android:shadowRadius="3.0"
+                            android:layout_gravity="center"
+                            android:textSize="18dp"
+                            android:layout_marginTop="20dp"/>
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@id/queueList">
+                    </LinearLayout>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/lastplayed"
+                            android:id="@+id/textView2"
+                            android:textColor="#ffffff"
+                            android:shadowColor="#9f000000"
+                            android:shadowDx="3.0"
+                            android:shadowDy="3.0"
+                            android:shadowRadius="3.0"
+                            android:layout_gravity="center"
+                            android:textSize="18dp"
+                            android:layout_marginTop="20dp"/>
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@id/lastPlayedList">
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+        </ViewFlipper>
+
+        <android.gesture.GestureOverlayView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/player_gestureoverlay"
+                android:layout_below="@+id/linearLayout"
+                android:layout_above="@+id/linearLayout2"
+                android:gestureColor="#00000000">
+        </android.gesture.GestureOverlayView>
+
+    </RelativeLayout>
+
+    <ListView
+            android:id="@+id/left_drawer"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
-            android:id="@+id/player_gestureoverlay"
-            android:layout_below="@+id/linearLayout"
-            android:layout_above="@+id/linearLayout2"
-            android:gestureColor="#00000000">
-    </android.gesture.GestureOverlayView>
-
-</RelativeLayout>
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="#cecece"
+            android:dividerHeight="0.5dp"
+            android:background="#d9ffffff"/>
+</android.support.v4.widget.DrawerLayout>
+    </LinearLayout>

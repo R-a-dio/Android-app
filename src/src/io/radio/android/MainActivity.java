@@ -28,6 +28,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -40,12 +41,16 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -131,6 +136,29 @@ public class MainActivity extends Activity {
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
 		listeners = (TextView) findViewById(R.id.main_Listeners);
 		songLength = (TextView) findViewById(R.id.main_SongLength);
+
+
+        //Set up drawer
+        final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.player_drawer);
+
+        LayoutInflater inflater = getLayoutInflater();
+        String[] names=new String[]{"Player", "etc..."};
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        R.layout.drawer_list_item, names));
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0)
+                {
+                    drawer.closeDrawers();
+                }
+            }
+        });
+
+
         // Set up controls
         playButton = (ImageButton) findViewById(R.id.player_play);
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +248,6 @@ public class MainActivity extends Activity {
         SharedPreferences pref = getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE);
         if (!pref.getBoolean("player_firstrun_hint_shown",false))
         {
-            LayoutInflater inflater = getLayoutInflater();
             View view = inflater.inflate(R.layout.player_intro_toast_layout,
                     (ViewGroup) findViewById(R.id.relativeLayout1));
             Toast toast = new Toast(this);
