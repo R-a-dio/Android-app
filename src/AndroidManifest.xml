@@ -26,13 +26,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".RequestActivity" />
         </activity>
         <activity
             android:name=".RequestActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:label="Request"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -43,7 +43,17 @@
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".RequestActivity" />
+
         </activity>
+        <activity android:name=".QueueActivity"
+                  android:screenOrientation="portrait"
+                  android:label="Queue"
+                android:parentActivityName=".MainActivity"/>
+        <activity android:name=".LastPlayedActivity"
+                  android:screenOrientation="portrait"
+
+                  android:label="Last Played"
+                android:parentActivityName=".MainActivity"/>
 
         <service android:name=".RadioService" />
 

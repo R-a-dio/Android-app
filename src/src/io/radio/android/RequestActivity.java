@@ -1,26 +1,5 @@
 package io.radio.android;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -37,6 +16,27 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by aki on 1/07/13.
@@ -67,6 +67,8 @@ public class RequestActivity extends ListActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             new SearchTask().execute(query);
+        } else {
+            onSearchRequested();
         }
     }
 
@@ -81,6 +83,14 @@ public class RequestActivity extends ListActivity {
         return true;
     }
 
+    @Override
+    public void onNewIntent(Intent i) {
+        if (Intent.ACTION_SEARCH.equals(i.getAction())) {
+            String query = i.getStringExtra(SearchManager.QUERY);
+            new SearchTask().execute(query);
+        }
+    }
+
 
     protected class SearchPage {
         public boolean status;
@@ -92,11 +102,12 @@ public class RequestActivity extends ListActivity {
 
         public SearchPage(String json) {
             try {
-                System.out.println(json);
                 JSONObject obj = new JSONObject(json);
                 pages = obj.getInt("pages");
+                status = obj.getBoolean("status");
 
-                if (pages > 0) {
+                if (status == false) {
+                } else if (pages > 0) {
                     status = obj.getBoolean("status");
                     cooldown = obj.getString("cooldown");
                     page = obj.getInt("page");
@@ -277,11 +288,18 @@ public class RequestActivity extends ListActivity {
     private class SearchTask extends AsyncTask<String, Void, Void> {
 
         ArrayList<SearchPage> searchPages;
+        boolean status;
 
         protected Void doInBackground(String... query) {
             searchPages = new ArrayList<SearchPage>();
             try {
                 SearchPage searchPage = new SearchPage(readJSON(query[0], 1));
+                status = searchPage.status;
+
+                if (status == false) {
+                    return null; // early exit
+                }
+
                 searchPages.add(searchPage);
                 if (searchPage.hasResults)
                 if (searchPage.pages > 1) {
@@ -313,6 +331,12 @@ public class RequestActivity extends ListActivity {
         }
 
         protected void onPostExecute(Void v) {
+
+            if (status == false) {
+                Toast.makeText(getApplicationContext(), "The APK Streamer is currently not streaming. No requests can be made.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             ArrayList<RequestSong> songs = new ArrayList<RequestSong>();
             for (SearchPage page : searchPages) {
                 if (page.hasResults)

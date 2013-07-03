@@ -1,11 +1,5 @@
 package io.radio.android;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -17,9 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ClipDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,10 +41,15 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends Activity {
     public static String PREFS_FILENAME = "RADIOPREFS";
@@ -143,7 +139,7 @@ public class MainActivity extends Activity {
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.player_drawer);
 
         LayoutInflater inflater = getLayoutInflater();
-        String[] names=new String[]{"Player", "etc..."};
+        String[] names=new String[]{"Player", "Queue", "Last Played", "etc..."};
 
         // Set the adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -151,9 +147,22 @@ public class MainActivity extends Activity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0)
-                {
-                    drawer.closeDrawers();
+                Intent intent;
+                switch(i) {
+                    case 0:
+                        drawer.closeDrawers();
+                        break;
+                    case 1:
+                        intent =  new Intent(getApplicationContext(), QueueActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        intent = new Intent(getApplicationContext(), LastPlayedActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 3:
+                    default:
+                        drawer.closeDrawers();
                 }
             }
         });
@@ -182,7 +191,7 @@ public class MainActivity extends Activity {
         searchButton = (ImageButton) findViewById(R.id.player_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                onSearchRequested();
+                startActivity(new Intent(getApplicationContext(), RequestActivity.class));
             }
         });
         contextButton = (ImageButton) findViewById(R.id.player_context);

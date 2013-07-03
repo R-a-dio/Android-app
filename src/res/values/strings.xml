@@ -13,5 +13,7 @@
     <string name="Queue">Queue</string>
     <string name="lastplayed">Last Played</string>
     <string name="player_gesture_tip">Swipe left for more info</string>
+    <string name="lastPlayedApiURL">http://r-a-d.io/lastplayed/api.php</string>
+    <string name="queueApiURL">http://r-a-d.io/queue/api.php</string>
 
 </resources>
