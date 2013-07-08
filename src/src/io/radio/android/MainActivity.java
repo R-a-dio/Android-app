@@ -145,7 +145,6 @@ public class MainActivity extends Activity {
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
         R.layout.drawer_list_item, names));
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent;
                 switch(i) {
