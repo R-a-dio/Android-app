@@ -1,6 +1,14 @@
 package io.radio.android;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +20,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioManager;
+import android.media.RemoteControlClient;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -44,12 +54,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends Activity {
 	public static String PREFS_FILENAME = "RADIOPREFS";
@@ -204,7 +208,8 @@ public class MainActivity extends Activity {
 					public boolean onMenuItemClick(MenuItem menuItem) {
 						switch (menuItem.getItemId()) {
 						case R.id.menu_settings:
-							startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+							startActivity(new Intent(getApplicationContext(),
+									SettingsActivity.class));
 							break;
 						}
 
@@ -249,26 +254,6 @@ public class MainActivity extends Activity {
 			}
 
 		}, 0, 1000);
-		/*
-		 * ComponentName eventRecevier = new ComponentName(getPackageName(),
-		 * LockscreenReceiver.class.getName()); AudioManager audioManager =
-		 * (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		 * audioManager.registerMediaButtonEventReceiver(eventRecevier); Intent
-		 * mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-		 * mediaButtonIntent.setComponent(eventRecevier); PendingIntent
-		 * mediaPendingIntent =
-		 * PendingIntent.getBroadcast(getApplicationContext(), 0,
-		 * mediaButtonIntent, 0); RemoteControlClient remoteControlClient = new
-		 * RemoteControlClient(mediaPendingIntent);
-		 * remoteControlClient.setPlaybackState
-		 * (RemoteControlClient.PLAYSTATE_STOPPED);
-		 * remoteControlClient.setTransportControlFlags
-		 * (RemoteControlClient.FLAG_KEY_MEDIA_PLAY |
-		 * RemoteControlClient.FLAG_KEY_MEDIA_STOP);
-		 * audioManager.registerRemoteControlClient(remoteControlClient);
-		 * audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC,
-		 * AudioManager.AUDIOFOCUS_GAIN);
-		 */
 
 		SharedPreferences pref = getSharedPreferences(PREFS_FILENAME,
 				Context.MODE_PRIVATE);
@@ -283,6 +268,33 @@ public class MainActivity extends Activity {
 			SharedPreferences.Editor editor = pref.edit();
 			editor.putBoolean("player_firstrun_hint_shown", true);
 			editor.apply();
+		}
+
+		// Initialize Remote Controls if SDK Version >=14
+		//initializeRemoteControls();
+	}
+
+	@TargetApi(14)
+	private void initializeRemoteControls() {
+		if (Build.VERSION.SDK_INT >= 14) {
+			ComponentName eventRecevier = new ComponentName(getPackageName(),
+					LockscreenReceiver.class.getName());
+			AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			audioManager.registerMediaButtonEventReceiver(eventRecevier);
+			Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+			mediaButtonIntent.setComponent(eventRecevier);
+			PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(
+					getApplicationContext(), 0, mediaButtonIntent, 0);
+			RemoteControlClient remoteControlClient = new RemoteControlClient(
+					mediaPendingIntent);
+			remoteControlClient
+					.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
+			remoteControlClient
+					.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
+							| RemoteControlClient.FLAG_KEY_MEDIA_STOP);
+			audioManager.registerRemoteControlClient(remoteControlClient);
+			audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC,
+					AudioManager.AUDIOFOCUS_GAIN);
 		}
 	}
 
