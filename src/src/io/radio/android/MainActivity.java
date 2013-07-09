@@ -52,7 +52,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends Activity {
-    public static String PREFS_FILENAME = "RADIOPREFS";
+	public static String PREFS_FILENAME = "RADIOPREFS";
 
 	RadioService service;
 	private TextView songName;
@@ -65,14 +65,14 @@ public class MainActivity extends Activity {
 	private TextView songLength;
 	private int progress;
 	private int length;
-    private ImageButton playButton;
-    private ImageButton shareButton;
-    private ImageButton searchButton;
-    private ImageButton contextButton;
-    private PopupMenu contextMenu;
-    private ViewFlipper viewFlipper;
-    private GestureOverlayView gestureOverlay;
-    private ScrollView queueScroll;
+	private ImageButton playButton;
+	private ImageButton shareButton;
+	private ImageButton searchButton;
+	private ImageButton contextButton;
+	private PopupMenu contextMenu;
+	private ViewFlipper viewFlipper;
+	private GestureOverlayView gestureOverlay;
+	private ScrollView queueScroll;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -107,22 +107,20 @@ public class MainActivity extends Activity {
 				songProgressBar.setProgress(progress);
 				songLength.setText(ApiUtil.formatSongLength(progress, length));
 			}
-            if (msg.what==ApiUtil.MUSICSTOP||msg.what==ApiUtil.MUSICSTART)
-            {
-                updatePlayButton();
-            }
+			if (msg.what == ApiUtil.MUSICSTOP || msg.what == ApiUtil.MUSICSTART) {
+				updatePlayButton();
+			}
 		}
 	};
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_layout);
-        getActionBar().hide();
+		getActionBar().hide();
 
-        //Allow keys to change volume without playing
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		// Allow keys to change volume without playing
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
@@ -133,95 +131,107 @@ public class MainActivity extends Activity {
 		listeners = (TextView) findViewById(R.id.main_Listeners);
 		songLength = (TextView) findViewById(R.id.main_SongLength);
 
+		// Set up drawer
+		final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.player_drawer);
 
-        //Set up drawer
-        final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.player_drawer);
+		LayoutInflater inflater = getLayoutInflater();
+		String[] names = new String[] { "Player", "Queue", "Last Played",
+				"etc..." };
 
-        LayoutInflater inflater = getLayoutInflater();
-        String[] names=new String[]{"Player", "Queue", "Last Played", "etc..."};
+		// Set the adapter for the list view
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.drawer_list_item, names));
+		mDrawerList
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					public void onItemClick(AdapterView<?> adapterView,
+							View view, int i, long l) {
+						Intent intent;
+						switch (i) {
+						case 0:
+							drawer.closeDrawers();
+							break;
+						case 1:
+							intent = new Intent(getApplicationContext(),
+									QueueActivity.class);
+							startActivity(intent);
+							break;
+						case 2:
+							intent = new Intent(getApplicationContext(),
+									LastPlayedActivity.class);
+							startActivity(intent);
+							break;
+						case 3:
+						default:
+							drawer.closeDrawers();
+						}
+					}
+				});
 
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-        R.layout.drawer_list_item, names));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent;
-                switch(i) {
-                    case 0:
-                        drawer.closeDrawers();
-                        break;
-                    case 1:
-                        intent =  new Intent(getApplicationContext(), QueueActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 2:
-                        intent = new Intent(getApplicationContext(), LastPlayedActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 3:
-                    default:
-                        drawer.closeDrawers();
-                }
-            }
-        });
+		// Set up controls
+		playButton = (ImageButton) findViewById(R.id.player_play);
+		playButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				if (service.currentlyPlaying) {
+					service.stopPlayer();
+				} else {
+					service.restartPlayer();
+					service.updateApiData();
+					// need indication to the user that the stream is loading ie
+					// progressbar
+				}
+				// Service will notify play button status
+			}
+		});
+		shareButton = (ImageButton) findViewById(R.id.player_share);
+		shareButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				shareTrack();
+			}
+		});
+		searchButton = (ImageButton) findViewById(R.id.player_search);
+		searchButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				startActivity(new Intent(getApplicationContext(),
+						RequestActivity.class));
+			}
+		});
+		contextButton = (ImageButton) findViewById(R.id.player_context);
+		contextMenu = new PopupMenu(MainActivity.this, contextButton);
+		contextMenu.inflate(R.menu.activity_main);
+		contextMenu
+				.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+					public boolean onMenuItemClick(MenuItem menuItem) {
+						switch (menuItem.getItemId()) {
+						case R.id.menu_settings:
+							startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+							break;
+						}
 
+						return false;
+					}
+				});
+		contextButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				contextMenu.show();
+			}
+		});
+		viewFlipper = (ViewFlipper) findViewById(R.id.player_flipper);
+		queueScroll = (ScrollView) findViewById(R.id.player_queuescroll);
+		gestureOverlay = (GestureOverlayView) findViewById(R.id.player_gestureoverlay);
+		final GestureDetector gestureDetector = new GestureDetector(this,
+				new Detector());
+		View.OnTouchListener gestureListener = new View.OnTouchListener() {
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				if (!gestureDetector.onTouchEvent(motionEvent))
+					return queueScroll.onTouchEvent(motionEvent);
+				else
+					return true;
+			}
+		};
+		gestureOverlay.setOnTouchListener(gestureListener);
 
-        // Set up controls
-        playButton = (ImageButton) findViewById(R.id.player_play);
-        playButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (service.currentlyPlaying) {
-                    service.stopPlayer();
-                } else {
-                    service.restartPlayer();
-                    service.updateApiData();
-                    // need indication to the user that the stream is loading ie progressbar
-                }
-                //Service will notify play button status
-            }
-        });
-        shareButton = (ImageButton) findViewById(R.id.player_share);
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                shareTrack();
-            }
-        });
-        searchButton = (ImageButton) findViewById(R.id.player_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), RequestActivity.class));
-            }
-        });
-        contextButton = (ImageButton) findViewById(R.id.player_context);
-        contextMenu = new PopupMenu(MainActivity.this,contextButton);
-        contextMenu.inflate(R.menu.activity_main);
-        contextMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                return false;
-            }
-        });
-        contextButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                contextMenu.show();
-            }
-        });
-        viewFlipper = (ViewFlipper) findViewById(R.id.player_flipper);
-        queueScroll = (ScrollView) findViewById(R.id.player_queuescroll);
-        gestureOverlay = (GestureOverlayView) findViewById(R.id.player_gestureoverlay);
-        final GestureDetector gestureDetector = new GestureDetector(this, new Detector());
-        View.OnTouchListener gestureListener = new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-               if (!gestureDetector.onTouchEvent(motionEvent))
-                    return queueScroll.onTouchEvent(motionEvent);
-               else
-                    return true;
-            }
-        };
-        gestureOverlay.setOnTouchListener(gestureListener);
-
-
-        // Start Radio service
+		// Start Radio service
 		startService();
 
 		// Start progress timer to estimate progress between api updates
@@ -239,35 +249,42 @@ public class MainActivity extends Activity {
 			}
 
 		}, 0, 1000);
-        /*
-        ComponentName eventRecevier = new ComponentName(getPackageName(), LockscreenReceiver.class.getName());
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioManager.registerMediaButtonEventReceiver(eventRecevier);
-        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-        mediaButtonIntent.setComponent(eventRecevier);
-        PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, mediaButtonIntent, 0);
-        RemoteControlClient remoteControlClient = new RemoteControlClient(mediaPendingIntent);
-        remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
-        remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY | RemoteControlClient.FLAG_KEY_MEDIA_STOP);
-        audioManager.registerRemoteControlClient(remoteControlClient);
-        audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        */
+		/*
+		 * ComponentName eventRecevier = new ComponentName(getPackageName(),
+		 * LockscreenReceiver.class.getName()); AudioManager audioManager =
+		 * (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		 * audioManager.registerMediaButtonEventReceiver(eventRecevier); Intent
+		 * mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+		 * mediaButtonIntent.setComponent(eventRecevier); PendingIntent
+		 * mediaPendingIntent =
+		 * PendingIntent.getBroadcast(getApplicationContext(), 0,
+		 * mediaButtonIntent, 0); RemoteControlClient remoteControlClient = new
+		 * RemoteControlClient(mediaPendingIntent);
+		 * remoteControlClient.setPlaybackState
+		 * (RemoteControlClient.PLAYSTATE_STOPPED);
+		 * remoteControlClient.setTransportControlFlags
+		 * (RemoteControlClient.FLAG_KEY_MEDIA_PLAY |
+		 * RemoteControlClient.FLAG_KEY_MEDIA_STOP);
+		 * audioManager.registerRemoteControlClient(remoteControlClient);
+		 * audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC,
+		 * AudioManager.AUDIOFOCUS_GAIN);
+		 */
 
-        SharedPreferences pref = getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE);
-        if (!pref.getBoolean("player_firstrun_hint_shown",false))
-        {
-            View view = inflater.inflate(R.layout.player_intro_toast_layout,
-                    (ViewGroup) findViewById(R.id.relativeLayout1));
-            Toast toast = new Toast(this);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.setView(view);
-            toast.show();
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean("player_firstrun_hint_shown",true);
-            editor.apply();
-        }
-    }
+		SharedPreferences pref = getSharedPreferences(PREFS_FILENAME,
+				Context.MODE_PRIVATE);
+		if (!pref.getBoolean("player_firstrun_hint_shown", false)) {
+			View view = inflater.inflate(R.layout.player_intro_toast_layout,
+					(ViewGroup) findViewById(R.id.relativeLayout1));
+			Toast toast = new Toast(this);
+			toast.setDuration(Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.setView(view);
+			toast.show();
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putBoolean("player_firstrun_hint_shown", true);
+			editor.apply();
+		}
+	}
 
 	@Override
 	public void onDestroy() {
@@ -291,87 +308,95 @@ public class MainActivity extends Activity {
 
 	}
 
-    private class Detector extends GestureDetector.SimpleOnGestureListener {
-        private static final String TAG = "Detector";
-        private static final int SWIPE_MIN_DISTANCE = 120;
-        private static final int SWIPE_MAX_OFF_PATH = 250;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+	private class Detector extends GestureDetector.SimpleOnGestureListener {
+		private static final String TAG = "Detector";
+		private static final int SWIPE_MIN_DISTANCE = 120;
+		private static final int SWIPE_MAX_OFF_PATH = 250;
+		private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
+			try {
+				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+					return false;
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                    return false;
+				// Right
+				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+					if (viewFlipper.getCurrentView().getId() != R.id.player_page_upcoming) {
+						viewFlipper.setInAnimation(inFromRightAnimation());
+						viewFlipper.setOutAnimation(outToLeftAnimation());
+						viewFlipper.showNext();
+					}
+				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+					if (viewFlipper.getCurrentView().getId() != R.id.player_page_current) {
+						viewFlipper.setInAnimation(inFromLeftAnimation());
+						viewFlipper.setOutAnimation(outToRightAnimation());
+						viewFlipper.showPrevious();
+					}
+				}
+			} catch (Exception ex) {
+				Log.e(this.TAG, ex.getMessage());
+			}
 
-                //Right
-                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    if (viewFlipper.getCurrentView().getId() != R.id.player_page_upcoming)
-                    {
-                        viewFlipper.setInAnimation(inFromRightAnimation());
-                        viewFlipper.setOutAnimation(outToLeftAnimation());
-                        viewFlipper.showNext();
-                    }
-                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    if (viewFlipper.getCurrentView().getId() != R.id.player_page_current)
-                    {
-                        viewFlipper.setInAnimation(inFromLeftAnimation());
-                        viewFlipper.setOutAnimation(outToRightAnimation());
-                        viewFlipper.showPrevious();
-                    }
-                }
-            } catch (Exception ex) {
-                Log.e(this.TAG, ex.getMessage());
-            }
+			return true;
+		}
 
-            return true;
-        }
-        private Animation inFromRightAnimation() {
+		private Animation inFromRightAnimation() {
 
-            Animation inFromRight = new TranslateAnimation(
-                    Animation.RELATIVE_TO_PARENT,  +1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
-                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-            );
-            inFromRight.setDuration(350);
-            inFromRight.setInterpolator(new AccelerateInterpolator());
-            return inFromRight;
-        }
-        private Animation outToLeftAnimation() {
-            Animation outtoLeft = new TranslateAnimation(
-                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  -1.0f,
-                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-            );
-            outtoLeft.setDuration(350);
-            outtoLeft.setInterpolator(new AccelerateInterpolator());
-            return outtoLeft;
-        }
-        private Animation inFromLeftAnimation() {
-            Animation inFromLeft = new TranslateAnimation(
-                    Animation.RELATIVE_TO_PARENT,  -1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
-                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-            );
-            inFromLeft.setDuration(350);
-            inFromLeft.setInterpolator(new AccelerateInterpolator());
-            return inFromLeft;
-        }
-        private Animation outToRightAnimation() {
-            Animation outtoRight = new TranslateAnimation(
-                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  +1.0f,
-                    Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-            );
-            outtoRight.setDuration(350);
-            outtoRight.setInterpolator(new AccelerateInterpolator());
-            return outtoRight;
-        }
-    }
+			Animation inFromRight = new TranslateAnimation(
+					Animation.RELATIVE_TO_PARENT, +1.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f);
+			inFromRight.setDuration(350);
+			inFromRight.setInterpolator(new AccelerateInterpolator());
+			return inFromRight;
+		}
 
-    private void updatePlayButton(){
-        if (service.currentlyPlaying) {
-            playButton.setImageResource(R.drawable.av_stop);
-        } else {
-            playButton.setImageResource(R.drawable.av_play);
-        }
-    }
+		private Animation outToLeftAnimation() {
+			Animation outtoLeft = new TranslateAnimation(
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, -1.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f);
+			outtoLeft.setDuration(350);
+			outtoLeft.setInterpolator(new AccelerateInterpolator());
+			return outtoLeft;
+		}
+
+		private Animation inFromLeftAnimation() {
+			Animation inFromLeft = new TranslateAnimation(
+					Animation.RELATIVE_TO_PARENT, -1.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f);
+			inFromLeft.setDuration(350);
+			inFromLeft.setInterpolator(new AccelerateInterpolator());
+			return inFromLeft;
+		}
+
+		private Animation outToRightAnimation() {
+			Animation outtoRight = new TranslateAnimation(
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, +1.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f,
+					Animation.RELATIVE_TO_PARENT, 0.0f);
+			outtoRight.setDuration(350);
+			outtoRight.setInterpolator(new AccelerateInterpolator());
+			return outtoRight;
+		}
+	}
+
+	private void updatePlayButton() {
+		if (service.currentlyPlaying) {
+			playButton.setImageResource(R.drawable.av_stop);
+		} else {
+			playButton.setImageResource(R.drawable.av_play);
+		}
+	}
 
 	private void shareTrack() {
 		String shareHeading = "Share track title.";
@@ -403,20 +428,19 @@ public class MainActivity extends Activity {
 		listeners.setText("Listeners: " + packet.list);
 		songLength.setText(ApiUtil.formatSongLength(progress, length));
 
-
 		LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
 		queueLayout.removeAllViews();
 		LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (packet.queue != null) {
+		if (packet.queue != null) {
 			for (Tracks t : packet.queue) {
 				View v = vi.inflate(R.layout.track_tableview, null);
 				TextView artistName = (TextView) v
 						.findViewById(R.id.track_artistName);
 				TextView songName = (TextView) v
 						.findViewById(R.id.track_songName);
-                configureQueueTextView(artistName);
-                configureQueueTextView(songName);
+				configureQueueTextView(artistName);
+				configureQueueTextView(songName);
 				artistName.setText(Html.fromHtml(t.artistName));
 				songName.setText(Html.fromHtml(t.songName));
 				if (t.isRequest) {
@@ -432,8 +456,8 @@ public class MainActivity extends Activity {
 			TextView songName = (TextView) v.findViewById(R.id.track_songName);
 			artistName.setText("-");
 			songName.setText("-");
-            configureQueueTextView(artistName);
-            configureQueueTextView(songName);
+			configureQueueTextView(artistName);
+			configureQueueTextView(songName);
 			queueLayout.addView(v);
 		}
 
@@ -446,8 +470,8 @@ public class MainActivity extends Activity {
 						.findViewById(R.id.track_artistName);
 				TextView songName = (TextView) v
 						.findViewById(R.id.track_songName);
-                configureQueueTextView(artistName);
-                configureQueueTextView(songName);
+				configureQueueTextView(artistName);
+				configureQueueTextView(songName);
 				artistName.setText(Html.fromHtml(t.artistName));
 				songName.setText(Html.fromHtml(t.songName));
 				if (t.isRequest) {
@@ -461,20 +485,19 @@ public class MainActivity extends Activity {
 			TextView artistName = (TextView) v
 					.findViewById(R.id.track_artistName);
 			TextView songName = (TextView) v.findViewById(R.id.track_songName);
-            configureQueueTextView(artistName);
-            configureQueueTextView(songName);
+			configureQueueTextView(artistName);
+			configureQueueTextView(songName);
 			artistName.setText("-");
 			songName.setText("-");
 			lpLayout.addView(v);
 		}
 
-
 	}
-    private void configureQueueTextView(TextView v)
-    {
-        v.setTextColor(Color.WHITE);
-        v.setShadowLayer(3.0f,3.0f,3.0f,Color.parseColor("#9f000000"));
-    }
+
+	private void configureQueueTextView(TextView v) {
+		v.setTextColor(Color.WHITE);
+		v.setShadowLayer(3.0f, 3.0f, 3.0f, Color.parseColor("#9f000000"));
+	}
 
 	private class DJImageLoader extends AsyncTask<ApiPacket, Void, Void> {
 		private Bitmap image;

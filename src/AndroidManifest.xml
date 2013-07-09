@@ -67,6 +67,7 @@
         </receiver>
         
         <receiver android:name=".LockscreenReceiver" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
