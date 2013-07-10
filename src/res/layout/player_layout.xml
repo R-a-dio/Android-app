@@ -169,8 +169,6 @@
                 android:layout_centerHorizontal="true"
                 android:flipInterval="2" >
 
-                
-
                 <ScrollView
                     android:id="@+id/player_lpscroll"
                     android:layout_width="match_parent"
@@ -207,12 +205,50 @@
                     </LinearLayout>
                 </ScrollView>
 
-                <LinearLayout android:id="@+id/player_page_current" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_alignParentRight="true" android:layout_below="@+id/linearLayout" android:orientation="vertical" android:paddingLeft="4dp" android:paddingRight="4dp">
+                <LinearLayout
+                    android:id="@+id/player_page_current"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/linearLayout"
+                    android:orientation="vertical"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp" >
 
-                    <TextView android:id="@id/main_SongName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="20dp" android:gravity="center_horizontal" android:shadowColor="#9f000000" android:shadowDx="3.0" android:shadowDy="3.0" android:shadowRadius="3.0" android:text="Song" android:textAppearance="?android:attr/textAppearanceLarge" android:textColor="#ffffff" android:textSize="22dp" />
+                    <TextView
+                        android:id="@id/main_SongName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center_horizontal"
+                        android:shadowColor="#9f000000"
+                        android:shadowDx="3.0"
+                        android:shadowDy="3.0"
+                        android:shadowRadius="3.0"
+                        android:text="Song"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#ffffff"
+                        android:textSize="22dp" />
 
-                    <TextView android:id="@id/main_ArtistName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:alpha="0.8" android:gravity="center_horizontal" android:shadowColor="#9f000000" android:shadowDx="3.0" android:shadowDy="3.0" android:shadowRadius="3.0" android:text="Artist" android:textAppearance="?android:attr/textAppearanceLarge" android:textColor="#ffffff" android:textSize="16dp" />
-                </LinearLayout><ScrollView
+                    <TextView
+                        android:id="@id/main_ArtistName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alpha="0.8"
+                        android:gravity="center_horizontal"
+                        android:shadowColor="#9f000000"
+                        android:shadowDx="3.0"
+                        android:shadowDy="3.0"
+                        android:shadowRadius="3.0"
+                        android:text="Artist"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#ffffff"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <ScrollView
                     android:id="@+id/player_queuescroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
