@@ -7,12 +7,11 @@
     <string name="streamURL">http://r-a-d.io/lb/load-balance.php</string>
     <string name="mainApiURL">http://r-a-d.io/api.php</string>
     <string name="searchApiURL">http://r-a-d.io/search/api.php</string>
-
     <string name="search_hint">Search for a song.</string>
     <string name="requestApiPath">http://r-a-d.io/request/index.py</string>
     <string name="Queue">Queue</string>
     <string name="lastplayed">Last Played</string>
-    <string name="player_gesture_tip">Swipe left for more info</string>
+    <string name="player_gesture_tip">Try swiping Left or Right for more info!</string>
     <string name="lastPlayedApiURL">http://r-a-d.io/lastplayed/api.php</string>
     <string name="queueApiURL">http://r-a-d.io/queue/api.php</string>
 
