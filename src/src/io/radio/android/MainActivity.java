@@ -206,7 +206,7 @@ public class MainActivity extends Activity {
 		faveButton = (ImageButton) findViewById(R.id.player_fave);
 		faveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				
+
 			}
 		});
 		viewFlipper = (ViewFlipper) findViewById(R.id.player_flipper);
@@ -224,6 +224,7 @@ public class MainActivity extends Activity {
 			}
 		};
 		gestureOverlay.setOnTouchListener(gestureListener);
+		viewFlipper.setDisplayedChild(1);
 
 		// Start Radio service
 		startService();
@@ -322,20 +323,30 @@ public class MainActivity extends Activity {
 				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
 					return false;
 
-				// Right
-				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					if (viewFlipper.getCurrentView().getId() != R.id.player_page_upcoming) {
+				// Swipe to the Left <-O
+				if (goRight(e1, e2, velocityX)) {
+					System.out.println("goRight");
+					switch (viewFlipper.getCurrentView().getId()) {
+					case R.id.player_page_lp:
+					case R.id.player_page_current:
+					case R.id.player_lpscroll:
 						viewFlipper.setInAnimation(inFromRightAnimation());
 						viewFlipper.setOutAnimation(outToLeftAnimation());
 						viewFlipper.showNext();
+						break;
 					}
-				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					if (viewFlipper.getCurrentView().getId() != R.id.player_page_current) {
+				}
+				// Swipe to the right O->
+				else if (goLeft(e1, e2, velocityX)) {
+					System.out.println("goLeft");
+					switch (viewFlipper.getCurrentView().getId()) {
+					case R.id.player_page_upcoming:
+					case R.id.player_page_current:
+					case R.id.player_queuescroll:
 						viewFlipper.setInAnimation(inFromLeftAnimation());
 						viewFlipper.setOutAnimation(outToRightAnimation());
 						viewFlipper.showPrevious();
+						break;
 					}
 				}
 			} catch (Exception ex) {
@@ -343,6 +354,20 @@ public class MainActivity extends Activity {
 			}
 
 			return true;
+		}
+
+		private boolean goRight(MotionEvent e1, MotionEvent e2, float v) {
+			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+					&& Math.abs(v) > SWIPE_THRESHOLD_VELOCITY)
+				return true;
+			return false;
+		}
+
+		private boolean goLeft(MotionEvent e1, MotionEvent e2, float v) {
+			if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+					&& Math.abs(v) > SWIPE_THRESHOLD_VELOCITY)
+				return true;
+			return false;
 		}
 
 		private Animation inFromRightAnimation() {
