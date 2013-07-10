@@ -140,8 +140,8 @@ public class MainActivity extends Activity {
 		final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.player_drawer);
 
 		LayoutInflater inflater = getLayoutInflater();
-		String[] names = new String[] { "Player", "Queue", "Last Played",
-				"etc..." };
+		String[] names = new String[] { "Now Playing", "Last Played", "Queue",
+				"Favorites", "etc..." };
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -157,15 +157,16 @@ public class MainActivity extends Activity {
 							break;
 						case 1:
 							intent = new Intent(getApplicationContext(),
-									QueueActivity.class);
+									LastPlayedActivity.class);
 							startActivity(intent);
 							break;
 						case 2:
 							intent = new Intent(getApplicationContext(),
-									LastPlayedActivity.class);
+									QueueActivity.class);
 							startActivity(intent);
 							break;
 						case 3:
+							break;
 						default:
 							drawer.closeDrawers();
 						}
@@ -271,7 +272,7 @@ public class MainActivity extends Activity {
 		}
 
 		// Initialize Remote Controls if SDK Version >=14
-		//initializeRemoteControls();
+		// initializeRemoteControls();
 	}
 
 	@TargetApi(14)
@@ -440,38 +441,8 @@ public class MainActivity extends Activity {
 		listeners.setText("Listeners: " + packet.list);
 		songLength.setText(ApiUtil.formatSongLength(progress, length));
 
-		LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
-		queueLayout.removeAllViews();
+		// Display the Last Played and Queue from API Packet
 		LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		if (packet.queue != null) {
-			for (Tracks t : packet.queue) {
-				View v = vi.inflate(R.layout.track_tableview, null);
-				TextView artistName = (TextView) v
-						.findViewById(R.id.track_artistName);
-				TextView songName = (TextView) v
-						.findViewById(R.id.track_songName);
-				configureQueueTextView(artistName);
-				configureQueueTextView(songName);
-				artistName.setText(Html.fromHtml(t.artistName));
-				songName.setText(Html.fromHtml(t.songName));
-				if (t.isRequest) {
-					artistName.setTypeface(null, Typeface.BOLD);
-					songName.setTypeface(null, Typeface.BOLD);
-				}
-				queueLayout.addView(v);
-			}
-		} else {
-			View v = vi.inflate(R.layout.track_tableview, null);
-			TextView artistName = (TextView) v
-					.findViewById(R.id.track_artistName);
-			TextView songName = (TextView) v.findViewById(R.id.track_songName);
-			artistName.setText("-");
-			songName.setText("-");
-			configureQueueTextView(artistName);
-			configureQueueTextView(songName);
-			queueLayout.addView(v);
-		}
 
 		LinearLayout lpLayout = (LinearLayout) findViewById(R.id.lastPlayedList);
 		lpLayout.removeAllViews();
@@ -502,6 +473,38 @@ public class MainActivity extends Activity {
 			artistName.setText("-");
 			songName.setText("-");
 			lpLayout.addView(v);
+		}
+
+		LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
+		queueLayout.removeAllViews();
+
+		if (packet.queue != null) {
+			for (Tracks t : packet.queue) {
+				View v = vi.inflate(R.layout.track_tableview, null);
+				TextView artistName = (TextView) v
+						.findViewById(R.id.track_artistName);
+				TextView songName = (TextView) v
+						.findViewById(R.id.track_songName);
+				configureQueueTextView(artistName);
+				configureQueueTextView(songName);
+				artistName.setText(Html.fromHtml(t.artistName));
+				songName.setText(Html.fromHtml(t.songName));
+				if (t.isRequest) {
+					artistName.setTypeface(null, Typeface.BOLD);
+					songName.setTypeface(null, Typeface.BOLD);
+				}
+				queueLayout.addView(v);
+			}
+		} else {
+			View v = vi.inflate(R.layout.track_tableview, null);
+			TextView artistName = (TextView) v
+					.findViewById(R.id.track_artistName);
+			TextView songName = (TextView) v.findViewById(R.id.track_songName);
+			artistName.setText("-");
+			songName.setText("-");
+			configureQueueTextView(artistName);
+			configureQueueTextView(songName);
+			queueLayout.addView(v);
 		}
 
 	}
