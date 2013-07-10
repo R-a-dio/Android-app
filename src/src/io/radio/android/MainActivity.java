@@ -141,7 +141,7 @@ public class MainActivity extends Activity {
 
 		LayoutInflater inflater = getLayoutInflater();
 		String[] names = new String[] { "Now Playing", "Last Played", "Queue",
-				"Favorites", "etc..." };
+				"Favorites", "Settings" };
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -166,6 +166,10 @@ public class MainActivity extends Activity {
 							startActivity(intent);
 							break;
 						case 3:
+							break;
+						case 4:
+							startActivity(new Intent(getApplicationContext(),
+									SettingsActivity.class));
 							break;
 						default:
 							drawer.closeDrawers();
@@ -209,8 +213,7 @@ public class MainActivity extends Activity {
 					public boolean onMenuItemClick(MenuItem menuItem) {
 						switch (menuItem.getItemId()) {
 						case R.id.menu_settings:
-							startActivity(new Intent(getApplicationContext(),
-									SettingsActivity.class));
+							
 							break;
 						}
 
