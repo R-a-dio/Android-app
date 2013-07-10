@@ -333,7 +333,7 @@ public class RequestActivity extends ListActivity {
         protected void onPostExecute(Void v) {
 
             if (status == false) {
-                Toast.makeText(getApplicationContext(), "The APK Streamer is currently not streaming. No requests can be made.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "The AFK Streamer is currently not streaming. No requests can be made.", Toast.LENGTH_LONG).show();
                 return;
             }
 
