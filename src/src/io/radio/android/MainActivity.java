@@ -325,7 +325,6 @@ public class MainActivity extends Activity {
 
 				// Swipe to the Left <-O
 				if (goRight(e1, e2, velocityX)) {
-					System.out.println("goRight");
 					switch (viewFlipper.getCurrentView().getId()) {
 					case R.id.player_page_lp:
 					case R.id.player_page_current:
@@ -338,7 +337,6 @@ public class MainActivity extends Activity {
 				}
 				// Swipe to the right O->
 				else if (goLeft(e1, e2, velocityX)) {
-					System.out.println("goLeft");
 					switch (viewFlipper.getCurrentView().getId()) {
 					case R.id.player_page_upcoming:
 					case R.id.player_page_current:
