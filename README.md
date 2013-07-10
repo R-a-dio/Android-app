@@ -37,6 +37,8 @@ r-a-dio-android
 
 ### Screenshots
 
+***Animated .gif (10MB):*** http://www.mediafire.com/download/c1j85e9azf2ro4c/app_demonstration.gif
+
 ><img src="http://i.imgur.com/PlFYSwx.png" alt="screenshot" title="Main Activity" height="400px" width="240px"/>
 <img src="http://i.imgur.com/DCQ32k7.png" alt="screenshot" title="Notification" height="400px" width="240px" />
 <img src="http://i.imgur.com/tqgS8j6.png" alt="screenshot" title="Home Screen Widget" height="400px" width="240px"/>
