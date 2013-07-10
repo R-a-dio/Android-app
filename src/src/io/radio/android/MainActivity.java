@@ -74,6 +74,7 @@ public class MainActivity extends Activity {
 	private ViewFlipper viewFlipper;
 	private GestureOverlayView gestureOverlay;
 	private ScrollView queueScroll;
+	private ScrollView lpScroll;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -210,6 +211,7 @@ public class MainActivity extends Activity {
 		});
 		viewFlipper = (ViewFlipper) findViewById(R.id.player_flipper);
 		queueScroll = (ScrollView) findViewById(R.id.player_queuescroll);
+		lpScroll = (ScrollView) findViewById(R.id.player_lpscroll);
 		gestureOverlay = (GestureOverlayView) findViewById(R.id.player_gestureoverlay);
 		final GestureDetector gestureDetector = new GestureDetector(this,
 				new Detector());
