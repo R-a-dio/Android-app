@@ -169,42 +169,6 @@
                 android:layout_centerHorizontal="true"
                 android:flipInterval="2" >
 
-                <ScrollView
-                    android:id="@+id/player_lpscroll"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/main_SongProgress" >
-
-                    <LinearLayout
-                        android:id="@+id/player_page_lp"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:orientation="vertical" >
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="20dp"
-                            android:shadowColor="#9f000000"
-                            android:shadowDx="3.0"
-                            android:shadowDy="3.0"
-                            android:shadowRadius="3.0"
-                            android:text="@string/lastplayed"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textColor="#ffffff"
-                            android:textSize="18dp" />
-
-                        <LinearLayout
-                            android:id="@id/lastPlayedList"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" >
-                        </LinearLayout>
-                    </LinearLayout>
-                </ScrollView>
-
                 <LinearLayout
                     android:id="@+id/player_page_current"
                     android:layout_width="match_parent"
@@ -277,6 +241,42 @@
 
                         <LinearLayout
                             android:id="@id/queueList"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+                        </LinearLayout>
+                    </LinearLayout>
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/player_lpscroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/main_SongProgress" >
+
+                    <LinearLayout
+                        android:id="@+id/player_page_lp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="20dp"
+                            android:shadowColor="#9f000000"
+                            android:shadowDx="3.0"
+                            android:shadowDy="3.0"
+                            android:shadowRadius="3.0"
+                            android:text="@string/lastplayed"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#ffffff"
+                            android:textSize="18dp" />
+
+                        <LinearLayout
+                            android:id="@id/lastPlayedList"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical" >

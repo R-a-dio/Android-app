@@ -223,7 +223,6 @@ public class MainActivity extends Activity {
 			}
 		};
 		gestureOverlay.setOnTouchListener(gestureListener);
-		viewFlipper.setDisplayedChild(1);
 
 		// Start Radio service
 		startService();
@@ -325,7 +324,6 @@ public class MainActivity extends Activity {
 				// Swipe to the Left <-O
 				if (goRight(e1, e2, velocityX)) {
 					switch (viewFlipper.getCurrentView().getId()) {
-					case R.id.player_page_lp:
 					case R.id.player_page_current:
 					case R.id.player_lpscroll:
 						viewFlipper.setInAnimation(inFromRightAnimation());
@@ -337,7 +335,6 @@ public class MainActivity extends Activity {
 				// Swipe to the right O->
 				else if (goLeft(e1, e2, velocityX)) {
 					switch (viewFlipper.getCurrentView().getId()) {
-					case R.id.player_page_upcoming:
 					case R.id.player_page_current:
 					case R.id.player_queuescroll:
 						viewFlipper.setInAnimation(inFromLeftAnimation());
