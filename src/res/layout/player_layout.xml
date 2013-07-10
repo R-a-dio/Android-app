@@ -111,7 +111,7 @@
                     android:id="@+id/player_fave"
                     android:layout_weight="1"
                     style="?android:attr/borderlessButtonStyle"
-                    android:src="@android:drawable/btn_star"
+                    android:src="@drawable/av_heart"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp"
                     android:layout_marginRight="50dp"
