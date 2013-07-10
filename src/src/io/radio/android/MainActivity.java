@@ -218,9 +218,8 @@ public class MainActivity extends Activity {
 		View.OnTouchListener gestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				if (!gestureDetector.onTouchEvent(motionEvent))
-					return queueScroll.onTouchEvent(motionEvent);
-				else
-					return true;
+					return viewFlipper.getCurrentView().onTouchEvent(motionEvent);
+				return true;
 			}
 		};
 		gestureOverlay.setOnTouchListener(gestureListener);
