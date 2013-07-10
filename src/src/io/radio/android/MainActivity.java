@@ -35,7 +35,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -72,8 +70,7 @@ public class MainActivity extends Activity {
 	private ImageButton playButton;
 	private ImageButton shareButton;
 	private ImageButton searchButton;
-	private ImageButton contextButton;
-	private PopupMenu contextMenu;
+	private ImageButton faveButton;
 	private ViewFlipper viewFlipper;
 	private GestureOverlayView gestureOverlay;
 	private ScrollView queueScroll;
@@ -205,24 +202,10 @@ public class MainActivity extends Activity {
 						RequestActivity.class));
 			}
 		});
-		contextButton = (ImageButton) findViewById(R.id.player_context);
-		contextMenu = new PopupMenu(MainActivity.this, contextButton);
-		contextMenu.inflate(R.menu.activity_main);
-		contextMenu
-				.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-					public boolean onMenuItemClick(MenuItem menuItem) {
-						switch (menuItem.getItemId()) {
-						case R.id.menu_settings:
-							
-							break;
-						}
-
-						return false;
-					}
-				});
-		contextButton.setOnClickListener(new View.OnClickListener() {
+		faveButton = (ImageButton) findViewById(R.id.player_fave);
+		faveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				contextMenu.show();
+				
 			}
 		});
 		viewFlipper = (ViewFlipper) findViewById(R.id.player_flipper);

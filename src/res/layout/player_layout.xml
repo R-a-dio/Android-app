@@ -108,10 +108,10 @@
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:id="@+id/player_context"
+                    android:id="@+id/player_fave"
                     android:layout_weight="1"
                     style="?android:attr/borderlessButtonStyle"
-                    android:src="@drawable/collections_sort_by_size"
+                    android:src="@android:drawable/btn_star"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp"
                     android:layout_marginRight="50dp"
