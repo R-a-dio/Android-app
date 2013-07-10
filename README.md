@@ -17,6 +17,7 @@ r-a-dio-android
   - Song Length
   - Listener Count
   - Song
+  - Navigation Drawer (Access by swiping to the right from the left end)
 * Requests Activity
   - List of songs matching a search query
   - Allows requests if able
@@ -43,3 +44,5 @@ r-a-dio-android
 <img src="http://i.imgur.com/JXgNyBX.png" alt="screenshot" title="Searching" height="400px" width="240px" />
 <img src="http://i.imgur.com/Fcx4LgX.png" alt="screenshot" title="Requesting" height="400px" width="240px" />
 <img src="http://i.imgur.com/KZeT7LH.png" alt="screenshot" title="Settings" height="400px" width="240px" />
+<img src="http://i.imgur.com/TiZszpB.png" alt="screenshot" title="Navigation Drawer" height="400px" width="240px" />
+
