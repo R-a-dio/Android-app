@@ -39,8 +39,7 @@ r-a-dio-android
 
 ***Animated .gif (10MB):*** http://www.mediafire.com/download/c1j85e9azf2ro4c/app_demonstration.gif
 
-><img src="http://i.imgur.com/B4mMmWX.png" alt="screenshot" title="Main Activity" height="400px" width="240px"/>
-<img src="http://i.imgur.com/TiZszpB.png" alt="screenshot" title="Navigation Drawer" height="400px" width="240px" />
+><img src="http://i.imgur.com/7UWVIL6.gif" alt="screenshot" title="Main Activity" height="400px" width="240px"/>
 <img src="http://i.imgur.com/DCQ32k7.png" alt="screenshot" title="Notification" height="400px" width="240px" />
 <img src="http://i.imgur.com/tqgS8j6.png" alt="screenshot" title="Home Screen Widget" height="400px" width="240px"/>
 <img src="http://i.imgur.com/6iVq7Xq.png" alt="screenshot" title="Lockscreen Widget" height="400px" width="240px" />
