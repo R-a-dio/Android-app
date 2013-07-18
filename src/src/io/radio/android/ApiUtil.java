@@ -65,7 +65,7 @@ public class ApiUtil {
                 } catch (Exception e) {}
                 String songName = "-";
                 String artistName = "-";
-                int hyphenPos = track.indexOf("-");
+                int hyphenPos = track.indexOf(" - ");
                 if (hyphenPos==-1)
                 {
                     songName = track;
@@ -73,7 +73,7 @@ public class ApiUtil {
                 else
                 {
                     try {
-                        songName = URLDecoder.decode(track.substring(hyphenPos+1), "UTF-8");
+                        songName = URLDecoder.decode(track.substring(hyphenPos+3), "UTF-8");
                         artistName = URLDecoder.decode(track.substring(0,hyphenPos), "UTF-8");
                     } catch (Exception e) {}
                 }
