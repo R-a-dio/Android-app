@@ -1,15 +1,13 @@
 package io.radio.android;
 
-import android.*;
-import android.R;
-import android.graphics.Color;
-
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import android.graphics.Color;
 
 public class ApiUtil {
 	public static final int NPUPDATE = 0;

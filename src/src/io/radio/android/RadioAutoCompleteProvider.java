@@ -46,7 +46,8 @@ public class RadioAutoCompleteProvider extends ContentProvider {
 
 		String keyword = uri.getLastPathSegment();
 		String[] databaseColumns = { BaseColumns._ID,
-				SearchManager.SUGGEST_COLUMN_TEXT_1 };
+				SearchManager.SUGGEST_COLUMN_TEXT_1,
+				SearchManager.SUGGEST_COLUMN_QUERY};
 
 		MatrixCursor suggestions = new MatrixCursor(databaseColumns);
 
@@ -65,9 +66,10 @@ public class RadioAutoCompleteProvider extends ContentProvider {
 			JSONArray results = new JSONArray(jsonStr);
 
 			for (int index = 0; index < results.length(); index++) {
-				System.out.println(results.getString(index));
+				// System.out.println(results.getString(index));
 				String[] row = { Integer.toString(index),
-						results.getString(index) };
+						results.getString(index),
+						results.getString(index)};
 				suggestions.addRow(row);
 			}
 
