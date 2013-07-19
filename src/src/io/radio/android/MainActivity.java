@@ -218,7 +218,8 @@ public class MainActivity extends Activity {
 		View.OnTouchListener gestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				if (!gestureDetector.onTouchEvent(motionEvent))
-					return viewFlipper.getCurrentView().onTouchEvent(motionEvent);
+					return viewFlipper.getCurrentView().onTouchEvent(
+							motionEvent);
 				return true;
 			}
 		};
