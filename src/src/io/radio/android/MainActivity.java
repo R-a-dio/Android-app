@@ -200,7 +200,7 @@ public class MainActivity extends Activity {
 		searchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				startActivity(new Intent(getApplicationContext(),
-						RequestActivity.class));
+						SearchActivity.class));
 			}
 		});
 		faveButton = (ImageButton) findViewById(R.id.player_fave);

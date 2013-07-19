@@ -28,7 +28,7 @@
 
         </activity>
         <activity
-            android:name=".RequestActivity"
+            android:name=".SearchActivity"
             android:screenOrientation="portrait"
             android:label="Request"
             android:parentActivityName=".MainActivity"

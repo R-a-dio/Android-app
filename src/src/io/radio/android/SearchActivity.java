@@ -55,7 +55,7 @@ import java.util.List;
 
  */
 
-public class RequestActivity extends ListActivity {
+public class SearchActivity extends ListActivity {
 
     private SongAdapter adapter = null;
 
