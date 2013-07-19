@@ -68,6 +68,8 @@
         
         <receiver android:name=".LockscreenReceiver" />
         <activity android:name=".SettingsActivity"></activity>
+        <provider android:name="RadioAutoCompleteProvider"
+                  android:authorities="io.radio.android.RadioAutoCompleteProvider"></provider>
     </application>
 
 </manifest>
