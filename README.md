@@ -1,6 +1,6 @@
 <p align="center" >
-  <img src="https://raw.github.com/R-a-dio/Android-app/player-ui-plus/logo%20small.png" title="R/a/dio">
-  <img src="https://github.com/R-a-dio/Android-app/raw/player-ui-plus/radio%20title.png" title="R/a/dio">
+  <img src="https://raw.github.com/R-a-dio/Android-app/master/logo%20small.png" title="R/a/dio">
+  <img src="https://github.com/R-a-dio/Android-app/raw/master/radio%20title.png" title="R/a/dio">
 </p>
 
 <p align="center" >
