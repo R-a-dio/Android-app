@@ -7,13 +7,18 @@ import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.graphics.Color;
+
 public class ApiUtil {
 	public static final int NPUPDATE = 0;
 	public static final int ACTIVITYCONNECTED = 1;
 	public static final int ACTIVITYDISCONNECTED = 2;
 	public static final int PROGRESSUPDATE = 3;
+    public static final int MUSICSTART = 4;
+    public static final int MUSICSTOP = 5;
 
-	public static ApiPacket parseJSON(String JSON) throws Exception {
+
+    public static ApiPacket parseJSON(String JSON) throws Exception {
 		ApiPacket pack = new ApiPacket();
 
 		JSONObject jObj = new JSONObject(JSON);
@@ -28,6 +33,8 @@ public class ApiUtil {
 		pack.djimg = jObj.getString("djimg");
 		pack.djtext = jObj.getString("djtext");
 		pack.thread = jObj.getString("thread");
+        String[] cs = jObj.getString("djcolor").split(" ");
+        pack.djColor = Color.argb(255,Integer.parseInt(cs[0]),Integer.parseInt(cs[1]),Integer.parseInt(cs[2]));
 
 		JSONArray lpArray = jObj.getJSONArray("lp");
         pack.lastPlayed = getTracks(lpArray);
@@ -54,18 +61,20 @@ public class ApiUtil {
                     track = obj.getString(1);
                     isRequest = obj.getInt(2) == 1 ? true : false;
                 } catch (Exception e) {}
-                String[] details = track.split(" - ");
                 String songName = "-";
                 String artistName = "-";
-                if (details.length == 2) {
-                    try {
-                        songName = URLDecoder.decode(details[0], "UTF-8");
-                        artistName = URLDecoder.decode(details[1], "UTF-8");
-                    } catch (Exception e) {}
-                } else if (details.length == 1) {
-                    songName = details[0];
+                int hyphenPos = track.indexOf(" - ");
+                if (hyphenPos==-1)
+                {
+                    songName = track;
                 }
-
+                else
+                {
+                    try {
+                        songName = URLDecoder.decode(track.substring(hyphenPos+3), "UTF-8");
+                        artistName = URLDecoder.decode(track.substring(0,hyphenPos), "UTF-8");
+                    } catch (Exception e) {}
+                }
                 list.add(new Tracks(songName, artistName, isRequest));
             }
             Object[] array = list.toArray();

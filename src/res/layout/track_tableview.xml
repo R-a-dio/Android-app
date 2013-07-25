@@ -8,7 +8,7 @@
     <TextView
             android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:id="@+id/track_songName"
+            android:id="@+id/track_artistName"
             android:padding="10dp"
             android:layout_weight="1"
 
@@ -20,7 +20,7 @@
             android:layout_width="0px"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/track_artistName"
+            android:id="@+id/track_songName"
             android:padding="10dp"
 
             android:text="uguu"

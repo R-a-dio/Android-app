@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory android:title="Favorites">
+            <EditTextPreference android:key="username" android:title="User Name" android:shouldDisableView="false" android:summary="Nickname used in IRC"/>
+            <EditTextPreference android:key="authcode" android:title="Authentication Code" android:summary="Authcodes are given out by Hanyuu-sama on IRC"/>
+            <MultiSelectListPreference android:key="faveDjs" android:title="Favorite DJ's" android:summary="Manage your favorite DJ's list" android:entries="@array/faveDjsList" android:entryValues="@array/faveDjsListValues"/>
+        </PreferenceCategory>
+    </PreferenceScreen>

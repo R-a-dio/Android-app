@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.radio.android"
-    android:versionCode="1"
-    android:versionName="1.1" >
+    android:versionCode="2"
+    android:versionName="0.1" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -25,30 +25,51 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.default_searchable"
-                       android:value=".RequestActivity" />
 
         </activity>
-        <activity android:name=".RequestActivity"
-                  android:screenOrientation="portrait" >
+        <activity
+            android:name=".SearchActivity"
+            android:screenOrientation="portrait"
+            android:label="Request"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/searchable"/>
-            <meta-data android:name="android.app.default_searchable"
-                       android:value=".RequestActivity" />
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".RequestActivity" />
+
         </activity>
+        <activity android:name=".QueueActivity"
+                  android:screenOrientation="portrait"
+                  android:label="Queue"
+                android:parentActivityName=".MainActivity"/>
+        <activity android:name=".LastPlayedActivity"
+                  android:screenOrientation="portrait"
+
+                  android:label="Last Played"
+                android:parentActivityName=".MainActivity"/>
 
         <service android:name=".RadioService" />
 
-        <receiver android:name="RadioWidgetProvider" >
+        <receiver android:name=".RadioWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider" />
         </receiver>
-        <receiver android:name=".LockscreenReceiver"/>
+        
+        <receiver android:name=".LockscreenReceiver" />
+        <activity android:name=".SettingsActivity"></activity>
+        <provider android:name="RadioAutoCompleteProvider"
+                  android:authorities="io.radio.android.RadioAutoCompleteProvider"></provider>
     </application>
 
 </manifest>

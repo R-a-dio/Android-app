@@ -32,7 +32,7 @@ public class NotificationHandler {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent stopIntent = new Intent();
-        stopIntent.setAction("restart");
+        stopIntent.setAction("stop");
 
         PendingIntent stopPendingIntent = PendingIntent.getBroadcast(
                 context.getApplicationContext(), 0, stopIntent,

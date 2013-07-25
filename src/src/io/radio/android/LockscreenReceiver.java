@@ -9,6 +9,6 @@ import android.content.Intent;
  */
 public class LockscreenReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
-
+        System.out.println("received intent");
     }
 }

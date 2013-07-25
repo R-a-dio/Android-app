@@ -3,6 +3,7 @@ package io.radio.android;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -163,6 +164,17 @@ public class RadioService extends Service implements OnPreparedListener,
 		//updateTimer.cancel();
 		radioPlayer.reset();
         currentlyPlaying = false;
+
+        Message m = Message.obtain();
+        m.what = ApiUtil.MUSICSTOP;
+        m.obj = currentPacket;
+        if (activityConnected) {
+            try {
+                activityMessenger.send(m);
+            } catch (RemoteException e) {
+                // Whatever...
+            }
+        }
 	}
 
 	// call
@@ -175,6 +187,17 @@ public class RadioService extends Service implements OnPreparedListener,
 		}
 		radioPlayer.prepareAsync();
         currentlyPlaying = true;
+
+        Message m = Message.obtain();
+        m.what = ApiUtil.MUSICSTART;
+        m.obj = currentPacket;
+        if (activityConnected) {
+            try {
+                activityMessenger.send(m);
+            } catch (RemoteException e) {
+                // Whatever...
+            }
+        }
     }
 
 	public Messenger getMessenger() {
@@ -208,17 +231,26 @@ public class RadioService extends Service implements OnPreparedListener,
 				URL apiURl = new URL(getString(R.string.mainApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
-				String inputLine = in.readLine();
+                String input ="";
+                String inputLine;
+                while ((inputLine = in.readLine())!=null)
+                    input+=inputLine;
 				in.close();
-				resultPacket = ApiUtil.parseJSON(inputLine);
-				String[] songParts = resultPacket.np.split(" - ");
-				if (songParts.length == 2) {
-					resultPacket.artistName = songParts[0];
-					resultPacket.songName = songParts[1];
-				} else {
-					resultPacket.songName = songParts[0];
-					resultPacket.artistName = "-";
-				}
+				resultPacket = ApiUtil.parseJSON(input);
+
+                int hyphenPos = resultPacket.np.indexOf("-");
+                if (hyphenPos==-1)
+                {
+                    resultPacket.songName = resultPacket.np;
+                    resultPacket.artistName = "";
+                }
+                else
+                {
+                    try {
+                        resultPacket.songName = URLDecoder.decode(resultPacket.np.substring(hyphenPos + 1), "UTF-8");
+                        resultPacket.artistName = URLDecoder.decode(resultPacket.np.substring(0,hyphenPos), "UTF-8");
+                    } catch (Exception e) {}
+                }
 
 			} catch (Exception e) {
 				e.printStackTrace();
