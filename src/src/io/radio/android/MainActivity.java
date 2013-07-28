@@ -75,6 +75,7 @@ public class MainActivity extends Activity {
 	private GestureOverlayView gestureOverlay;
 	private ScrollView queueScroll;
 	private ScrollView lpScroll;
+	private FXView fxView;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -225,6 +226,8 @@ public class MainActivity extends Activity {
 		};
 		gestureOverlay.setOnTouchListener(gestureListener);
 
+		fxView = (FXView) findViewById(R.id.audioFxView);
+		
 		// Start Radio service
 		startService();
 
