@@ -110,8 +110,13 @@ public class MainActivity extends Activity {
 				songProgressBar.setProgress(progress);
 				songLength.setText(ApiUtil.formatSongLength(progress, length));
 			}
-			if (msg.what == ApiUtil.MUSICSTOP || msg.what == ApiUtil.MUSICSTART) {
+			if (msg.what == ApiUtil.MUSICSTART) {
 				updatePlayButton();
+				fxView.startFx(service.getAudioStreamId());
+			}
+			if (msg.what == ApiUtil.MUSICSTOP ) {
+				updatePlayButton();
+				fxView.stopFx();
 			}
 		}
 	};
@@ -225,12 +230,13 @@ public class MainActivity extends Activity {
 			}
 		};
 		gestureOverlay.setOnTouchListener(gestureListener);
-
-		fxView = (FXView) findViewById(R.id.audioFxView);
 		
+		// Get the fxView
+		fxView = (FXView) findViewById(R.id.audioFxView);
+
 		// Start Radio service
 		startService();
-
+				
 		// Start progress timer to estimate progress between api updates
 		progressTimer = new Timer();
 		progressTimer.scheduleAtFixedRate(new TimerTask() {
@@ -247,6 +253,7 @@ public class MainActivity extends Activity {
 
 		}, 0, 1000);
 
+		// Give user a popup on their first install telling them about gestures
 		SharedPreferences pref = getSharedPreferences(PREFS_FILENAME,
 				Context.MODE_PRIVATE);
 		if (!pref.getBoolean("player_firstrun_hint_shown", false)) {

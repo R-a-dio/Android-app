@@ -20,9 +20,15 @@ public class FXView extends View {
 	public FXView(Context context) {
 		super(context);
 	}
-
-	public void init(int playerId) {
+	
+	public void startFx(int playerId) {
+		System.out.println("LolID: " + playerId);
 		visualizer = new Visualizer(playerId);
+		System.out.println("SweetWorks");
+	}
+	
+	public void stopFx() {
+		visualizer.release();
 	}
 
 	@Override

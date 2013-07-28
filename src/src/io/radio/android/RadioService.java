@@ -37,7 +37,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	private ApiPacket currentPacket = new ApiPacket();
 	private NotificationHandler notificationManager;
 	private Timer updateTimer;
-	MediaPlayer radioPlayer;
+	private MediaPlayer radioPlayer;
 	public static boolean serviceStarted = false;
 	public static RadioService service;
 	AppWidgetManager widgetManager;
@@ -202,6 +202,10 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	public Messenger getMessenger() {
 		return this.messenger;
+	}
+	
+	public int getAudioStreamId() {
+		return radioPlayer.getAudioSessionId();
 	}
 
 	public class LocalBinder extends Binder {

@@ -195,13 +195,6 @@
                         android:textColor="#ffffff"
                         android:textSize="22dp" />
                     
-                    <io.radio.android.FXView 
-                        android:id="@+id/audioFxView"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="#000" >
-                    </io.radio.android.FXView>
-
                     <TextView
                         android:id="@id/main_ArtistName"
                         android:layout_width="wrap_content"
@@ -217,6 +210,12 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#ffffff"
                         android:textSize="16dp" />
+                    <io.radio.android.FXView 
+                        android:id="@+id/audioFxView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="#000" >
+                    </io.radio.android.FXView>
                 </LinearLayout>
 
                 <ScrollView
