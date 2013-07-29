@@ -22,12 +22,14 @@ public class FXView extends View {
 	}
 	
 	public void startFx(int playerId) {
-		System.out.println("LolID: " + playerId);
 		visualizer = new Visualizer(playerId);
-		System.out.println("SweetWorks");
+		//visualizer.setCaptureSize(size);
+		//visualizer.setDataCaptureListener(listener, rate, waveform, fft);
+		visualizer.setEnabled(true);
 	}
-	
+
 	public void stopFx() {
+		visualizer.setEnabled(false);
 		visualizer.release();
 	}
 
@@ -35,4 +37,21 @@ public class FXView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 	}
+	
+	private class onAudioData implements Visualizer.OnDataCaptureListener
+    {
+
+		public void onFftDataCapture(Visualizer visualizer, byte[] fft,
+				int samplingRate) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void onWaveFormDataCapture(Visualizer visualizer,
+				byte[] waveform, int samplingRate) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+    }
 }
