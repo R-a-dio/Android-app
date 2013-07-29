@@ -312,6 +312,7 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	@Override
 	public void onDestroy() {
+		stopPlayer();
 		radioPlayer.release();
 		unregisterReceiver(receiver);
 		updateTimer.cancel();

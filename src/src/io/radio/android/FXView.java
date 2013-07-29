@@ -30,7 +30,8 @@ public class FXView extends View {
 
 	public void startFx(int playerId) {
 		visualizer = new Visualizer(playerId);
-		visualizer.setCaptureSize(visualizer.getCaptureSizeRange()[1]);
+		visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
+		visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
 		visualizer.setDataCaptureListener(new onAudioData(),
 				Visualizer.getMaxCaptureRate(), false, true);
 		visualizer.setEnabled(true);
@@ -47,17 +48,26 @@ public class FXView extends View {
 		canvas.getClipBounds(bounds);
 
 		paint.setColor(Color.argb(128, 255, 255, 255));
-		paint.setStrokeWidth(10f);
+		paint.setStrokeWidth(5f);
 
 		if (fftData != null) {
-			byte rfk = fftData[0];
-			byte ifk = fftData[1];
-			float mag = (rfk * rfk + ifk * ifk);
-			int db = (int) (10 * Math.log10(mag));
-			// System.out.println("Mag: " + mag + " - " + "dB: " + db);
-			canvas.drawLine(bounds.centerX(), bounds.bottom, bounds.centerX(),
-					bounds.bottom - (db * 10), paint);
+			for (int i = 0; i < fftData.length / 8; i++) {
+				canvas.drawLine(
+						bounds.left + i * 5,
+						bounds.bottom,
+						bounds.left + i * 5,
+						bounds.bottom - (getdB(fftData[i], fftData[i + 1]) * 8),
+						paint);
+			}
 		}
+	}
+
+	private int getdB(byte real, byte imag) {
+		float mag = (real * real + imag * imag);
+		int db = (int) (10 * Math.log10(mag));
+		if (mag <= 0)
+			db = 0;
+		return db;
 	}
 
 	private class onAudioData implements Visualizer.OnDataCaptureListener {
