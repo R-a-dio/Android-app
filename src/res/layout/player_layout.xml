@@ -15,7 +15,7 @@
         android:background="#d9ffffff" >
 
         <ImageView
-            android:id="@id/main_DjImage"
+            android:id="@+id/main_DjImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|top"
@@ -32,7 +32,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@id/main_DjName"
+                android:id="@+id/main_DjName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
@@ -43,7 +43,7 @@
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@id/main_Listeners"
+                android:id="@+id/main_Listeners"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
@@ -138,10 +138,10 @@
             </LinearLayout>
 
             <TextView
-                android:id="@id/main_SongLength"
+                android:id="@+id/main_SongLength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/main_SongProgress"
+                android:layout_above="@+id/main_SongProgress"
                 android:layout_centerHorizontal="true"
                 android:shadowColor="#9f000000"
                 android:shadowDx="3.0"
@@ -152,7 +152,7 @@
                 android:textColor="#ffffff" />
 
             <ProgressBar
-                android:id="@id/main_SongProgress"
+                android:id="@+id/main_SongProgress"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
                     android:paddingRight="4dp" >
 
                     <TextView
-                        android:id="@id/main_SongName"
+                        android:id="@+id/main_SongName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -196,7 +196,7 @@
                         android:textSize="22dp" />
                     
                     <TextView
-                        android:id="@id/main_ArtistName"
+                        android:id="@+id/main_ArtistName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -224,7 +224,7 @@
                     android:id="@+id/player_queuescroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/main_SongProgress" >
+                    android:layout_below="@+id/main_SongProgress" >
 
                     <LinearLayout
                         android:id="@+id/player_page_upcoming"
@@ -248,7 +248,7 @@
                             android:textSize="18dp" />
 
                         <LinearLayout
-                            android:id="@id/queueList"
+                            android:id="@+id/queueList"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical" >
@@ -260,7 +260,7 @@
                     android:id="@+id/player_lpscroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/main_SongProgress" >
+                    android:layout_below="@+id/main_SongProgress" >
 
                     <LinearLayout
                         android:id="@+id/player_page_lp"
@@ -284,7 +284,7 @@
                             android:textSize="18dp" />
 
                         <LinearLayout
-                            android:id="@id/lastPlayedList"
+                            android:id="@+id/lastPlayedList"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical" >
