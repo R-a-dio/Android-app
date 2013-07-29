@@ -31,6 +31,7 @@ Find us listening to music in our IRC channel ***#r/a/dio*** on the Rizon networ
  - Song Info
  - Song Progressbar & Length
  - Playback Control
+ - Music Visualizer
  - Last Played and Queue mini lists (with gestures |<= O =>|)
 * Notifications
  - Ticker text displays on song and DJ change
