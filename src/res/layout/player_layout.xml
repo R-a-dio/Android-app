@@ -210,12 +210,14 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#ffffff"
                         android:textSize="16dp" />
+                    
                     <io.radio.android.FXView 
                         android:id="@+id/audioFxView"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:background="#000" >
+                        android:background="#44000000" >
                     </io.radio.android.FXView>
+                    
                 </LinearLayout>
 
                 <ScrollView
