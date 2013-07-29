@@ -56,7 +56,7 @@ public class FXView extends View {
 			int db = (int) (10 * Math.log10(mag));
 			// System.out.println("Mag: " + mag + " - " + "dB: " + db);
 			canvas.drawLine(bounds.centerX(), bounds.bottom, bounds.centerX(),
-					bounds.top + (db * 10), paint);
+					bounds.bottom - (db * 10), paint);
 		}
 	}
 
