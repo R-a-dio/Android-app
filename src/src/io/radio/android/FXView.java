@@ -5,12 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class FXView extends View {
 	Visualizer visualizer;
+	Equalizer equalizer;
 	static Rect bounds = new Rect();
 	byte[] fftData;
 
@@ -35,11 +37,18 @@ public class FXView extends View {
 		visualizer.setDataCaptureListener(new onAudioData(),
 				Visualizer.getMaxCaptureRate(), false, true);
 		visualizer.setEnabled(true);
+		
+		equalizer = new Equalizer(0, playerId);
+		equalizer.setEnabled(true);
+		
 	}
 
 	public void stopFx() {
 		visualizer.setEnabled(false);
 		visualizer.release();
+
+		equalizer.setEnabled(false);
+		equalizer.release();
 	}
 
 	@Override
@@ -48,15 +57,15 @@ public class FXView extends View {
 		canvas.getClipBounds(bounds);
 
 		paint.setColor(Color.argb(128, 255, 255, 255));
-		paint.setStrokeWidth(5f);
+		paint.setStrokeWidth(2f);
 
 		if (fftData != null) {
-			for (int i = 0; i < fftData.length / 8; i++) {
+			for (int i = 0; i < fftData.length / 2; i++) {
 				canvas.drawLine(
-						bounds.left + i * 5,
+						bounds.left + i,
 						bounds.bottom,
-						bounds.left + i * 5,
-						bounds.bottom - (getdB(fftData[i], fftData[i + 1]) * 8),
+						bounds.left + i,
+						bounds.bottom - (getdB(fftData[2*i], fftData[2*i + 1]) * 8),
 						paint);
 			}
 		}
