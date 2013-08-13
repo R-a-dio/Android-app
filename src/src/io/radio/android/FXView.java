@@ -13,10 +13,11 @@ import android.view.View;
 public class FXView extends View {
 	Visualizer visualizer;
 	Equalizer equalizer;
-	static Rect bounds = new Rect();
 	byte[] fftData;
+	byte[] audioData;
 
 	static Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	static Rect bounds = new Rect();
 
 	public FXView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -30,25 +31,30 @@ public class FXView extends View {
 		super(context);
 	}
 
-	public void startFx(int playerId) {
+	public void startFx(int playerId, boolean dbGraph, boolean waveVis) {
 		visualizer = new Visualizer(playerId);
-		visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
-		visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+		visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1] / 2);
 		visualizer.setDataCaptureListener(new onAudioData(),
-				Visualizer.getMaxCaptureRate(), false, true);
+				Visualizer.getMaxCaptureRate(), waveVis, dbGraph);
 		visualizer.setEnabled(true);
-		
+
 		equalizer = new Equalizer(0, playerId);
 		equalizer.setEnabled(true);
-		
+
 	}
 
 	public void stopFx() {
-		visualizer.setEnabled(false);
-		visualizer.release();
+		if (visualizer != null) {
+			visualizer.setEnabled(false);
+			visualizer.release();
+		}
+		if (equalizer != null) {
+			equalizer.setEnabled(false);
+			equalizer.release();
+		}
 
-		equalizer.setEnabled(false);
-		equalizer.release();
+		fftData = null;
+		audioData = null;
 	}
 
 	@Override
@@ -56,17 +62,30 @@ public class FXView extends View {
 		super.onDraw(canvas);
 		canvas.getClipBounds(bounds);
 
-		paint.setColor(Color.argb(128, 255, 255, 255));
-		paint.setStrokeWidth(2f);
-
 		if (fftData != null) {
-			for (int i = 0; i < fftData.length / 2; i++) {
+			paint.setColor(Color.argb(175, 255, 255, 255));
+			paint.setStrokeWidth(1f);
+			for (int i = 0; i < fftData.length - 1; i++) {
 				canvas.drawLine(
 						bounds.left + i,
 						bounds.bottom,
 						bounds.left + i,
-						bounds.bottom - (getdB(fftData[2*i], fftData[2*i + 1]) * 8),
+						bounds.bottom - (getdB(fftData[i], fftData[i + 1]) * 2),
 						paint);
+			}
+
+		}
+
+		if (audioData != null) {
+			paint.setColor(Color.argb(128, 255, 255, 255));
+			paint.setStrokeWidth(3f);
+			for (int i = 0; i < audioData.length - 1; i++) {
+				canvas.drawLine(bounds.width() * i / (audioData.length - 1),
+						bounds.height() / 2 + ((byte) (audioData[i] + 128))
+								* (bounds.height() / 3) / 128, bounds.width()
+								* (i + 1) / (audioData.length - 1),
+						bounds.height() / 2 + ((byte) (audioData[i + 1] + 128))
+								* (bounds.height() / 3) / 128, paint);
 			}
 		}
 	}
@@ -88,8 +107,8 @@ public class FXView extends View {
 
 		public void onWaveFormDataCapture(Visualizer visualizer,
 				byte[] waveform, int samplingRate) {
-			// TODO Auto-generated method stub
-
+			audioData = waveform;
+			invalidate();
 		}
 
 	}

@@ -14,6 +14,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -25,6 +26,9 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -42,11 +46,11 @@ public class RadioService extends Service implements OnPreparedListener,
 	public static RadioService service;
 	AppWidgetManager widgetManager;
 
-    public String currentDj = "";
-    public String currentSong = "";
-    public String currentArtist = "";
+	public String currentDj = "";
+	public String currentSong = "";
+	public String currentArtist = "";
 
-    public static boolean currentlyPlaying = false;
+	public static boolean currentlyPlaying = false;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -58,7 +62,7 @@ public class RadioService extends Service implements OnPreparedListener,
 				stopPlayer();
 			}
 			if (intent.getAction().equals("api fail")) {
-				CharSequence text = "The R/a/dio server doesn't seem to be responding. You may have to update the app";
+				CharSequence text = "The R/a/dio server doesn't seem to be responding. Check your internet connection or update the app";
 				int duration = Toast.LENGTH_SHORT;
 
 				Toast toast = Toast.makeText(context, text, duration);
@@ -98,6 +102,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		this.startForeground(NotificationHandler.CONSTANTNOTIFICATION,
 				notificationManager.constantNotification());
 
+		// Create the Mediaplayer and setup to play stream
 		radioPlayer = new MediaPlayer();
 		radioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		radioPlayer.setOnPreparedListener(this);
@@ -107,6 +112,23 @@ public class RadioService extends Service implements OnPreparedListener,
 			e.printStackTrace();
 		}
 
+		PhoneStateListener phoneStateListener = new PhoneStateListener() {
+			@Override
+			public void onCallStateChanged(int state, String incomingNumber) {
+				if (state == TelephonyManager.CALL_STATE_RINGING) {
+					stopPlayer();
+				} else if (state == TelephonyManager.CALL_STATE_IDLE) {
+					if (!currentlyPlaying)
+						restartPlayer();
+				} else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+				}
+				super.onCallStateChanged(state, incomingNumber);
+			}
+		};
+		TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		if (mgr != null) {
+			mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		}
 	}
 
 	public void onPrepared(MediaPlayer mp) {
@@ -123,7 +145,7 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	public void initializeTimers() {
 		updateTimer = new Timer();
-		
+
 		// Schedule API updates every 10 seconds
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -131,7 +153,7 @@ public class RadioService extends Service implements OnPreparedListener,
 				updateApiData();
 			}
 		}, 0, 10000);
-		
+
 		// Schedule widget update every second
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -161,20 +183,20 @@ public class RadioService extends Service implements OnPreparedListener,
 	}
 
 	public void stopPlayer() {
-		//updateTimer.cancel();
+		// updateTimer.cancel();
 		radioPlayer.reset();
-        currentlyPlaying = false;
+		currentlyPlaying = false;
 
-        Message m = Message.obtain();
-        m.what = ApiUtil.MUSICSTOP;
-        m.obj = currentPacket;
-        if (activityConnected) {
-            try {
-                activityMessenger.send(m);
-            } catch (RemoteException e) {
-                // Whatever...
-            }
-        }
+		Message m = Message.obtain();
+		m.what = ApiUtil.MUSICSTOP;
+		m.obj = currentPacket;
+		if (activityConnected) {
+			try {
+				activityMessenger.send(m);
+			} catch (RemoteException e) {
+				// Whatever...
+			}
+		}
 	}
 
 	// call
@@ -186,24 +208,24 @@ public class RadioService extends Service implements OnPreparedListener,
 			e.printStackTrace();
 		}
 		radioPlayer.prepareAsync();
-        currentlyPlaying = true;
+		currentlyPlaying = true;
 
-        Message m = Message.obtain();
-        m.what = ApiUtil.MUSICSTART;
-        m.obj = currentPacket;
-        if (activityConnected) {
-            try {
-                activityMessenger.send(m);
-            } catch (RemoteException e) {
-                // Whatever...
-            }
-        }
-    }
+		Message m = Message.obtain();
+		m.what = ApiUtil.MUSICSTART;
+		m.obj = currentPacket;
+		if (activityConnected) {
+			try {
+				activityMessenger.send(m);
+			} catch (RemoteException e) {
+				// Whatever...
+			}
+		}
+	}
 
 	public Messenger getMessenger() {
 		return this.messenger;
 	}
-	
+
 	public int getAudioStreamId() {
 		return radioPlayer.getAudioSessionId();
 	}
@@ -235,26 +257,28 @@ public class RadioService extends Service implements OnPreparedListener,
 				URL apiURl = new URL(getString(R.string.mainApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
-                String input ="";
-                String inputLine;
-                while ((inputLine = in.readLine())!=null)
-                    input+=inputLine;
+				String input = "";
+				String inputLine;
+				while ((inputLine = in.readLine()) != null)
+					input += inputLine;
 				in.close();
 				resultPacket = ApiUtil.parseJSON(input);
 
-                int hyphenPos = resultPacket.np.indexOf("-");
-                if (hyphenPos==-1)
-                {
-                    resultPacket.songName = resultPacket.np;
-                    resultPacket.artistName = "";
-                }
-                else
-                {
-                    try {
-                        resultPacket.songName = URLDecoder.decode(resultPacket.np.substring(hyphenPos + 1), "UTF-8");
-                        resultPacket.artistName = URLDecoder.decode(resultPacket.np.substring(0,hyphenPos), "UTF-8");
-                    } catch (Exception e) {}
-                }
+				int hyphenPos = resultPacket.np.indexOf("-");
+				if (hyphenPos == -1) {
+					resultPacket.songName = resultPacket.np;
+					resultPacket.artistName = "";
+				} else {
+					try {
+						resultPacket.songName = URLDecoder.decode(
+								resultPacket.np.substring(hyphenPos + 1),
+								"UTF-8");
+						resultPacket.artistName = URLDecoder.decode(
+								resultPacket.np.substring(0, hyphenPos),
+								"UTF-8");
+					} catch (Exception e) {
+					}
+				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -279,15 +303,17 @@ public class RadioService extends Service implements OnPreparedListener,
 					// Whatever...
 				}
 			}
-            if (!currentArtist.equals(currentPacket.artistName) && !currentSong.equals(currentPacket.songName)) {
-                notificationManager.newSongTickerNotification(currentPacket.songName, currentPacket.artistName);
-                currentArtist = currentPacket.artistName;
-                currentSong = currentPacket.songName;
-            }
-            if (!currentDj.equals(currentPacket.dj)) {
-                notificationManager.newDjTickerNotification(currentPacket.dj);
-                currentDj = currentPacket.dj;
-            }
+			if (!currentArtist.equals(currentPacket.artistName)
+					&& !currentSong.equals(currentPacket.songName)) {
+				notificationManager.newSongTickerNotification(
+						currentPacket.songName, currentPacket.artistName);
+				currentArtist = currentPacket.artistName;
+				currentSong = currentPacket.songName;
+			}
+			if (!currentDj.equals(currentPacket.dj)) {
+				notificationManager.newDjTickerNotification(currentPacket.dj);
+				currentDj = currentPacket.dj;
+			}
 			notificationManager.updateNotificationWithInfo(currentPacket);
 		}
 

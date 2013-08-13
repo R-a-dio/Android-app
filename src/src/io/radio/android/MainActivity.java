@@ -29,6 +29,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.util.Log;
@@ -112,9 +113,15 @@ public class MainActivity extends Activity {
 			}
 			if (msg.what == ApiUtil.MUSICSTART) {
 				updatePlayButton();
-				fxView.startFx(service.getAudioStreamId());
+				SharedPreferences sharedPref = PreferenceManager
+						.getDefaultSharedPreferences(getApplicationContext());
+				boolean dBGraph = sharedPref
+						.getBoolean("dBGraphEnabled", false);
+				boolean wavVis = sharedPref.getBoolean("waveVisEnabled", true);
+				if (dBGraph || wavVis)
+					fxView.startFx(service.getAudioStreamId(), dBGraph, wavVis);
 			}
-			if (msg.what == ApiUtil.MUSICSTOP ) {
+			if (msg.what == ApiUtil.MUSICSTOP) {
 				updatePlayButton();
 				fxView.stopFx();
 			}
@@ -230,13 +237,13 @@ public class MainActivity extends Activity {
 			}
 		};
 		gestureOverlay.setOnTouchListener(gestureListener);
-		
+
 		// Get the fxView
 		fxView = (FXView) findViewById(R.id.audioFxView);
 
 		// Start Radio service
 		startService();
-				
+
 		// Start progress timer to estimate progress between api updates
 		progressTimer = new Timer();
 		progressTimer.scheduleAtFixedRate(new TimerTask() {
