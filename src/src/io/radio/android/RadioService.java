@@ -51,6 +51,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	public String currentArtist = "";
 
 	public static boolean currentlyPlaying = false;
+	public static boolean incomingOrDialingCall = false;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -117,10 +118,15 @@ public class RadioService extends Service implements OnPreparedListener,
 			public void onCallStateChanged(int state, String incomingNumber) {
 				if (state == TelephonyManager.CALL_STATE_RINGING) {
 					stopPlayer();
+					incomingOrDialingCall = true;
 				} else if (state == TelephonyManager.CALL_STATE_IDLE) {
-					if (!currentlyPlaying)
+					if (incomingOrDialingCall) {
 						restartPlayer();
+						incomingOrDialingCall = false;
+					}
 				} else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+					stopPlayer();
+					incomingOrDialingCall = true;
 				}
 				super.onCallStateChanged(state, incomingNumber);
 			}
@@ -221,7 +227,7 @@ public class RadioService extends Service implements OnPreparedListener,
 			}
 		}
 	}
-
+	
 	public Messenger getMessenger() {
 		return this.messenger;
 	}
