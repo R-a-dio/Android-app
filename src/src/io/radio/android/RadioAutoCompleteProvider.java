@@ -53,7 +53,7 @@ public class RadioAutoCompleteProvider extends ContentProvider {
 
 		try {
 			URL apiUrl = new URL(
-					"http://r-a-d.io/search/autocomplete.php?query=" + keyword);
+					"https://r-a-d.io/search/autocomplete.php?query=" + keyword);
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					apiUrl.openStream()));
 			String input = "";
