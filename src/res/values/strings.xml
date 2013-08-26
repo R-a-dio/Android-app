@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">R/a/dio</string>
+    <string name="baseURL">https://r-a-d.io</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">R/a/dio</string>
