@@ -547,7 +547,7 @@ public class MainActivity extends Activity {
 			ApiPacket pack = params[0];
 			URL url;
 			try {
-				url = new URL("http://r-a-d.io" + pack.djimg);
+				url = new URL(getString(R.string.baseURL) + pack.djimg);
 				HttpURLConnection conn = (HttpURLConnection) url
 						.openConnection();
 				conn.setDoInput(true);
