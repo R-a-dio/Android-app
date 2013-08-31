@@ -116,7 +116,8 @@ public class RadioService extends Service implements OnPreparedListener,
 		PhoneStateListener phoneStateListener = new PhoneStateListener() {
 			@Override
 			public void onCallStateChanged(int state, String incomingNumber) {
-				if (state == TelephonyManager.CALL_STATE_RINGING) {
+				if (((state == TelephonyManager.CALL_STATE_RINGING) || (state == TelephonyManager.CALL_STATE_OFFHOOK))
+						&& currentlyPlaying) {
 					stopPlayer();
 					incomingOrDialingCall = true;
 				} else if (state == TelephonyManager.CALL_STATE_IDLE) {
@@ -124,9 +125,6 @@ public class RadioService extends Service implements OnPreparedListener,
 						restartPlayer();
 						incomingOrDialingCall = false;
 					}
-				} else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-					stopPlayer();
-					incomingOrDialingCall = true;
 				}
 				super.onCallStateChanged(state, incomingNumber);
 			}
@@ -227,7 +225,7 @@ public class RadioService extends Service implements OnPreparedListener,
 			}
 		}
 	}
-	
+
 	public Messenger getMessenger() {
 		return this.messenger;
 	}
