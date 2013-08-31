@@ -12,9 +12,10 @@
 # Users
 **We are currently accepting beta testers whom have an Android device.**
 
-If you would like to help us with testing, join the 
-[R/a/dio Beta Testers Google Group](https://groups.google.com/forum/#!forum/radio-beta-testers-android) 
-and proceed through the link provided there. 
+If you would like to help us with testing,
+
+1. Make sure you join the [R/a/dio Beta Testers Google Group](https://groups.google.com/forum/#!forum/radio-beta-testers-android) for access
+2. Proceed through the link provided there.
 
 Please take note of any bugs you encounter or any new features you
 would like to see by creating an issue [through Github](https://github.com/R-a-dio/Android-app/issues/new)
