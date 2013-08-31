@@ -43,14 +43,11 @@ import android.widget.Toast;
  */
 
 /*
-  TO DO 
-  - indication of requesting status in the search results 
-  - indication of cooldown 
-  -- extract from "You have to wait another 1 hour, 58 minutes, 32 seconds before requesting again. (Updates every 2 minutes)"
-  - nicer looking results list 
-  - not redo search on orientation change 
-  - indication when search fails 
-  - indication when loading search results
+ * TO DO - indication of requesting status in the search results - indication of
+ * cooldown -- extract from
+ * "You have to wait another 1 hour, 58 minutes, 32 seconds before requesting again. (Updates every 2 minutes)"
+ * - nicer looking results list - not redo search on orientation change -
+ * indication when search fails - indication when loading search results
  */
 
 public class SearchActivity extends ListActivity {
@@ -363,6 +360,11 @@ public class SearchActivity extends ListActivity {
 						songs.add(song);
 					}
 			}
+
+			if (searchPages.get(0).pages == 0)
+				Toast.makeText(getApplicationContext(), "No Results.",
+						Toast.LENGTH_LONG).show();
+
 			adapter = new SongAdapter(getApplicationContext(),
 					R.layout.request_row, songs);
 			setListAdapter(adapter);
