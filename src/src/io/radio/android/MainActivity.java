@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.RemoteControlClient;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -100,6 +101,11 @@ public class MainActivity extends Activity {
 	};
 	final Messenger mMessenger = new Messenger(new IncomingHandler());
 
+	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
+		public void onAudioFocusChange(int focusChange) {
+		}
+	};
+
 	class IncomingHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
@@ -113,12 +119,16 @@ public class MainActivity extends Activity {
 				songLength.setText(ApiUtil.formatSongLength(progress, length));
 			}
 			if (msg.what == ApiUtil.MUSICSTART) {
-					
+				audioManager
+						.requestAudioFocus(afChangeListener,
+								AudioManager.STREAM_MUSIC,
+								AudioManager.AUDIOFOCUS_GAIN);
+
 				updatePlayButton();
 				SharedPreferences sharedPref = PreferenceManager
 						.getDefaultSharedPreferences(getApplicationContext());
-				
-				//FxView
+
+				// FxView
 				boolean dBGraph = sharedPref
 						.getBoolean("dBGraphEnabled", false);
 				boolean wavVis = sharedPref.getBoolean("waveVisEnabled", true);
@@ -127,6 +137,7 @@ public class MainActivity extends Activity {
 			}
 			if (msg.what == ApiUtil.MUSICSTOP) {
 				updatePlayButton();
+				audioManager.abandonAudioFocus(afChangeListener);
 				fxView.stopFx();
 			}
 		}
