@@ -14,7 +14,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -26,7 +25,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.preference.PreferenceManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.widget.RemoteViews;
@@ -68,6 +66,12 @@ public class RadioService extends Service implements OnPreparedListener,
 
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
+			}
+			if (intent.getAction().equals(
+					intent.getAction().equals(Intent.ACTION_HEADSET_PLUG))) {
+				int state = intent.getIntExtra("state", -1);
+				if (state == 0)
+					stopPlayer();
 			}
 		}
 	};
@@ -144,6 +148,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		filter.addAction("restart");
 		filter.addAction("stop");
 		filter.addAction("api fail");
+		filter.addAction(Intent.ACTION_HEADSET_PLUG);
 		registerReceiver(receiver, filter);
 	}
 

@@ -77,6 +77,7 @@ public class MainActivity extends Activity {
 	private ScrollView queueScroll;
 	private ScrollView lpScroll;
 	private FXView fxView;
+	private AudioManager audioManager;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -112,9 +113,12 @@ public class MainActivity extends Activity {
 				songLength.setText(ApiUtil.formatSongLength(progress, length));
 			}
 			if (msg.what == ApiUtil.MUSICSTART) {
+					
 				updatePlayButton();
 				SharedPreferences sharedPref = PreferenceManager
 						.getDefaultSharedPreferences(getApplicationContext());
+				
+				//FxView
 				boolean dBGraph = sharedPref
 						.getBoolean("dBGraphEnabled", false);
 				boolean wavVis = sharedPref.getBoolean("waveVisEnabled", true);
@@ -136,6 +140,9 @@ public class MainActivity extends Activity {
 
 		// Allow keys to change volume without playing
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+		audioManager = (AudioManager) getApplicationContext().getSystemService(
+				Context.AUDIO_SERVICE);
 
 		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
