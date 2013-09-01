@@ -1,6 +1,5 @@
 package io.radio.android;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -8,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.graphics.Color;
+import android.text.Html;
 
 public class ApiUtil {
 	public static final int NPUPDATE = 0;
@@ -64,6 +64,7 @@ public class ApiUtil {
                 String songName = "-";
                 String artistName = "-";
                 int hyphenPos = track.indexOf(" - ");
+                
                 if (hyphenPos==-1)
                 {
                     songName = track;
@@ -71,8 +72,8 @@ public class ApiUtil {
                 else
                 {
                     try {
-                        songName = URLDecoder.decode(track.substring(hyphenPos+3), "UTF-8");
-                        artistName = URLDecoder.decode(track.substring(0,hyphenPos), "UTF-8");
+                    	songName = Html.fromHtml(track.substring(hyphenPos+3)).toString();
+                        artistName = Html.fromHtml(track.substring(0,hyphenPos)).toString();
                     } catch (Exception e) {}
                 }
                 list.add(new Tracks(songName, artistName, isRequest));

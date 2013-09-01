@@ -1,5 +1,12 @@
 package io.radio.android;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -11,14 +18,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import org.json.JSONArray;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.ArrayList;
 
 /**
  * Created by andcolem on 7/3/13.
@@ -57,8 +56,8 @@ public class LastPlayedActivity extends Activity {
                         songName = track;
                     } else {
                         try {
-                            songName = URLDecoder.decode(track.substring(hyphenPos + 3), "UTF-8");
-                            artistName = URLDecoder.decode(track.substring(0,hyphenPos), "UTF-8");
+                            songName = Html.fromHtml(track.substring(hyphenPos+3)).toString();
+                            artistName = Html.fromHtml(track.substring(0,hyphenPos)).toString();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -84,16 +83,14 @@ public class LastPlayedActivity extends Activity {
                 TextView songName = (TextView) v
                         .findViewById(R.id.track_songName);
                 artistName.setText(Html.fromHtml(t.artistName));
-                songName.setText(Html.fromHtml(t.songName));
+                songName.setText(Html.fromHtml(t.songName));          
                 if (t.isRequest) {
                     artistName.setTypeface(null, Typeface.BOLD);
                     songName.setTypeface(null, Typeface.BOLD);
                 }
                 lpList.addView(v);
             }
-
         }
-
     }
 
 }
