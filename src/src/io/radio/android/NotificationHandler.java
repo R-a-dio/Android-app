@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.text.Html;
 
 
 public class NotificationHandler {
@@ -78,7 +79,7 @@ public class NotificationHandler {
 		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 		Notification n = baseNotification()
 				.setContentTitle("R/a/dio" + " (" + currentPacket.dj + ")")
-				.setContentText(currentPacket.np).setSmallIcon(R.drawable.ic_launcher)
+				.setContentText(Html.fromHtml(currentPacket.np)).setSmallIcon(R.drawable.ic_launcher)
                 .setLargeIcon(image).build();
 		mNotificationManager.notify(CONSTANTNOTIFICATION, n);
 	}
@@ -88,11 +89,11 @@ public class NotificationHandler {
 		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 		Notification n = baseNotification()
 				.setContentTitle("R/a/dio" + " (" + currentPacket.dj + ")")
-				.setContentText(currentPacket.np)
-				.setLargeIcon(
-						currentImage != null ? currentImage : BitmapFactory.decodeResource(
-								context.getResources(), R.drawable.ic_launcher))
-                .build();
+				.setContentText(Html.fromHtml(currentPacket.np))
+                        .setLargeIcon(
+                                currentImage != null ? currentImage : BitmapFactory.decodeResource(
+                                        context.getResources(), R.drawable.ic_launcher))
+                        .build();
 		mNotificationManager.notify(CONSTANTNOTIFICATION, n);
 	}
 }

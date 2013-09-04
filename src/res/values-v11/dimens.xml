@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Honeycomb and above work with width-30-margins(dp)  (Or something like that anyway, jesus, who reads and checks this?)-->
+    <dimen name="widget_height">30dp</dimen>
+    <dimen name="widget_width">250dp</dimen>
+</resources>

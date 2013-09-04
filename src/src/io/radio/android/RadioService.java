@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 public class RadioService extends Service implements OnPreparedListener,
 		MediaPlayer.OnErrorListener {
+    public static boolean isRunning;
 	private final IBinder binder = new LocalBinder();
 	private Messenger messenger;
 	private boolean activityConnected;
@@ -83,6 +84,7 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	@Override
 	public void onCreate() {
+        isRunning=true;
 		notificationManager = new NotificationHandler(this);
 		widgetManager = AppWidgetManager.getInstance(this);
 		service = this;
@@ -170,19 +172,11 @@ public class RadioService extends Service implements OnPreparedListener,
 				RemoteViews view = new RemoteViews(getPackageName(),
 						R.layout.widget_layout);
 				currentPacket.progress++;
-				view.setTextViewText(R.id.widget_NowPlaying, currentPacket.np);
-				view.setProgressBar(R.id.widget_ProgressBar,
-						currentPacket.length, currentPacket.progress, false);
-				view.setTextViewText(R.id.widget_SongLength, ApiUtil
-						.formatSongLength(currentPacket.progress,
-								currentPacket.length));
+
 
 				// Push update for this widget to the home screen
-				ComponentName thisWidget = new ComponentName(
-						getApplicationContext(), RadioWidgetProvider.class);
-				AppWidgetManager manager = AppWidgetManager
-						.getInstance(getApplicationContext());
-				manager.updateAppWidget(thisWidget, view);
+				RadioWidgetProvider.updateWidget(getApplicationContext(),AppWidgetManager.getInstance(getApplicationContext()),true,
+                        currentPacket.np,currentPacket.length,currentPacket.progress);
 			}
 		}, 0, 1000);
 	}
@@ -335,14 +329,10 @@ public class RadioService extends Service implements OnPreparedListener,
 	public void updateWidgetImage(Bitmap image) {
 		RemoteViews view = new RemoteViews(getPackageName(),
 				R.layout.widget_layout);
-		view.setImageViewBitmap(R.id.widget_djImage, image);
+		view.setImageViewBitmap(R.id.widget_bg, image);
 
 		// Push update for this widget to the home screen
-		ComponentName thisWidget = new ComponentName(getApplicationContext(),
-				RadioWidgetProvider.class);
-		AppWidgetManager manager = AppWidgetManager
-				.getInstance(getApplicationContext());
-		manager.updateAppWidget(thisWidget, view);
+		RadioWidgetProvider.updateWidget(getApplicationContext(),AppWidgetManager.getInstance(getApplicationContext()),false,null,0,0);
 	}
 
 	@Override
@@ -351,6 +341,8 @@ public class RadioService extends Service implements OnPreparedListener,
 		radioPlayer.release();
 		unregisterReceiver(receiver);
 		updateTimer.cancel();
-	}
+        isRunning=false;
+        RadioWidgetProvider.updateWidget(getApplicationContext(), AppWidgetManager.getInstance(getApplicationContext()),true,"",-1,-1);
+    }
 
 }

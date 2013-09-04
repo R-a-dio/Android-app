@@ -1,64 +1,102 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<?xml version="1.0" encoding="utf-8"?>
 
-    <ImageButton
-        android:id="@+id/widget_PauseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/widget_PlayButton"
-        android:layout_toRightOf="@+id/widget_PlayButton"
-        android:src="@drawable/ic_media_pause" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@drawable/widget_bg"
+>
 
-    <ProgressBar
-        android:id="@+id/widget_ProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/widget_NowPlaying"
-        android:layout_toLeftOf="@+id/widget_RelativeLayout"
-        android:progress="69" />
+    <ImageView
+        android:id="@+id/widget_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/testimage"
+        android:scaleType="centerCrop"
+        android:layout_gravity="right|center_vertical"
+        android:alpha="1"
+        android:layout_marginLeft="1px"
+        android:layout_marginBottom="1px"
+        android:layout_marginTop="1px"
+        android:layout_marginRight="1px"
+        android:cropToPadding="false" />
+
+
+
 
     <RelativeLayout
-        android:id="@+id/widget_RelativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
+        android:layout_width="match_parent"
+        android:background="@drawable/white_gradient"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right"
+        android:gravity="right">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:baselineAligned="false"
+            android:gravity="bottom"
+            android:layout_toLeftOf="@+id/widget_icon">
+
+            <TextView
+                android:id="@+id/widget_SongLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:shadowColor="#6f000000"
+                android:shadowDx="3.0"
+                android:shadowDy="3.0"
+                android:shadowRadius="3.0"
+                android:lines="1"
+                android:ellipsize="end"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#e3e3e3"
+                android:textSize="12sp"
+                android:layout_marginBottom="-5dp" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/widget_ProgressBar"
+                android:layout_marginRight="8dp"
+                android:progress="60"
+                android:layout_marginBottom="-5dp" />
+            <TextView
+                android:id="@+id/widget_NowPlaying"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:shadowColor="#9f000000"
+                android:shadowDx="3.0"
+                android:shadowDy="3.0"
+                android:shadowRadius="3.0"
+                android:lines="1"
+                android:ellipsize="end"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#e3e3e3"
+                android:textSize="14sp"/>
+
+
+
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/widget_djImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/jyytt" />
+            android:id="@+id/widget_icon"
+            android:src="@drawable/ic_launcher"
+            android:layout_gravity="right|center_vertical"
+            android:scaleType="fitXY"
+            android:alpha="0.9"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/widget_NowPlaying"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/widget_ProgressBar"
-        android:text="neko - Matryoshka"
-        android:textColor="@android:color/black" />
-
-    <TextView
-        android:id="@+id/widget_SongLength"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/widget_ProgressBar"
-        android:layout_toLeftOf="@+id/widget_RelativeLayout"
-        android:text="00:49 / 2:50"
-        android:textColor="@android:color/black" />
-
-    <ImageButton
-        android:id="@+id/widget_PlayButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/widget_SongLength"
-        android:src="@drawable/ic_media_play" />
-
-</RelativeLayout>
+</FrameLayout>
