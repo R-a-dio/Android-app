@@ -42,15 +42,3 @@ Find us listening to music in our IRC channel ***#r/a/dio*** on the Rizon networ
 * Homescreen & Lockscreen Widget
 * Full Last Played and Queue Lists
 * Configurable Settings
-
-# Screenshots
-
-***Animated .gif (10MB):*** http://www.mediafire.com/download/c1j85e9azf2ro4c/app_demonstration.gif
-
-<img src="http://i.imgur.com/65MIRQf.gif" alt="screenshot" title="Main Activity" height="400px" width="240px"/>
-<img src="http://i.imgur.com/DCQ32k7.png" alt="screenshot" title="Notification" height="400px" width="240px" />
-<img src="http://i.imgur.com/tqgS8j6.png" alt="screenshot" title="Home Screen Widget" height="400px" width="240px"/>
-<img src="http://i.imgur.com/6iVq7Xq.png" alt="screenshot" title="Lockscreen Widget" height="400px" width="240px" />
-<img src="http://i.imgur.com/8t6bqdU.png" alt="screenshot" title="Searching" height="400px" width="240px" />
-<img src="http://i.imgur.com/Fcx4LgX.png" alt="screenshot" title="Requesting" height="400px" width="240px" />
-<img src="http://i.imgur.com/KZeT7LH.png" alt="screenshot" title="Settings" height="400px" width="240px" />
