@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 public class RadioService extends Service implements OnPreparedListener,
 		MediaPlayer.OnErrorListener {
-    public static boolean isRunning;
+	public static boolean isRunning;
 	private final IBinder binder = new LocalBinder();
 	private Messenger messenger;
 	private boolean activityConnected;
@@ -68,8 +68,7 @@ public class RadioService extends Service implements OnPreparedListener,
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
 			}
-			if (intent.getAction().equals(
-					intent.getAction().equals(Intent.ACTION_HEADSET_PLUG))) {
+			if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
 				int state = intent.getIntExtra("state", -1);
 				if (state == 0)
 					stopPlayer();
@@ -84,7 +83,7 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	@Override
 	public void onCreate() {
-        isRunning=true;
+		isRunning = true;
 		notificationManager = new NotificationHandler(this);
 		widgetManager = AppWidgetManager.getInstance(this);
 		service = this;
@@ -173,10 +172,11 @@ public class RadioService extends Service implements OnPreparedListener,
 						R.layout.widget_layout);
 				currentPacket.progress++;
 
-
 				// Push update for this widget to the home screen
-				RadioWidgetProvider.updateWidget(getApplicationContext(),AppWidgetManager.getInstance(getApplicationContext()),true,
-                        currentPacket.np,currentPacket.length,currentPacket.progress);
+				RadioWidgetProvider.updateWidget(getApplicationContext(),
+						AppWidgetManager.getInstance(getApplicationContext()),
+						true, currentPacket.np, currentPacket.length,
+						currentPacket.progress);
 			}
 		}, 0, 1000);
 	}
@@ -332,7 +332,9 @@ public class RadioService extends Service implements OnPreparedListener,
 		view.setImageViewBitmap(R.id.widget_bg, image);
 
 		// Push update for this widget to the home screen
-		RadioWidgetProvider.updateWidget(getApplicationContext(),AppWidgetManager.getInstance(getApplicationContext()),false,null,0,0);
+		RadioWidgetProvider.updateWidget(getApplicationContext(),
+				AppWidgetManager.getInstance(getApplicationContext()), false,
+				null, 0, 0);
 	}
 
 	@Override
@@ -341,8 +343,10 @@ public class RadioService extends Service implements OnPreparedListener,
 		radioPlayer.release();
 		unregisterReceiver(receiver);
 		updateTimer.cancel();
-        isRunning=false;
-        RadioWidgetProvider.updateWidget(getApplicationContext(), AppWidgetManager.getInstance(getApplicationContext()),true,"",-1,-1);
-    }
+		isRunning = false;
+		RadioWidgetProvider.updateWidget(getApplicationContext(),
+				AppWidgetManager.getInstance(getApplicationContext()), true,
+				"", -1, -1);
+	}
 
 }
