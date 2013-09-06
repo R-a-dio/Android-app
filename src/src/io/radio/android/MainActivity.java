@@ -146,6 +146,10 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Announce widget to launcher
+		sendBroadcast(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
+		
 		setContentView(R.layout.player_layout);
 		getActionBar().hide();
 
