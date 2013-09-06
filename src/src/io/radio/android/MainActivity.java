@@ -103,6 +103,10 @@ public class MainActivity extends Activity {
 
 	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
 		public void onAudioFocusChange(int focusChange) {
+			if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+				audioManager.abandonAudioFocus(afChangeListener);
+				service.stopPlayer();
+			}
 		}
 	};
 
@@ -146,10 +150,11 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Announce widget to launcher
-		sendBroadcast(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
-		
+		sendBroadcast(new Intent(Intent.ACTION_MAIN)
+				.addCategory(Intent.CATEGORY_HOME));
+
 		setContentView(R.layout.player_layout);
 		getActionBar().hide();
 
@@ -299,9 +304,11 @@ public class MainActivity extends Activity {
 		}
 
 		// Initialize Remote Controls if SDK Version >=14
+		// I don't know what this does
 		// initializeRemoteControls();
 	}
-
+	
+	// I don't know what this really does
 	@TargetApi(14)
 	private void initializeRemoteControls() {
 		if (Build.VERSION.SDK_INT >= 14) {
