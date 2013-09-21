@@ -74,7 +74,7 @@ public class RadioService extends Service implements OnPreparedListener,
 				if (state == 0)
 					stopPlayer();
 			}
-			if (intent.getAction().equals(Intent.EXTRA_KEY_EVENT)) {
+			if (intent.getAction().equals(Intent.ACTION_MEDIA_BUTTON)) {
 				KeyEvent ev = (KeyEvent) intent
 						.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 				if (ev.getAction() == KeyEvent.ACTION_DOWN)
@@ -165,7 +165,6 @@ public class RadioService extends Service implements OnPreparedListener,
 		filter.addAction("api fail");
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);
 		filter.addAction(Intent.ACTION_MEDIA_BUTTON);
-		filter.addAction(Intent.EXTRA_KEY_EVENT);
 		registerReceiver(receiver, filter);
 	}
 

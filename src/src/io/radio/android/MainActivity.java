@@ -21,7 +21,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
+import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
+import android.media.RemoteControlClient.MetadataEditor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -79,6 +81,7 @@ public class MainActivity extends Activity {
 	private ScrollView lpScroll;
 	private FXView fxView;
 	private AudioManager audioManager;
+	private RemoteControlClient remoteControlClient;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -163,9 +166,9 @@ public class MainActivity extends Activity {
 
 		audioManager = (AudioManager) getApplicationContext().getSystemService(
 				Context.AUDIO_SERVICE);
-		
+
 		// Initialize Remote Controls if SDK Version >=14
-				initializeRemoteControls();
+		initializeRemoteControls();
 
 		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
@@ -317,8 +320,7 @@ public class MainActivity extends Activity {
 			mediaButtonIntent.setComponent(eventRecevier);
 			PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(
 					getApplicationContext(), 0, mediaButtonIntent, 0);
-			RemoteControlClient remoteControlClient = new RemoteControlClient(
-					mediaPendingIntent);
+			remoteControlClient = new RemoteControlClient(mediaPendingIntent);
 			remoteControlClient
 					.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
 							| RemoteControlClient.FLAG_KEY_MEDIA_STOP);
@@ -471,17 +473,19 @@ public class MainActivity extends Activity {
 
 	private String lastDjImg = "";
 
-	public void sendPebbleMetadata(String artist, String track) {
-		final Intent i = new Intent("com.getpebble.action.NOW_PLAYING");
-		i.putExtra("artist", artist);
-		i.putExtra("track", track);
-
-		sendBroadcast(i);
+	@TargetApi(14)
+	public void updateRemoteMetadata(String artist, String track) {
+		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			MetadataEditor metaEditor = remoteControlClient.editMetadata(true);
+			metaEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, track);
+			metaEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, artist);
+			metaEditor.apply();
+		}
 	}
 
 	private void updateNP(ApiPacket packet) {
-		sendPebbleMetadata(Html.fromHtml(packet.songName).toString(), Html
-				.fromHtml(packet.artistName).toString());
+		updateRemoteMetadata(Html.fromHtml(packet.artistName).toString(), Html
+				.fromHtml(packet.songName).toString());
 
 		progress = (int) (packet.cur - packet.start);
 		length = (int) (packet.end - packet.start);
