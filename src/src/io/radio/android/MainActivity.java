@@ -323,7 +323,8 @@ public class MainActivity extends Activity {
 			remoteControlClient = new RemoteControlClient(mediaPendingIntent);
 			remoteControlClient
 					.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
-							| RemoteControlClient.FLAG_KEY_MEDIA_STOP);
+							| RemoteControlClient.FLAG_KEY_MEDIA_STOP
+							| RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE);
 			audioManager.registerRemoteControlClient(remoteControlClient);
 		}
 	}
@@ -477,8 +478,10 @@ public class MainActivity extends Activity {
 	public void updateRemoteMetadata(String artist, String track) {
 		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			MetadataEditor metaEditor = remoteControlClient.editMetadata(true);
-			metaEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, track);
-			metaEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, artist);
+			metaEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE,
+					track);
+			metaEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST,
+					artist);
 			metaEditor.apply();
 		}
 	}

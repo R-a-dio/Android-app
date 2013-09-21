@@ -10,7 +10,6 @@ import java.util.TimerTask;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -84,6 +83,12 @@ public class RadioService extends Service implements OnPreparedListener,
 						break;
 					case KeyEvent.KEYCODE_MEDIA_PLAY:
 						restartPlayer();
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+						if (currentlyPlaying)
+							stopPlayer();
+						else
+							restartPlayer();
 						break;
 					}
 			}
