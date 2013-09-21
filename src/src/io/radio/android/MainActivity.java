@@ -304,17 +304,14 @@ public class MainActivity extends Activity {
 		}
 
 		// Initialize Remote Controls if SDK Version >=14
-		// I don't know what this does
-		// initializeRemoteControls();
+		initializeRemoteControls();
 	}
 	
-	// I don't know what this really does
 	@TargetApi(14)
 	private void initializeRemoteControls() {
 		if (Build.VERSION.SDK_INT >= 14) {
 			ComponentName eventRecevier = new ComponentName(getPackageName(),
 					LockscreenReceiver.class.getName());
-			AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 			audioManager.registerMediaButtonEventReceiver(eventRecevier);
 			Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
 			mediaButtonIntent.setComponent(eventRecevier);
@@ -328,8 +325,6 @@ public class MainActivity extends Activity {
 					.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
 							| RemoteControlClient.FLAG_KEY_MEDIA_STOP);
 			audioManager.registerRemoteControlClient(remoteControlClient);
-			audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC,
-					AudioManager.AUDIOFOCUS_GAIN);
 		}
 	}
 
