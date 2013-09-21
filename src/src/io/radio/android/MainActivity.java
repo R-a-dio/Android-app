@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
 				audioManager.abandonAudioFocus(afChangeListener);
 				fxView.stopFx();
 			}
-			
+
 		}
 	};
 
@@ -322,7 +322,8 @@ public class MainActivity extends Activity {
 			PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(
 					getApplicationContext(), 0, mediaButtonIntent, 0);
 			remoteControlClient = new RemoteControlClient(mediaPendingIntent);
-			remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
+			remoteControlClient
+					.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
 			remoteControlClient
 					.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
 							| RemoteControlClient.FLAG_KEY_MEDIA_STOP
@@ -486,6 +487,11 @@ public class MainActivity extends Activity {
 					artist);
 			metaEditor.apply();
 		}
+		Intent avrcp = new Intent("com.android.music.metachanged");
+		avrcp.putExtra("track", track);
+		avrcp.putExtra("artist", artist);
+		// avrcp.putExtra("album", "album name");
+		this.getApplicationContext().sendBroadcast(avrcp);
 	}
 
 	private void updateNP(ApiPacket packet) {
