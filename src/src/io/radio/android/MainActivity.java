@@ -306,7 +306,7 @@ public class MainActivity extends Activity {
 		// Initialize Remote Controls if SDK Version >=14
 		initializeRemoteControls();
 	}
-	
+
 	@TargetApi(14)
 	private void initializeRemoteControls() {
 		if (Build.VERSION.SDK_INT >= 14) {
@@ -473,7 +473,18 @@ public class MainActivity extends Activity {
 
 	private String lastDjImg = "";
 
+	public void sendPebbleMetadata(String artist, String track) {
+		final Intent i = new Intent("com.getpebble.action.NOW_PLAYING");
+		i.putExtra("artist", artist);
+		i.putExtra("track", track);
+
+		sendBroadcast(i);
+	}
+
 	private void updateNP(ApiPacket packet) {
+		sendPebbleMetadata(Html.fromHtml(packet.songName).toString(), Html
+				.fromHtml(packet.artistName).toString());
+
 		progress = (int) (packet.cur - packet.start);
 		length = (int) (packet.end - packet.start);
 		songName.setText(Html.fromHtml(packet.songName));
