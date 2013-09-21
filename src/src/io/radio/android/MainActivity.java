@@ -163,6 +163,9 @@ public class MainActivity extends Activity {
 
 		audioManager = (AudioManager) getApplicationContext().getSystemService(
 				Context.AUDIO_SERVICE);
+		
+		// Initialize Remote Controls if SDK Version >=14
+				initializeRemoteControls();
 
 		// Find and get all the layout items
 		songName = (TextView) findViewById(R.id.main_SongName);
@@ -302,9 +305,6 @@ public class MainActivity extends Activity {
 			editor.putBoolean("player_firstrun_hint_shown", true);
 			editor.apply();
 		}
-
-		// Initialize Remote Controls if SDK Version >=14
-		initializeRemoteControls();
 	}
 
 	@TargetApi(14)
@@ -319,8 +319,6 @@ public class MainActivity extends Activity {
 					getApplicationContext(), 0, mediaButtonIntent, 0);
 			RemoteControlClient remoteControlClient = new RemoteControlClient(
 					mediaPendingIntent);
-			remoteControlClient
-					.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
 			remoteControlClient
 					.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
 							| RemoteControlClient.FLAG_KEY_MEDIA_STOP);

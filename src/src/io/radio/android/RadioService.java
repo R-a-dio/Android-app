@@ -27,6 +27,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.view.KeyEvent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -72,6 +73,19 @@ public class RadioService extends Service implements OnPreparedListener,
 				int state = intent.getIntExtra("state", -1);
 				if (state == 0)
 					stopPlayer();
+			}
+			if (intent.getAction().equals(Intent.EXTRA_KEY_EVENT)) {
+				KeyEvent ev = (KeyEvent) intent
+						.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+				if (ev.getAction() == KeyEvent.ACTION_DOWN)
+					switch (ev.getKeyCode()) {
+					case KeyEvent.KEYCODE_MEDIA_STOP:
+						stopPlayer();
+						break;
+					case KeyEvent.KEYCODE_MEDIA_PLAY:
+						restartPlayer();
+						break;
+					}
 			}
 		}
 	};
@@ -150,6 +164,8 @@ public class RadioService extends Service implements OnPreparedListener,
 		filter.addAction("stop");
 		filter.addAction("api fail");
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);
+		filter.addAction(Intent.ACTION_MEDIA_BUTTON);
+		filter.addAction(Intent.EXTRA_KEY_EVENT);
 		registerReceiver(receiver, filter);
 	}
 
