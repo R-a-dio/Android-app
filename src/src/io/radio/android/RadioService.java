@@ -26,7 +26,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.view.KeyEvent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -52,7 +51,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	public static boolean currentlyPlaying = false;
 	public static boolean incomingOrDialingCall = false;
 
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
+	public BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals("restart")) {
@@ -72,25 +71,6 @@ public class RadioService extends Service implements OnPreparedListener,
 				int state = intent.getIntExtra("state", -1);
 				if (state == 0)
 					stopPlayer();
-			}
-			if (intent.getAction().equals(Intent.ACTION_MEDIA_BUTTON)) {
-				KeyEvent ev = (KeyEvent) intent
-						.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-				if (ev.getAction() == KeyEvent.ACTION_DOWN)
-					switch (ev.getKeyCode()) {
-					case KeyEvent.KEYCODE_MEDIA_STOP:
-						stopPlayer();
-						break;
-					case KeyEvent.KEYCODE_MEDIA_PLAY:
-						restartPlayer();
-						break;
-					case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-						if (currentlyPlaying)
-							stopPlayer();
-						else
-							restartPlayer();
-						break;
-					}
 			}
 		}
 	};
@@ -159,6 +139,32 @@ public class RadioService extends Service implements OnPreparedListener,
 		}
 	}
 
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
+		handleIntent(intent);
+		return START_STICKY;
+	}
+
+	private void handleIntent(Intent intent) {
+		switch (intent.getIntExtra("Command", -1)) {
+		case -1:
+			return;
+		case 1:
+			restartPlayer();
+			break;
+		case 2:
+			stopPlayer();
+			break;
+		case 3:
+			if (currentlyPlaying)
+				stopPlayer();
+			else
+				restartPlayer();
+			break;
+		}
+	}
+
 	public void onPrepared(MediaPlayer mp) {
 		radioPlayer.start();
 	}
@@ -169,7 +175,6 @@ public class RadioService extends Service implements OnPreparedListener,
 		filter.addAction("stop");
 		filter.addAction("api fail");
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);
-		filter.addAction(Intent.ACTION_MEDIA_BUTTON);
 		registerReceiver(receiver, filter);
 	}
 
@@ -220,6 +225,13 @@ public class RadioService extends Service implements OnPreparedListener,
 				// Whatever...
 			}
 		}
+	}
+
+	public static void sendCommand(Context context, int command) {
+		Intent intent = new Intent(context, RadioService.class);
+		intent.setAction("restart");
+		intent.putExtra("Command", command);
+		context.startService(intent);
 	}
 
 	// call

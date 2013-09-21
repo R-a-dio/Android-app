@@ -147,6 +147,7 @@ public class MainActivity extends Activity {
 				audioManager.abandonAudioFocus(afChangeListener);
 				fxView.stopFx();
 			}
+			
 		}
 	};
 
@@ -321,6 +322,7 @@ public class MainActivity extends Activity {
 			PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(
 					getApplicationContext(), 0, mediaButtonIntent, 0);
 			remoteControlClient = new RemoteControlClient(mediaPendingIntent);
+			remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
 			remoteControlClient
 					.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
 							| RemoteControlClient.FLAG_KEY_MEDIA_STOP
