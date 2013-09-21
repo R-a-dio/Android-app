@@ -16,6 +16,10 @@ public class ApiUtil {
 	public static final int PROGRESSUPDATE = 3;
     public static final int MUSICSTART = 4;
     public static final int MUSICSTOP = 5;
+    
+    public static final int REMOTEMUSICSTOP = 1;
+    public static final int REMOTEMUSICPLAY = 2;
+    public static final int REMOTEMUSICPLAYPAUSE = 3;
 
 
     public static ApiPacket parseJSON(String JSON) throws Exception {

@@ -147,16 +147,16 @@ public class RadioService extends Service implements OnPreparedListener,
 	}
 
 	private void handleIntent(Intent intent) {
-		switch (intent.getIntExtra("Command", -1)) {
+		switch (intent.getIntExtra("Remote Command", -1)) {
 		case -1:
 			return;
-		case 1:
+		case ApiUtil.REMOTEMUSICPLAY:
 			restartPlayer();
 			break;
-		case 2:
+		case ApiUtil.REMOTEMUSICSTOP:
 			stopPlayer();
 			break;
-		case 3:
+		case ApiUtil.REMOTEMUSICPLAYPAUSE:
 			if (currentlyPlaying)
 				stopPlayer();
 			else
@@ -229,8 +229,7 @@ public class RadioService extends Service implements OnPreparedListener,
 
 	public static void sendCommand(Context context, int command) {
 		Intent intent = new Intent(context, RadioService.class);
-		intent.setAction("restart");
-		intent.putExtra("Command", command);
+		intent.putExtra("Remote Command", command);
 		context.startService(intent);
 	}
 

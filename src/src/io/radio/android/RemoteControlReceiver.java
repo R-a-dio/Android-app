@@ -16,13 +16,13 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 			if (ev.getAction() == KeyEvent.ACTION_DOWN)
 				switch (ev.getKeyCode()) {
 				case KeyEvent.KEYCODE_MEDIA_STOP:
-					RadioService.sendCommand(context, 2);
+					RadioService.sendCommand(context, ApiUtil.REMOTEMUSICSTOP);
 					break;
 				case KeyEvent.KEYCODE_MEDIA_PLAY:
-					RadioService.sendCommand(context, 1);
+					RadioService.sendCommand(context, ApiUtil.REMOTEMUSICPLAY);
 					break;
 				case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-					RadioService.sendCommand(context, 3);
+					RadioService.sendCommand(context, ApiUtil.REMOTEMUSICPLAYPAUSE);
 					break;
 				}
 		}
