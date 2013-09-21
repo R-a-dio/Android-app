@@ -68,7 +68,11 @@
                 android:resource="@xml/widget_provider" />
         </receiver>
         
-        <receiver android:name=".LockscreenReceiver" />
+        <receiver android:name=".RemoteControlReceiver" >
+            <intent-filter >
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
         <activity android:name=".SettingsActivity"></activity>
         <provider android:name="RadioAutoCompleteProvider"
                   android:authorities="io.radio.android.RadioAutoCompleteProvider"></provider>

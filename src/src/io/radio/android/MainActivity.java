@@ -309,9 +309,9 @@ public class MainActivity extends Activity {
 
 	@TargetApi(14)
 	private void initializeRemoteControls() {
-		if (Build.VERSION.SDK_INT >= 14) {
+		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			ComponentName eventRecevier = new ComponentName(getPackageName(),
-					LockscreenReceiver.class.getName());
+					RemoteControlReceiver.class.getName());
 			audioManager.registerMediaButtonEventReceiver(eventRecevier);
 			Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
 			mediaButtonIntent.setComponent(eventRecevier);

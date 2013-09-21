@@ -7,7 +7,7 @@ import android.content.Intent;
 /**
  * Created by aki on 30/06/13.
  */
-public class LockscreenReceiver extends BroadcastReceiver {
+public class RemoteControlReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         System.out.println("received intent");
     }
