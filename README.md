@@ -20,6 +20,11 @@ If you would like to help us with testing,
 Please take note of any bugs you encounter or any new features you
 would like to see by creating an issue [through Github](https://github.com/R-a-dio/Android-app/issues/new)
 
+**Don't want to join Google's botnet and have a tin-foil hat on?**
+
+[Download the possibly outdated .apk here ](http://www.mediafire.com/download/4xbcbep6bzop3ji/Android-app.apk)
+(Last uploaded: Dec 25,2013)
+
 **Have any questions, comments, or want to speak with us directly?** 
 
 Find us listening to music in our IRC channel ***#r/a/dio*** on the Rizon network.
