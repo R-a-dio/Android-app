@@ -62,8 +62,7 @@ public class RadioAutoCompleteProvider extends ContentProvider {
 				input += inputLine;
 			in.close();
 
-			String jsonStr = input.substring(1, input.length() - 2);
-			JSONArray results = new JSONArray(jsonStr);
+			JSONArray results = new JSONArray(input);
 
 			for (int index = 0; index < results.length(); index++) {
 				// System.out.println(results.getString(index));

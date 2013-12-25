@@ -6,7 +6,7 @@
             <MultiSelectListPreference android:key="faveDjs" android:title="Favorite DJ's" android:summary="Manage your favorite DJ's list" android:entries="@array/faveDjsList" android:entryValues="@array/faveDjsListValues"/>
         </PreferenceCategory>
         <PreferenceCategory android:title="Visualizer">
-            <CheckBoxPreference android:title="Waveform Visualizer" android:summary="Enable the waveform visualizer" android:key="waveVisEnabled" android:defaultValue="true"/>
+            <CheckBoxPreference android:title="Waveform Visualizer" android:summary="Enable the waveform visualizer" android:key="waveVisEnabled" android:defaultValue="false"/>
             <CheckBoxPreference android:title="dB Bar Graph" android:summary="Enable the dB Bar Graph (still in development)" android:key="dBGraphEnabled" android:defaultValue="false"/>
         </PreferenceCategory>
     </PreferenceScreen>

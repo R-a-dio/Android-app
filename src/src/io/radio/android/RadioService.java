@@ -51,6 +51,8 @@ public class RadioService extends Service implements OnPreparedListener,
 	public static boolean currentlyPlaying = false;
 	public static boolean incomingOrDialingCall = false;
 
+	public boolean apiToastDisplayedOnce = false;
+	
 	public BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -60,12 +62,17 @@ public class RadioService extends Service implements OnPreparedListener,
 			if (intent.getAction().equals("stop")) {
 				stopPlayer();
 			}
-			if (intent.getAction().equals("api fail")) {
+			if (intent.getAction().equals("api update")) {
+				updateApiData();
+			}
+			if (intent.getAction().equals("api fail") && !apiToastDisplayedOnce) {
 				CharSequence text = "The R/a/dio server doesn't seem to be responding. Check your internet connection or update the app";
-				int duration = Toast.LENGTH_SHORT;
+				int duration = Toast.LENGTH_LONG;
 
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
+				
+				apiToastDisplayedOnce = true;
 			}
 			if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
 				int state = intent.getIntExtra("state", -1);
@@ -173,6 +180,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("restart");
 		filter.addAction("stop");
+		filter.addAction("api update");
 		filter.addAction("api fail");
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);
 		registerReceiver(receiver, filter);
@@ -185,7 +193,9 @@ public class RadioService extends Service implements OnPreparedListener,
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				updateApiData();
+				Intent intent = new Intent();
+				intent.setAction("api update");
+				sendBroadcast(intent);
 			}
 		}, 0, 10000);
 
@@ -313,10 +323,9 @@ public class RadioService extends Service implements OnPreparedListener,
 					} catch (Exception e) {
 					}
 				}
-
+				apiToastDisplayedOnce = false;
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("Api getter failed");
 				Intent intent = new Intent();
 				intent.setAction("api fail");
 				sendBroadcast(intent);

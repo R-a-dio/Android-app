@@ -185,7 +185,7 @@ public class MainActivity extends Activity {
 		final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.player_drawer);
 
 		LayoutInflater inflater = getLayoutInflater();
-		String[] names = new String[] { "Now Playing", "Last Played", "Queue",
+		String[] names = new String[] { "News", "Last Played", "Queue",
 				"Favorites", "Settings" };
 
 		// Set the adapter for the list view
