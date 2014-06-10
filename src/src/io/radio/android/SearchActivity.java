@@ -199,10 +199,9 @@ public class SearchActivity extends ListActivity {
 
 			String lastPlayedString;
 			String lastRequestedString;
-			DateFormat dateFormat = new DateFormat();
-			lastPlayedString = dateFormat.format("E d MMM, k:mm",
+			lastPlayedString = DateFormat.format("E d MMM, k:mm",
 					lastPlayedDate).toString();
-			lastRequestedString = dateFormat.format("E d MMM, k:mm",
+			lastRequestedString = DateFormat.format("E d MMM, k:mm",
 					lastRequestedDate).toString();
 
 			lastPlayed.setText(lastPlayedString);

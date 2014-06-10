@@ -226,7 +226,7 @@ public class MainActivity extends Activity {
 		playButton = (ImageButton) findViewById(R.id.player_play);
 		playButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				if (service.currentlyPlaying) {
+				if (RadioService.currentlyPlaying) {
 					service.stopPlayer();
 				} else {
 					service.restartPlayer();
@@ -390,7 +390,7 @@ public class MainActivity extends Activity {
 					}
 				}
 			} catch (Exception ex) {
-				Log.e(this.TAG, ex.getMessage());
+				Log.e(Detector.TAG, ex.getMessage());
 			}
 
 			return true;
@@ -457,7 +457,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void updatePlayButton() {
-		if (service.currentlyPlaying) {
+		if (RadioService.currentlyPlaying) {
 			playButton.setImageResource(R.drawable.av_stop);
 		} else {
 			playButton.setImageResource(R.drawable.av_play);
