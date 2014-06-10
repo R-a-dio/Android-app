@@ -5,15 +5,16 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">R/a/dio</string>
-    <string name="streamURL">https://r-a-d.io/main.mp3</string>
-    <string name="mainApiURL">https://r-a-d.io/api.php</string>
+    <string name="streamURL">https://stream.r-a-d.io/main.mp3</string>
+    <string name="mainApiURL">https://r-a-d.io/api/</string>
     <string name="searchApiURL">https://r-a-d.io/search/api.php</string>
     <string name="search_hint">Search for a song.</string>
-    <string name="requestApiPath">https://r-a-d.io/request/index.py</string>
+    <string name="requestApiPath">https://r-a-d.io/request/</string>
     <string name="Queue">Queue</string>
     <string name="lastplayed">Last Played</string>
     <string name="player_gesture_tip">Try swiping Left or Right for more info!</string>
-    <string name="lastPlayedApiURL">https://r-a-d.io/lastplayed/api.php</string>
-    <string name="queueApiURL">https://r-a-d.io/queue/api.php</string>
+    <string name="lastPlayedApiURL">https://r-a-d.io/api/last-played</string>
+    <string name="queueApiURL">https://r-a-d.io/api/queue</string>
+    <string name="djImageApiURL">https://r-a-d.io/api/dj-image/</string>
 
 </resources>
