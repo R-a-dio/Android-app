@@ -31,10 +31,10 @@ public class LastPlayedActivity extends Activity {
     }
 
     private class LoadTask extends AsyncTask<Void, Void, Void> {
-        ArrayList<Tracks> list;
+        ArrayList<Track> list;
         public Void doInBackground(Void... params) {
             // load queue from api
-            list = new ArrayList<Tracks>();
+            list = new ArrayList<Track>();
             try {
                 URL apiURl = new URL(getString(R.string.lastPlayedApiURL));
                 BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -62,7 +62,7 @@ public class LastPlayedActivity extends Activity {
                             e.printStackTrace();
                         }
                     }
-                    list.add(new Tracks(songName, artistName, false));
+                    list.add(new Track(songName, artistName, false));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -76,7 +76,7 @@ public class LastPlayedActivity extends Activity {
 
             LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            for (Tracks t : list) {
+            for (Track t : list) {
                 View v = vi.inflate(R.layout.track_tableview, null);
                 TextView artistName = (TextView) v
                         .findViewById(R.id.track_artistName);

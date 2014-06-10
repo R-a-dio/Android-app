@@ -34,8 +34,8 @@ public class ApiUtil {
 		return packet;
 	}
 
-    private static Tracks[] getTracks(JSONArray JSONarray) {
-        ArrayList<Tracks> list = new ArrayList<Tracks>();
+    private static Track[] getTracks(JSONArray JSONarray) {
+        ArrayList<Track> list = new ArrayList<Track>();
             for (int i = 0; i < JSONarray.length(); i++) {
                 JSONArray obj = null;
                 String track = "";
@@ -60,10 +60,10 @@ public class ApiUtil {
                         artistName = Html.fromHtml(track.substring(0,hyphenPos)).toString();
                     } catch (Exception e) {}
                 }
-                list.add(new Tracks(songName, artistName, isRequest));
+                list.add(new Track(songName, artistName, isRequest));
             }
             Object[] array = list.toArray();
-            return Arrays.copyOf(array, array.length, Tracks[].class);
+            return Arrays.copyOf(array, array.length, Track[].class);
     }
 	
 	static public String formatSongLength(int progress, int length) {

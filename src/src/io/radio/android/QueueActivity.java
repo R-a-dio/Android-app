@@ -33,11 +33,11 @@ public class QueueActivity extends Activity {
 	}
 
 	private class LoadTask extends AsyncTask<Void, Void, Void> {
-		ArrayList<Tracks> list;
+		ArrayList<Track> list;
 
 		public Void doInBackground(Void... params) {
 			// load queue from api
-			list = new ArrayList<Tracks>();
+			list = new ArrayList<Track>();
 			try {
 				URL apiURl = new URL(getString(R.string.queueApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -69,7 +69,7 @@ public class QueueActivity extends Activity {
 							e.printStackTrace();
 						}
 					}
-					list.add(new Tracks(songName, artistName, isRequest));
+					list.add(new Track(songName, artistName, isRequest));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -84,7 +84,7 @@ public class QueueActivity extends Activity {
 
 			LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			for (Tracks t : list) {
+			for (Track t : list) {
 				View v = vi.inflate(R.layout.track_tableview, null);
 				TextView artistName = (TextView) v
 						.findViewById(R.id.track_artistName);

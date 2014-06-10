@@ -520,7 +520,7 @@ public class MainActivity extends Activity {
 		LinearLayout lpLayout = (LinearLayout) findViewById(R.id.lastPlayedList);
 		lpLayout.removeAllViews();
 		if (packet.lastPlayed != null) {
-			for (Tracks t : packet.lastPlayed) {
+			for (Track t : packet.lastPlayed) {
 				View v = vi.inflate(R.layout.track_tableview, null);
 				TextView artistName = (TextView) v
 						.findViewById(R.id.track_artistName);
@@ -552,7 +552,7 @@ public class MainActivity extends Activity {
 		queueLayout.removeAllViews();
 
 		if (packet.queue != null) {
-			for (Tracks t : packet.queue) {
+			for (Track t : packet.queue) {
 				View v = vi.inflate(R.layout.track_tableview, null);
 				TextView artistName = (TextView) v
 						.findViewById(R.id.track_artistName);
