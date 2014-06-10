@@ -61,9 +61,9 @@ public class MainActivity extends Activity {
 	public static String PREFS_FILENAME = "RADIOPREFS";
 
 	RadioService service;
-	private TextView songName;
-	private TextView artistName;
-	private TextView djName;
+	private TextView title;
+	private TextView artist;
+	private TextView dj;
 	private ProgressBar songProgressBar;
 	private Timer progressTimer;
 	private ImageView djImage;
@@ -82,6 +82,7 @@ public class MainActivity extends Activity {
 	private FXView fxView;
 	private AudioManager audioManager;
 	private RemoteControlClient remoteControlClient;
+	private DJ lastDj;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -172,9 +173,9 @@ public class MainActivity extends Activity {
 		initializeRemoteControls();
 
 		// Find and get all the layout items
-		songName = (TextView) findViewById(R.id.main_SongName);
-		artistName = (TextView) findViewById(R.id.main_ArtistName);
-		djName = (TextView) findViewById(R.id.main_DjName);
+		title = (TextView) findViewById(R.id.main_SongName);
+		artist = (TextView) findViewById(R.id.main_ArtistName);
+		dj = (TextView) findViewById(R.id.main_DjName);
 		djImage = (ImageView) findViewById(R.id.main_DjImage);
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
 		listeners = (TextView) findViewById(R.id.main_Listeners);
@@ -467,15 +468,13 @@ public class MainActivity extends Activity {
 	private void shareTrack() {
 		String shareHeading = "Share track title.";
 
-		String shareText = songName.getText() + " - " + artistName.getText();
+		String shareText = title.getText() + " - " + artist.getText();
 		Intent i = new Intent(android.content.Intent.ACTION_SEND);
 		i.setType("text/plain");
 		i.putExtra(Intent.EXTRA_TEXT, shareText);
 
 		startActivity(Intent.createChooser(i, shareHeading));
 	}
-
-	private String lastDjImg = "";
 
 	@TargetApi(14)
 	public void updateRemoteMetadata(String artist, String track) {
@@ -495,23 +494,23 @@ public class MainActivity extends Activity {
 	}
 
 	private void updateNP(ApiPacket packet) {
-		updateRemoteMetadata(Html.fromHtml(packet.artistName).toString(), Html
-				.fromHtml(packet.songName).toString());
+		updateRemoteMetadata(Html.fromHtml(packet.main.artist).toString(), Html
+				.fromHtml(packet.main.title).toString());
 
-		progress = (int) (packet.cur - packet.start);
-		length = (int) (packet.end - packet.start);
-		songName.setText(Html.fromHtml(packet.songName));
-		artistName.setText(Html.fromHtml(packet.artistName));
-		djName.setText(Html.fromHtml(packet.dj));
+		progress = packet.main.progress;
+		length = packet.main.length;
+		title.setText(Html.fromHtml(packet.main.title));
+		artist.setText(Html.fromHtml(packet.main.artist));
+		dj.setText(Html.fromHtml(packet.main.dj.name));
 		songProgressBar.setMax(length);
 		songProgressBar.setProgress(progress);
-		if (!lastDjImg.equals(packet.djimg)) {
-			lastDjImg = packet.djimg;
+		if (!lastDj.equals(packet.main.dj)) {
+			lastDj = packet.main.dj;
 			DJImageLoader imageLoader = new DJImageLoader();
 			imageLoader.execute(packet);
 
 		}
-		listeners.setText("Listeners: " + packet.list);
+		listeners.setText("Listeners: " + packet.main.listeners);
 		songLength.setText(ApiUtil.formatSongLength(progress, length));
 
 		// Display the Last Played and Queue from API Packet
@@ -519,8 +518,8 @@ public class MainActivity extends Activity {
 
 		LinearLayout lpLayout = (LinearLayout) findViewById(R.id.lastPlayedList);
 		lpLayout.removeAllViews();
-		if (packet.lastPlayed != null) {
-			for (Track t : packet.lastPlayed) {
+		if (packet.main.lp != null) {
+			for (Track t : packet.main.lp) {
 				View v = vi.inflate(R.layout.track_tableview, null);
 				TextView artistName = (TextView) v
 						.findViewById(R.id.track_artistName);
@@ -551,8 +550,8 @@ public class MainActivity extends Activity {
 		LinearLayout queueLayout = (LinearLayout) findViewById(R.id.queueList);
 		queueLayout.removeAllViews();
 
-		if (packet.queue != null) {
-			for (Track t : packet.queue) {
+		if (packet.main.queue != null) {
+			for (Track t : packet.main.queue) {
 				View v = vi.inflate(R.layout.track_tableview, null);
 				TextView artistName = (TextView) v
 						.findViewById(R.id.track_artistName);
@@ -595,7 +594,7 @@ public class MainActivity extends Activity {
 			ApiPacket pack = params[0];
 			URL url;
 			try {
-				url = new URL(getString(R.string.baseURL) + pack.djimg);
+				url = new URL(getString(R.string.djImageApiURL) + pack.main.dj.id);
 				HttpURLConnection conn = (HttpURLConnection) url
 						.openConnection();
 				conn.setDoInput(true);

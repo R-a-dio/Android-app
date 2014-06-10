@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ApiPacket {
-	public ApiDetails main;
+	public ApiMain main;
 	public ApiMeta meta;
 	
 	public ApiPacket(JSONObject packet) throws JSONException

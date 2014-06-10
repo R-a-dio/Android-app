@@ -65,9 +65,9 @@ public class NotificationHandler {
         mNotificationManager.notify(CONSTANTNOTIFICATION, n);
     }
 
-    public void newDjTickerNotification(String djName) {
+    public void newDjTickerNotification(DJ dj) {
         String ns = Context.NOTIFICATION_SERVICE;
-        Notification n = baseNotification().setTicker(djName + " is now streaming!").build();
+        Notification n = baseNotification().setTicker(dj.name + " is now streaming!").build();
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
         mNotificationManager.notify(CONSTANTNOTIFICATION, n);
     }
@@ -78,8 +78,8 @@ public class NotificationHandler {
 		currentImage = image;
 		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 		Notification n = baseNotification()
-				.setContentTitle("R/a/dio" + " (" + currentPacket.dj + ")")
-				.setContentText(Html.fromHtml(currentPacket.np)).setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle("R/a/dio" + " (" + currentPacket.main.dj.name + ")")
+				.setContentText(Html.fromHtml(currentPacket.main.metadata)).setSmallIcon(R.drawable.ic_launcher)
                 .setLargeIcon(image).build();
 		mNotificationManager.notify(CONSTANTNOTIFICATION, n);
 	}
@@ -88,8 +88,8 @@ public class NotificationHandler {
         String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 		Notification n = baseNotification()
-				.setContentTitle("R/a/dio" + " (" + currentPacket.dj + ")")
-				.setContentText(Html.fromHtml(currentPacket.np))
+				.setContentTitle("R/a/dio" + " (" + currentPacket.main.dj.name + ")")
+				.setContentText(Html.fromHtml(currentPacket.main.metadata))
                         .setLargeIcon(
                                 currentImage != null ? currentImage : BitmapFactory.decodeResource(
                                         context.getResources(), R.drawable.ic_launcher))
