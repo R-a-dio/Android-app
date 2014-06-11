@@ -39,7 +39,7 @@ public class ApiMain {
 		
 		this.id = json.getInt("trackid");
 		this.listeners = json.getInt("listeners");
-		this.requesting = json.getInt("requests") == 1 ? true : false;
+		this.requesting = json.getInt("requesting") == 1 ? true : false;
 		
 		this.current = json.getLong("current");
 		this.start = json.getLong("start_time");

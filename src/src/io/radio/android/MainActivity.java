@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
 	private FXView fxView;
 	private AudioManager audioManager;
 	private RemoteControlClient remoteControlClient;
-	private DJ lastDj;
+	private int lastDj;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName arg0, IBinder binder) {
@@ -504,8 +504,8 @@ public class MainActivity extends Activity {
 		dj.setText(Html.fromHtml(packet.main.dj.name));
 		songProgressBar.setMax(length);
 		songProgressBar.setProgress(progress);
-		if (!lastDj.equals(packet.main.dj)) {
-			lastDj = packet.main.dj;
+		if (lastDj != packet.main.dj.id) {
+			lastDj = packet.main.dj.id;
 			DJImageLoader imageLoader = new DJImageLoader();
 			imageLoader.execute(packet);
 

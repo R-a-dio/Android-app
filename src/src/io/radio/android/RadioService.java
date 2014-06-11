@@ -44,6 +44,7 @@ public class RadioService extends Service implements OnPreparedListener,
 	AppWidgetManager widgetManager;
 
 	public DJ dj;
+	public int djId;
 	public String title = "";
 	public String artist = "";
 
@@ -345,9 +346,11 @@ public class RadioService extends Service implements OnPreparedListener,
 				artist = current.main.artist;
 				title = current.main.title;
 			}
-			if (!dj.equals(current.main.dj)) {
+			
+			if (djId != current.main.dj.id) {
 				notificationManager.newDjTickerNotification(current.main.dj);
 				dj = current.main.dj;
+				djId = current.main.dj.id;
 			}
 			notificationManager.updateNotificationWithInfo(current);
 		}
