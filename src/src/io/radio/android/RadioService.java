@@ -324,6 +324,10 @@ public class RadioService extends Service implements OnPreparedListener,
 		@Override
 		protected void onPostExecute(Void result) {
 			current = resultPacket;
+			
+			if (current == null)
+				return;
+			
 			Message m = Message.obtain();
 			m.what = ApiUtil.NPUPDATE;
 			m.obj = current;
