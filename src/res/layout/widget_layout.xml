@@ -41,21 +41,38 @@
             android:layout_toLeftOf="@+id/widget_icon">
 
             <TextView
-                android:id="@+id/widget_SongLength"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
-                android:shadowColor="#6f000000"
-                android:shadowDx="3.0"
-                android:shadowDy="3.0"
-                android:shadowRadius="3.0"
-                android:lines="1"
-                android:ellipsize="end"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#e3e3e3"
-                android:textSize="12sp"
-                android:layout_marginBottom="-5dp" />
+            android:id="@+id/widget_SongLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:shadowColor="#6f000000"
+            android:shadowDx="3.0"
+            android:shadowDy="3.0"
+            android:shadowRadius="3.0"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#e3e3e3"
+            android:textSize="12sp"
+            android:layout_marginBottom="-5dp" />
+
+            <TextView
+            android:id="@+id/widget_SongElapsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:shadowColor="#6f000000"
+            android:shadowDx="3.0"
+            android:shadowDy="3.0"
+            android:shadowRadius="3.0"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#e3e3e3"
+            android:textSize="12sp"
+            android:layout_marginBottom="-5dp" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"

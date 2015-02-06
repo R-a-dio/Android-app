@@ -50,8 +50,9 @@ public class RadioWidgetProvider extends AppWidgetProvider {
             views.setProgressBar(R.id.widget_ProgressBar,
                     songLength, songProgress, false);
             views.setTextViewText(R.id.widget_SongLength, (songLength == -1 && songProgress == -1) ? "" : ApiUtil
-                    .formatSongLength(songProgress,
-                            songLength));
+                    .intTimeDurationToString(songLength));
+            views.setTextViewText(R.id.widget_SongElapsed, (songLength == -1 && songProgress == -1) ? "" : ApiUtil
+                    .intTimeDurationToString(songProgress));
         }
 
         PendingIntent pendingIntent;
