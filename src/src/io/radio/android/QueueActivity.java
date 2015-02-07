@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -39,7 +40,7 @@ public class QueueActivity extends Activity {
 			// load queue from api
 			list = new ArrayList<Track>();
 			try {
-				URL apiURl = new URL(getString(R.string.queueApiURL));
+				URL apiURl = new URL(getString(R.string.mainApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
 				String input = "";
@@ -47,12 +48,15 @@ public class QueueActivity extends Activity {
 				while ((inputLine = in.readLine()) != null)
 					input += inputLine;
 				in.close();
+                JSONObject json = new JSONObject(input);
+                JSONObject main = json.getJSONObject("main");
+                JSONArray queue = main.getJSONArray("queue");
 
-				JSONArray json = new JSONArray(input);
-				for (int i = 0; i < json.length(); i++) {
-					JSONArray trackObj = json.getJSONArray(i);
-					String track = trackObj.getString(1);
-					boolean isRequest = trackObj.getInt(2) == 1 ? true : false;
+				for (int i = 0; i < queue.length(); i++) {
+					JSONObject obj = queue.getJSONObject(i);
+
+					String track = obj.getString("meta");
+					boolean isRequest = obj.getInt("type") == 1 ? true : false;
 
 					String songName = "-";
 					String artistName = "-";
