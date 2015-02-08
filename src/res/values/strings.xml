@@ -13,6 +13,9 @@
     <string name="Queue">Queue</string>
     <string name="lastplayed">Last Played</string>
     <string name="player_gesture_tip">Try swiping Left or Right for more info!</string>
+    <!--the new api doesn't handle the following urls-->
+    <!--TODO-->
+    <!--either fix api to include deprecated calls or delete this-->
     <string name="lastPlayedApiURL">https://r-a-d.io/api/last-played</string>
     <string name="queueApiURL">https://r-a-d.io/api/queue</string>
     <string name="djImageApiURL">https://r-a-d.io/api/dj-image/</string>

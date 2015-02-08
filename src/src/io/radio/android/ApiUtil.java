@@ -65,32 +65,19 @@ public class ApiUtil {
             Object[] array = list.toArray();
             return Arrays.copyOf(array, array.length, Track[].class);
     }
-	
-	static public String formatSongLength(int progress, int length) {
-		StringBuilder sb = new StringBuilder();
+	static public String intTimeDurationToString (int duration) {
+        StringBuilder sb = new StringBuilder();
+        int minutes = duration / 60;
+        int seconds = duration % 60;
 
-		int progMins = progress / 60;
-		int progSecs = progress % 60;
-		if (progMins < 10)
-			sb.append("0");
-		sb.append(progMins);
-		sb.append(":");
-		if (progSecs < 10)
-			sb.append("0");
-		sb.append(progSecs);
+        if (minutes < 10)
+            sb.append("0");
+        sb.append(minutes);
+        sb.append(":");
+        if (seconds < 10)
+            sb.append("0");
+        sb.append(seconds);
 
-		sb.append(" / ");
-
-		int lenMins = length / 60;
-		int lenSecs = length % 60;
-		if (lenMins < 10)
-			sb.append("0");
-		sb.append(lenMins);
-		sb.append(":");
-		if (lenSecs < 10)
-			sb.append("0");
-		sb.append(lenSecs);
-
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }

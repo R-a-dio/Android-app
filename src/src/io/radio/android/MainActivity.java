@@ -57,6 +57,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends Activity {
 	public static String PREFS_FILENAME = "RADIOPREFS";
 
@@ -69,6 +71,7 @@ public class MainActivity extends Activity {
 	private ImageView djImage;
 	private TextView listeners;
 	private TextView songLength;
+    private TextView songElapsed;
 	private int progress;
 	private int length;
 	private ImageButton playButton;
@@ -124,7 +127,8 @@ public class MainActivity extends Activity {
 			if (msg.what == ApiUtil.PROGRESSUPDATE) {
 				progress++;
 				songProgressBar.setProgress(progress);
-				songLength.setText(ApiUtil.formatSongLength(progress, length));
+				songLength.setText(ApiUtil.intTimeDurationToString(length));
+                songElapsed.setText(ApiUtil.intTimeDurationToString(progress));
 			}
 			if (msg.what == ApiUtil.MUSICSTART) {
 				audioManager
@@ -179,7 +183,8 @@ public class MainActivity extends Activity {
 		djImage = (ImageView) findViewById(R.id.main_DjImage);
 		songProgressBar = (ProgressBar) findViewById(R.id.main_SongProgress);
 		listeners = (TextView) findViewById(R.id.main_Listeners);
-		songLength = (TextView) findViewById(R.id.main_SongLength);
+		songLength = (TextView) findViewById(R.id.main_Total);
+        songElapsed = (TextView) findViewById(R.id.main_Elapsed);
 
 		// Set up drawer
 		final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -511,7 +516,8 @@ public class MainActivity extends Activity {
 
 		}
 		listeners.setText("Listeners: " + packet.main.listeners);
-		songLength.setText(ApiUtil.formatSongLength(progress, length));
+        songLength.setText(ApiUtil.intTimeDurationToString(length));
+        songElapsed.setText(ApiUtil.intTimeDurationToString(progress));
 
 		// Display the Last Played and Queue from API Packet
 		LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);

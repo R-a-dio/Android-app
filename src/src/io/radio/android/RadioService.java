@@ -115,6 +115,7 @@ public class RadioService extends Service implements OnPreparedListener,
 				notificationManager.constantNotification());
 
 		// API call
+
 		
 		
 		// Create the Mediaplayer and setup to play stream
@@ -208,15 +209,20 @@ public class RadioService extends Service implements OnPreparedListener,
 			public void run() {
 				RemoteViews view = new RemoteViews(getPackageName(),
 						R.layout.widget_layout);
-				current.main.progress++;
+                try {
+                    current.main.progress++;
 
-				// Push update for this widget to the home screen
-				RadioWidgetProvider.updateWidget(
-						getApplicationContext(),
-						AppWidgetManager.getInstance(getApplicationContext()),
-						true, current.main.metadata, current.main.length,
-						current.main.progress
-				);
+                    // Push update for this widget to the home screen
+                    RadioWidgetProvider.updateWidget(
+                            getApplicationContext(),
+                            AppWidgetManager.getInstance(getApplicationContext()),
+                            true, current.main.metadata, current.main.length,
+                            current.main.progress
+                    );
+                }
+                catch (Exception E){
+                    System.out.println("Error in initializeTimers");
+                }
 			}
 		}, 0, 1000);
 	}
@@ -302,6 +308,7 @@ public class RadioService extends Service implements OnPreparedListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
+                System.out.println(R.string.mainApiURL);
 				URL apiURl = new URL(getString(R.string.mainApiURL));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						apiURl.openStream()));
